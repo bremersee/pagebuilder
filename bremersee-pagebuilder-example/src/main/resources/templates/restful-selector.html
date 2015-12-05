@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="de">
+    <meta charset="UTF-8"/>
+    <title>Bremersee PageBuilder Example</title>
+    <script type="text/javascript" src="../static/jquery/jquery.min.js"
+            th:src="@{/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" src="../static/bootstrap/js/bootstrap.js"
+            th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" type="text/css"
+          href="../static/bootstrap/css/bootstrap.css"
+          th:href="@{/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css"
+          href="../static/bootstrap/css/bootstrap-theme.css"
+          th:href="@{/bootstrap/css/bootstrap-theme.min.css}"/>
+    <link rel="stylesheet" type="text/css"
+          href="../static/css/app.css"
+          th:href="@{/css/app.css}"/>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header page-header-no-border">
+            <h1>Bremersee PageBuilder Example</h1>
+        </div>
+        
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#users-navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div id="users-navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#"><img class="add-img" src="../static/img/add.gif" th:src="@{/img/add.gif}" alt=""/> Add a person</a></li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li th:if="${pageControl.querySupported}">
+                            <form class="navbar-form navbar-left" method="get">
+                                <input type="hidden" name="_p" th:attr="name=${pageControl.pageNumberParamName}" value="0" />
+                                <input type="hidden" name="_c" th:attr="name=${pageControl.comparatorParamName}" th:value="${pageControl.comparatorParamValue}" />
+                                <input type="hidden" name="_max" th:attr="name=${pageControl.maxResultsParamName}" th:value="${pageControl.page.maxResults}" />
+                                <div class="form-group">
+                                    <input type="text" name="_q" th:attr="name=${pageControl.queryParamName}" th:value="${pageControl.query}" class="form-control" />
+                                </div>
+                            </form>
+                        </li>
+                        <li>
+                            <form class="navbar-form navbar-left" method="get">
+                                <input type="hidden" name="_p" th:attr="name=${pageControl.pageNumberParamName}" value="0" />
+                                <input type="hidden" name="_c" th:attr="name=${pageControl.comparatorParamName}" th:value="${pageControl.comparatorParamValue}" />
+                                <input type="hidden" name="_q" th:attr="name=${pageControl.queryParamName}" th:value="${pageControl.query}" />
+                                <div class="form-group">
+                                    <select name="_max" th:attr="name=${pageControl.maxResultsParamName}" class="form-control" style="width:auto" onchange="this.form.submit()">
+                                        <option th:each="part : ${pageControl.maxResultsSelectorOptions}" 
+                                                th:selected="${part.selected}"
+                                                th:value="${part.value}"
+                                                th:text="${part.displayedValue}">10</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </li>
+                        <li>
+                            <form class="navbar-form navbar-left" method="get">
+                                <input type="hidden" name="_c" th:attr="name=${pageControl.comparatorParamName}" th:value="${pageControl.comparatorParamValue}" />
+                                <input type="hidden" name="_max" th:attr="name=${pageControl.maxResultsParamName}" th:value="${pageControl.page.maxResults}" />
+                                <input type="hidden" name="_q" th:attr="name=${pageControl.queryParamName}" th:value="${pageControl.query}" />
+                                <a href="#" 
+                                   th:href="@{${pageControl.pagination.previousPageButton.url}}" 
+                                   class="btn btn-default disabled" 
+                                   th:class="${pageControl.pagination.previousPageButton.active}? 'btn btn-default' : 'btn btn-default disabled'"
+                                   role="button">
+                                    <span class="glyphicon glyphicon-minus-sign" aria-hidden="true" aria-label="Previous Page"></span>
+                                </a>
+                                <div class="form-group">
+                                    <select name="_p" th:attr="name=${pageControl.pageNumberParamName}" class="form-control" style="width:auto" onchange="this.form.submit()">
+                                        <option th:each="part : ${pageControl.pagination.allButtons}" 
+                                                th:selected="${part.active}"
+                                                th:value="${part.pageNumber}"
+                                                th:text="${part.displayedPageNumber}">1</option>
+                                    </select>
+                                </div>
+                                <a href="#" 
+                                   th:href="@{${pageControl.pagination.nextPageButton.url}}" 
+                                   class="btn btn-default disabled" 
+                                   th:class="${pageControl.pagination.nextPageButton.active}? 'btn btn-default' : 'btn btn-default disabled'"
+                                   role="button">
+                                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" aria-label="Next Page"></span>
+                                </a>
+                            </form>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+        
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <span>#</span>
+                        <span>
+                            <a class="dropup" href="#" 
+                               th:href="@{restful-selector.html(c='id,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                                <span class="caret"></span>
+                            </a>
+                            <a class="dropdown" href="#" 
+                               th:href="@{restful-selector.html(c='id,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                                <span class="caret"></span>
+                            </a>
+                        </span>
+                    </th>
+                    <th>
+                        <span>First Name</span>
+                        <span>
+                            <a class="dropup" href="#" 
+                               th:href="@{restful-selector.html(c='firstname,asc|lastname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                                <span class="caret"></span>
+                            </a>
+                            <a class="dropdown" href="#" 
+                               th:href="@{restful-selector.html(c='firstname,desc|lastname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                                <span class="caret"></span>
+                            </a>
+                        </span>
+                    </th>
+                    <th>
+                        <span>Last Name</span>
+                        <span>
+                            <a class="dropup" href="#" 
+                               th:href="@{restful-selector.html(c='lastname,asc|firstname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                                <span class="caret"></span>
+                            </a>
+                            <a class="dropdown" href="#" 
+                               th:href="@{restful-selector.html(c='lastname,desc|firstname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                                <span class="caret"></span>
+                            </a>
+                        </span>
+                    </th>
+                    <th>
+                        <span>Street</span>
+                    </th>
+                    <th>
+                        <span>City</span>
+                        <span>
+                            <a class="dropup" href="#" 
+                               th:href="@{restful-selector.html(c='address.city,asc|lastname,asc|firstname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                                <span class="caret"></span>
+                            </a>
+                            <a class="dropdown" href="#" 
+                               th:href="@{restful-selector.html(c='address.city,desc|lastname,desc|firstname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                                <span class="caret"></span>
+                            </a>
+                        </span>
+                    </th>
+                    <th>
+                        <span>Postal Code</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${pageControl.page.entries}">
+                    <td th:text="${entry.id}">1</td>
+                    <td th:text="${entry.firstname}">Christian</td>
+                    <td th:text="${entry.lastname}">Bremer</td>
+                    <td th:text="${entry.address.street}">Some Street No. 27</td>
+                    <td th:text="${entry.address.city}">Somewhere</td>
+                    <td th:text="${entry.address.postalCode}">12345</td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+</body>
+</html>
