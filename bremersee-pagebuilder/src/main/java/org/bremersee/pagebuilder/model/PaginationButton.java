@@ -19,15 +19,32 @@ package org.bremersee.pagebuilder.model;
 import java.io.Serializable;
 
 /**
+ * <p>
+ * A pagination button.
+ * </p>
+ * 
  * @author Christian Bremer
- *
  */
 public interface PaginationButton extends Serializable {
+    
+    /**
+     * Returns the displayed page number.
+     */
+    String getDisplayedPageNumber();
 
+    /**
+     * Returns the page number of this button.
+     */
     int getPageNumber();
 
+    /**
+     * Returns {@code true} if this button is active otherwise {@code false}.
+     */
     boolean isActive();
 
+    /**
+     * Returns the URL of this button.
+     */
     String getUrl();
 
 }

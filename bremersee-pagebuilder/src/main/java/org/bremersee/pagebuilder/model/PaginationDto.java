@@ -36,8 +36,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
+ * <p>
+ * A pagination can be used to display pagination buttons on a web site.
+ * </p>
+ * 
  * @author Christian Bremer
- *
  */
 //@formatter:off
 @XmlType(name = "paginationType", propOrder = {
@@ -134,6 +137,24 @@ public class PaginationDto implements Pagination {
     public PaginationDto() {
     }
 
+    /**
+     * Creates a pagination with the given parameters.
+     * 
+     * @param maxPaginationButtons
+     *            the maximum numbers of pagination buttons.
+     * @param allButtons
+     *            all pagination buttons
+     * @param firstPageButton
+     *            the first pagination button
+     * @param previousPageButton
+     *            the previous pagination button
+     * @param paginationButtons
+     *            the pagination buttons
+     * @param nextPageButton
+     *            the next pagination button
+     * @param lastPageButton
+     *            the last pagination button
+     */
     public PaginationDto(int maxPaginationButtons, Collection<? extends PaginationButton> allButtons,
             PaginationButton firstPageButton, PaginationButton previousPageButton,
             Collection<? extends PaginationButton> paginationButtons, PaginationButton nextPageButton,
@@ -152,6 +173,12 @@ public class PaginationDto implements Pagination {
         this.lastPageButton = lastPageButton;
     }
 
+    /**
+     * Creates a pagination from another one.
+     * 
+     * @param pagination
+     *            the other pagination
+     */
     public PaginationDto(Pagination pagination) {
         if (pagination != null) {
             if (pagination.getAllButtons() != null) {
@@ -256,8 +283,10 @@ public class PaginationDto implements Pagination {
         return true;
     }
 
-    /**
-     * @return the maxPaginationButtons
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Pagination#getMaxPaginationButtons()
      */
     @Override
     public int getMaxPaginationButtons() {
@@ -265,8 +294,7 @@ public class PaginationDto implements Pagination {
     }
 
     /**
-     * @param maxPaginationButtons
-     *            the maxPaginationButtons to set
+     * Sets the maximum number of pagination buttons.
      */
     public void setMaxPaginationButtons(int maxPaginationButtons) {
         if (maxPaginationButtons < 1) {
@@ -276,8 +304,10 @@ public class PaginationDto implements Pagination {
         }
     }
 
-    /**
-     * @return the previousPageButton
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Pagination#getPreviousPageButton()
      */
     @Override
     public PaginationButton getPreviousPageButton() {
@@ -285,15 +315,16 @@ public class PaginationDto implements Pagination {
     }
 
     /**
-     * @param previousPageButton
-     *            the previousPageButton to set
+     * Sets the previous pagination button.
      */
     public void setPreviousPageButton(PaginationButton previousPageButton) {
         this.previousPageButton = previousPageButton;
     }
 
-    /**
-     * @return the nextPageButton
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Pagination#getNextPageButton()
      */
     @Override
     public PaginationButton getNextPageButton() {
@@ -301,21 +332,25 @@ public class PaginationDto implements Pagination {
     }
 
     /**
-     * @param nextPageButton
-     *            the nextPageButton to set
+     * Sets the next pagination button.
      */
     public void setNextPageButton(PaginationButton nextPageButton) {
         this.nextPageButton = nextPageButton;
     }
 
-    /**
-     * @return the allButtons
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Pagination#getAllButtons()
      */
     @Override
     public List<PaginationButton> getAllButtons() {
         return allButtons;
     }
 
+    /**
+     * Sets all pagination buttons.
+     */
     public void setAllButtons(List<PaginationButton> allButtons) {
         if (allButtons == null) {
             allButtons = new ArrayList<>();
@@ -323,14 +358,19 @@ public class PaginationDto implements Pagination {
         this.allButtons = allButtons;
     }
 
-    /**
-     * @return the buttons
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Pagination#getButtons()
      */
     @Override
     public List<PaginationButton> getButtons() {
         return buttons;
     }
 
+    /**
+     * Sets the pagination buttons.
+     */
     public void setButtons(List<PaginationButton> buttons) {
         if (buttons == null) {
             buttons = new ArrayList<>();
@@ -338,8 +378,10 @@ public class PaginationDto implements Pagination {
         this.buttons = buttons;
     }
 
-    /**
-     * @return the firstPageButton
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Pagination#getFirstPageButton()
      */
     @Override
     public PaginationButton getFirstPageButton() {
@@ -347,23 +389,23 @@ public class PaginationDto implements Pagination {
     }
 
     /**
-     * @param firstPageButton
-     *            the firstPageButton to set
+     * Sets the first pagination button.
      */
     public void setFirstPageButton(PaginationButton firstPageButton) {
         this.firstPageButton = firstPageButton;
     }
 
-    /**
-     * @return the lastPageButton
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Pagination#getLastPageButton()
      */
     public PaginationButton getLastPageButton() {
         return lastPageButton;
     }
 
     /**
-     * @param lastPageButton
-     *            the lastPageButton to set
+     * Sets the last pagination button.
      */
     public void setLastPageButton(PaginationButton lastPageButton) {
         this.lastPageButton = lastPageButton;

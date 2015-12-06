@@ -19,6 +19,7 @@ package org.bremersee.pagebuilder.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -38,6 +39,13 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
+ * <p>
+ * A {@link PageControl} can be used to display a {@link Page} on a web site.
+ * <br/>
+ * This page control can be processed by a {@link JAXBContext} and the Jackson
+ * JSON processor.
+ * </p>
+ * 
  * @author Christian Bremer
  */
 //@formatter:off
@@ -80,6 +88,25 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 })
 //@formatter:on
 public class PageControlDto implements PageControl {
+
+    /**
+     * If the given page control is {@code null}, {@code null} will be returned.
+     * <br/>
+     * If the given Page control is an instance of {@code PageControlDto} , that
+     * instance will be returned. Otherwise a new instance will be created.
+     * 
+     * @param pageControl
+     *            a page control
+     */
+    public static PageControlDto toPageControlDto(PageControl pageControl) {
+        if (pageControl == null) {
+            return null;
+        }
+        if (pageControl instanceof PageControlDto) {
+            return (PageControlDto) pageControl;
+        }
+        return new PageControlDto(pageControl);
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -133,6 +160,80 @@ public class PageControlDto implements PageControl {
     public PageControlDto() {
     }
 
+    /**
+     * Creates a page control with the given parameters.
+     * 
+     * @param page
+     *            the page
+     * @param pagination
+     *            the pagination
+     * @param pageNumberParamName
+     *            the parameter name of the page number
+     * @param maxResultsParamName
+     *            the parameter name of the maximum results
+     * @param maxResultsSelectorOptions
+     *            the options for the maximum results selector
+     * @param comparatorParamName
+     *            the parameter name of the comparator item
+     * @param comparatorParamValue
+     *            the value of the comparator item
+     * @param querySupported
+     *            {@code true} if a query field should be displayed otherwise
+     *            {@code false}
+     * @param queryParamName
+     *            the parameter name of the query
+     * @param query
+     *            the query value
+     */
+    public PageControlDto(Page page, Pagination pagination, String pageNumberParamName, String maxResultsParamName,
+            List<MaxResultsSelectorOption> maxResultsSelectorOptions, String comparatorParamName,
+            String comparatorParamValue, boolean querySupported, String queryParamName, String query) {
+        super();
+        this.page = page;
+        this.pagination = pagination;
+        this.pageNumberParamName = pageNumberParamName;
+        this.maxResultsParamName = maxResultsParamName;
+        setMaxResultsSelectorOptions(maxResultsSelectorOptions);
+        this.comparatorParamName = comparatorParamName;
+        this.comparatorParamValue = comparatorParamValue;
+        this.querySupported = querySupported;
+        this.queryParamName = queryParamName;
+        this.query = query;
+    }
+
+    /**
+     * Creates a page control from another page control.
+     * 
+     * @param pageControl
+     *            the other page control
+     */
+    public PageControlDto(PageControl pageControl) {
+        if (pageControl != null) {
+            this.page = PageDto.toPageDto(pageControl.getPage());
+            this.pagination = PaginationDto.toPaginationDto(pageControl.getPagination());
+            this.pageNumberParamName = pageControl.getPageNumberParamName();
+            this.maxResultsParamName = pageControl.getMaxResultsParamName();
+            if (pageControl.getMaxResultsSelectorOptions() != null) {
+                for (MaxResultsSelectorOption o : pageControl.getMaxResultsSelectorOptions()) {
+                    if (o != null) {
+                        getMaxResultsSelectorOptions()
+                                .add(MaxResultsSelectorOptionDto.toMaxResultsSelectorOptionDto(o));
+                    }
+                }
+            }
+            this.comparatorParamName = pageControl.getComparatorParamName();
+            this.comparatorParamValue = pageControl.getComparatorParamValue();
+            this.querySupported = pageControl.isQuerySupported();
+            this.queryParamName = pageControl.getQueryParamName();
+            this.query = pageControl.getQuery();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return "PageControlDto [page=" + page + ", pagination=" + pagination + ", pageNumberParamName="
@@ -142,6 +243,11 @@ public class PageControlDto implements PageControl {
                 + ", query=" + query + "]";
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -159,6 +265,11 @@ public class PageControlDto implements PageControl {
         return result;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -218,51 +329,93 @@ public class PageControlDto implements PageControl {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PageControl#getPage()
+     */
     @Override
     public Page getPage() {
         return page;
     }
 
+    /**
+     * Sets the page.
+     */
     public void setPage(Page page) {
         this.page = page;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PageControl#getPagination()
+     */
     @Override
     public Pagination getPagination() {
         return pagination;
     }
 
+    /**
+     * Sets the pagination.
+     */
     public void setPagination(Pagination pagination) {
         this.pagination = pagination;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PageControl#getPageNumberParamName()
+     */
     @Override
     public String getPageNumberParamName() {
         return pageNumberParamName;
     }
 
+    /**
+     * Sets the parameter name of page number.
+     */
     public void setPageNumberParamName(String pageNumberParamName) {
         if (StringUtils.isNotBlank(pageNumberParamName)) {
             this.pageNumberParamName = pageNumberParamName;
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PageControl#getMaxResultsParamName()
+     */
     @Override
     public String getMaxResultsParamName() {
         return maxResultsParamName;
     }
 
+    /**
+     * Sets the parameter name of the max results.
+     */
     public void setMaxResultsParamName(String maxResultsParamName) {
         if (StringUtils.isNotBlank(maxResultsParamName)) {
             this.maxResultsParamName = maxResultsParamName;
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bremersee.pagebuilder.model.PageControl#getMaxResultsSelectorOptions(
+     * )
+     */
     @Override
     public List<MaxResultsSelectorOption> getMaxResultsSelectorOptions() {
         return maxResultsSelectorOptions;
     }
 
+    /**
+     * Sets the list with maximum result options.
+     */
     public void setMaxResultsSelectorOptions(List<MaxResultsSelectorOption> maxResultsSelectorOptions) {
         if (maxResultsSelectorOptions == null) {
             maxResultsSelectorOptions = new ArrayList<>();
@@ -270,51 +423,92 @@ public class PageControlDto implements PageControl {
         this.maxResultsSelectorOptions = maxResultsSelectorOptions;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PageControl#getComparatorParamName()
+     */
     @Override
     public String getComparatorParamName() {
         return comparatorParamName;
     }
 
+    /**
+     * Sets the parameter name of the comparator item.
+     */
     public void setComparatorParamName(String comparatorParamName) {
         if (StringUtils.isNotBlank(comparatorParamName)) {
             this.comparatorParamName = comparatorParamName;
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bremersee.pagebuilder.model.PageControl#getComparatorParamValue()
+     */
     @Override
     public String getComparatorParamValue() {
         return comparatorParamValue;
     }
 
+    /**
+     * Sets the serialized value of the comparator item.
+     */
     public void setComparatorParamValue(String comparatorParamValue) {
         this.comparatorParamValue = comparatorParamValue;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PageControl#isQuerySupported()
+     */
     @Override
     public boolean isQuerySupported() {
         return querySupported;
     }
 
+    /**
+     * Specifies whether the query field should be displayed or not.
+     */
     public void setQuerySupported(boolean querySupported) {
         this.querySupported = querySupported;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PageControl#getQueryParamName()
+     */
     @Override
     public String getQueryParamName() {
         return queryParamName;
     }
 
+    /**
+     * Sets the parameter name of the query.
+     */
     public void setQueryParamName(String queryParamName) {
         if (StringUtils.isNotBlank(queryParamName)) {
             this.queryParamName = queryParamName;
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PageControl#getQuery()
+     */
     @Override
     public String getQuery() {
         return query;
     }
 
+    /**
+     * Sets the query value.
+     */
     public void setQuery(String query) {
         this.query = query;
     }

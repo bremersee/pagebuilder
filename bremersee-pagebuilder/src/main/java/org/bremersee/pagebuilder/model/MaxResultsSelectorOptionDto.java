@@ -16,19 +16,25 @@
 
 package org.bremersee.pagebuilder.model;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 /**
+ * <p>
+ * An option of a maximum result selector that can be processed by a
+ * {@link JAXBContext} and the Jackson JSON processor.
+ * </p>
+ * 
  * @author Christian Bremer
  */
 //@formatter:off
@@ -166,13 +172,18 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
         return true;
     }
 
+    /**
+     * Compares the values of the options.
+     */
     @Override
     public int compareTo(MaxResultsSelectorOption o) {
         return value - o.getValue();
     }
 
-    /**
-     * @return the value
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.MaxResultsSelectorOption#getValue()
      */
     @Override
     public int getValue() {
@@ -180,7 +191,17 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
     }
 
     /**
-     * @return the displayedValue
+     * Sets the value of this option.
+     */
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.MaxResultsSelectorOption#
+     * getDisplayedValue()
      */
     @Override
     public String getDisplayedValue() {
@@ -188,10 +209,28 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
     }
 
     /**
-     * @return the selected
+     * Sets the displayed value of this option.
+     */
+    public void setDisplayedValue(String displayedValue) {
+        this.displayedValue = displayedValue;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bremersee.pagebuilder.model.MaxResultsSelectorOption#isSelected()
      */
     @Override
     public boolean isSelected() {
         return selected;
     }
+
+    /**
+     * Sets whether this option is selected or not.
+     */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
 }

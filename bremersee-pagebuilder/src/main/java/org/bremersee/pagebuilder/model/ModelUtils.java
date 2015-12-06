@@ -51,7 +51,7 @@ public abstract class ModelUtils {
         Validate.notNull(page, "page must not be null");
         if (page.getTotalSize() != null && page.getFirstResult() != null && page.getMaxResults() != null) {
             long previous = page.getFirstResult() - page.getMaxResults();
-            if (previous <= Integer.MIN_VALUE) {
+            if (previous < Integer.MIN_VALUE) {
                 return null;
             }
             return (int) previous < 0 ? null : (int) previous;
@@ -78,7 +78,7 @@ public abstract class ModelUtils {
         Validate.notNull(page, "page must not be null");
         if (page.getTotalSize() != null && page.getFirstResult() != null && page.getMaxResults() != null) {
             long next = page.getFirstResult() + page.getMaxResults();
-            if (next >= Integer.MAX_VALUE) {
+            if (next > Integer.MAX_VALUE) {
                 return null;
             }
             return (int) next >= page.getTotalSize() ? null : (int) next;

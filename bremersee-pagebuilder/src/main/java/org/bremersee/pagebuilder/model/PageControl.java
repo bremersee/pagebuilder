@@ -20,29 +20,63 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * <p>
+ * A {@link PageControl} can be used to display a {@link Page} on a web site.
+ * </p>
+ * 
  * @author Christian Bremer
- *
  */
 public interface PageControl extends Serializable {
 
+    /**
+     * Returns the page.
+     */
     Page getPage();
 
+    /**
+     * Returns the pagination.
+     */
     Pagination getPagination();
 
+    /**
+     * Returns the parameter name of the page number.
+     */
     String getPageNumberParamName();
 
+    /**
+     * Returns the parameter name of the maximum results.
+     */
     String getMaxResultsParamName();
 
+    /**
+     * Returns a list with maximum result options.
+     */
     List<MaxResultsSelectorOption> getMaxResultsSelectorOptions();
 
+    /**
+     * Returns the parameter name of the comparator item.
+     */
     String getComparatorParamName();
 
+    /**
+     * Returns the serialized value of the comparator item.
+     */
     String getComparatorParamValue();
 
+    /**
+     * Returns {@code true} if a query field should be displayed, otherwise
+     * {@code false}.
+     */
     boolean isQuerySupported();
 
+    /**
+     * Returns the parameter name of the query.
+     */
     String getQueryParamName();
 
+    /**
+     * Returns the query value.
+     */
     String getQuery();
 
 }

@@ -29,8 +29,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
+ * <p>
+ * A pagination button.
+ * </p>
+ * 
  * @author Christian Bremer
- *
  */
 //@formatter:off
 @XmlType(name = "paginationButtonType", propOrder = { 
@@ -53,7 +56,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class PaginationButtonDto implements PaginationButton {
 
     /**
-     * if the given pagination button is {@code null}, {@code null} will be
+     * If the given pagination button is {@code null}, {@code null} will be
      * returned.<br/>
      * If the given pagination button is an instance of
      * {@code PaginationButtonDto}, that instance will be returned. Otherwise a
@@ -92,12 +95,28 @@ public class PaginationButtonDto implements PaginationButton {
     public PaginationButtonDto() {
     }
 
+    /**
+     * Creates a pagination button with the given values.
+     * 
+     * @param pageNumber
+     *            the page number
+     * @param active
+     *            specifies whether the button is active or not
+     * @param url
+     *            the URL
+     */
     public PaginationButtonDto(int pageNumber, boolean active, String url) {
         this.pageNumber = pageNumber;
         this.active = active;
         this.url = url;
     }
 
+    /**
+     * Creates a pagination button from another one.
+     * 
+     * @param paginationButton
+     *            the other button
+     */
     public PaginationButtonDto(PaginationButton paginationButton) {
         if (paginationButton != null) {
             this.pageNumber = paginationButton.getPageNumber();
@@ -157,12 +176,20 @@ public class PaginationButtonDto implements PaginationButton {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bremersee.pagebuilder.model.PaginationButton#getDisplayedPageNumber()
+     */
     public String getDisplayedPageNumber() {
         return Integer.valueOf(getPageNumber() + 1).toString();
     }
 
-    /**
-     * @return the pageNumber
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PaginationButton#getPageNumber()
      */
     @Override
     public int getPageNumber() {
@@ -170,15 +197,16 @@ public class PaginationButtonDto implements PaginationButton {
     }
 
     /**
-     * @param pageNumber
-     *            the pageNumber to set
+     * Sets the page number.
      */
     public void setPageNumber(int pageNumber) {
         this.pageNumber = pageNumber;
     }
 
-    /**
-     * @return the active
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PaginationButton#isActive()
      */
     @Override
     public boolean isActive() {
@@ -186,15 +214,16 @@ public class PaginationButtonDto implements PaginationButton {
     }
 
     /**
-     * @param active
-     *            the active to set
+     * Specifies whether this button is active or not.
      */
     public void setActive(boolean active) {
         this.active = active;
     }
 
-    /**
-     * @return the url
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.PaginationButton#getUrl()
      */
     @Override
     public String getUrl() {
@@ -202,8 +231,7 @@ public class PaginationButtonDto implements PaginationButton {
     }
 
     /**
-     * @param url
-     *            the url to set
+     * Sets the URL.
      */
     public void setUrl(String url) {
         this.url = url;

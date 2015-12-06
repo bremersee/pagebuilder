@@ -20,22 +20,47 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * <p>
+ * A pagination can be used to display pagination buttons on a web site.
+ * </p>
+ * 
  * @author Christian Bremer
  */
 public interface Pagination extends Serializable {
 
+    /**
+     * Returns all buttons.
+     */
     List<PaginationButton> getAllButtons();
 
+    /**
+     * Returns the maximum numbers of pagination buttons.
+     */
     int getMaxPaginationButtons();
 
+    /**
+     * Returns the first pagination button.
+     */
     PaginationButton getFirstPageButton();
 
+    /**
+     * Returns the previous pagination buttons.
+     */
     PaginationButton getPreviousPageButton();
 
+    /**
+     * Returns the pagination buttons.
+     */
     List<PaginationButton> getButtons();
 
+    /**
+     * Returns the next pagination button.
+     */
     PaginationButton getNextPageButton();
 
+    /**
+     * Returns the last pagination button.
+     */
     PaginationButton getLastPageButton();
 
 }

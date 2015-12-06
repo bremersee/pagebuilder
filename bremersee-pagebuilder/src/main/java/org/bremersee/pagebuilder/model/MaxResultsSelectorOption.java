@@ -27,10 +27,19 @@ import java.io.Serializable;
  */
 public interface MaxResultsSelectorOption extends Serializable, Comparable<MaxResultsSelectorOption> {
 
+    /**
+     * Returns the value of this option.
+     */
     int getValue();
 
+    /**
+     * Returns the displayed value.
+     */
     String getDisplayedValue();
 
+    /**
+     * Returns {@code true} if the option is selected, otherwise {@code false}.
+     */
     boolean isSelected();
 
 }
