@@ -30,7 +30,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.bremersee.comparator.model.ComparatorItem;
-import org.bremersee.pagebuilder.PageBuilderUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -281,7 +280,7 @@ public class PageDto implements Page {
      */
     @Override
     public Integer getPreviousFirstResult() {
-        return PageBuilderUtils.getPreviousFirstResult(this);
+        return ModelUtils.getPreviousFirstResult(this);
     }
 
     /*
@@ -291,7 +290,7 @@ public class PageDto implements Page {
      */
     @Override
     public Integer getNextFirstResult() {
-        return PageBuilderUtils.getNextFirstResult(this);
+        return ModelUtils.getNextFirstResult(this);
     }
 
     /**
@@ -321,7 +320,7 @@ public class PageDto implements Page {
      */
     @Override
     public Integer getPageSize() {
-        return PageBuilderUtils.getPageSize(this);
+        return ModelUtils.getPageSize(this);
     }
 
     /*
@@ -331,7 +330,7 @@ public class PageDto implements Page {
      */
     @Override
     public Integer getCurrentPage() {
-        return PageBuilderUtils.getCurrentPage(this);
+        return ModelUtils.getCurrentPage(this);
     }
 
     /*
@@ -341,7 +340,7 @@ public class PageDto implements Page {
      */
     @Override
     public Integer getPaginationSize(int fieldSize) {
-        return PageBuilderUtils.getPaginationSize(this, fieldSize);
+        return ModelUtils.getPaginationSize(this, fieldSize);
     }
 
     /**

@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.bremersee.comparator.model.ComparatorItem;
-import org.bremersee.pagebuilder.PageBuilderUtils;
 
 /**
  * <p>
@@ -77,7 +76,7 @@ public interface Page extends Serializable {
      * {@code null} will be returned, too.
      * 
      * @return the previous first result number or {@code null}
-     * @see PageBuilderUtils#getPreviousFirstResult(Page)
+     * @see ModelUtils#getPreviousFirstResult(Page)
      */
     Integer getPreviousFirstResult();
 
@@ -91,7 +90,7 @@ public interface Page extends Serializable {
      * returned, too.
      * 
      * @return the next first result number or {@code null}
-     * @see PageBuilderUtils#getNextFirstResult(Page)
+     * @see ModelUtils#getNextFirstResult(Page)
      */
     Integer getNextFirstResult();
 
@@ -101,7 +100,7 @@ public interface Page extends Serializable {
      * {@code null}). Otherwise {@code null} will be returned.
      * 
      * @return the number of available pages or {@code null}
-     * @see PageBuilderUtils#getPageSize(Page)
+     * @see ModelUtils#getPageSize(Page)
      */
     Integer getPageSize();
 
@@ -111,7 +110,7 @@ public interface Page extends Serializable {
      * (not {@code null}). Otherwise {@code null} will be returned.
      * 
      * @return the current page number or {@code null}
-     * @see PageBuilderUtils#getCurrentPage(Page)
+     * @see ModelUtils#getCurrentPage(Page)
      */
     Integer getCurrentPage();
 
@@ -136,7 +135,7 @@ public interface Page extends Serializable {
      * @param fieldSize
      *            the field size
      * @return the pagination size or {@code null}
-     * @see PageBuilderUtils#getPaginationSize(Page, int)
+     * @see ModelUtils#getPaginationSize(Page, int)
      */
     Integer getPaginationSize(int fieldSize);
 

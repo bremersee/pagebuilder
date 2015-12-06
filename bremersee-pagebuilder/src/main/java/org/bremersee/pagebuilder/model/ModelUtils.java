@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.bremersee.pagebuilder;
+package org.bremersee.pagebuilder.model;
 
 import java.io.IOException;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 import org.apache.commons.lang3.Validate;
-import org.bremersee.pagebuilder.model.Page;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,11 +32,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 
  * @author Christian Bremer
  */
-public abstract class PageBuilderUtils {
+@XmlTransient
+public abstract class ModelUtils {
 
     private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
-    private PageBuilderUtils() {
+    private ModelUtils() {
     }
 
     /**
