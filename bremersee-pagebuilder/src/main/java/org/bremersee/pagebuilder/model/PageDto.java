@@ -58,21 +58,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 		"firstResult", 
 		"maxResults", 
 		"comparatorItem", 
-		"entries" 
+		"entries",
+		"pageSize",
+		"currentPage",
+		"previousFirstResult",
+		"nextFirstResult"
 })
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.PROPERTY)
 @JsonAutoDetect(fieldVisibility = Visibility.ANY, 
-    getterVisibility = Visibility.NONE, 
+    getterVisibility = Visibility.PUBLIC_ONLY, 
     creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.NONE, 
-    setterVisibility = Visibility.NONE)
+    isGetterVisibility = Visibility.PUBLIC_ONLY, 
+    setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
 @JsonInclude(Include.NON_EMPTY)
 @JsonPropertyOrder(value = {
         "totalSize", 
         "firstResult", 
         "maxResults", 
         "comparatorItem", 
-        "entries" 
+        "entries",
+        "pageSize",
+        "currentPage",
+        "previousFirstResult",
+        "nextFirstResult"
 })
 //@formatter:on
 public class PageDto implements Page {
@@ -97,24 +105,14 @@ public class PageDto implements Page {
 
     private static final long serialVersionUID = 1L;
 
-    @XmlElement(name = "totalSize", required = false)
-    @JsonProperty(value = "totalSize", required = false)
     private Integer totalSize;
 
-    @XmlElement(name = "firstResult", required = false)
-    @JsonProperty(value = "firstResult", required = false)
     private Integer firstResult;
 
-    @XmlElement(name = "maxResults", required = false)
-    @JsonProperty(value = "maxResults", required = false)
     private Integer maxResults;
 
-    @XmlElement(name = "comparatorItem", required = false)
-    @JsonProperty(value = "comparatorItem", required = false)
     private ComparatorItem comparatorItem;
 
-    @XmlElementWrapper(name = "entries", required = false)
-    @XmlAnyElement(lax = true)
     private List<Object> entries = new ArrayList<Object>();
 
     /**
@@ -238,6 +236,8 @@ public class PageDto implements Page {
      * 
      * @return the size of all available entries (may be {@code null})
      */
+    @XmlElement(name = "totalSize", required = false)
+    @JsonProperty(value = "totalSize", required = false)
     @Override
     public Integer getTotalSize() {
         return totalSize;
@@ -249,6 +249,7 @@ public class PageDto implements Page {
      * @param totalSize
      *            the size of all available entries
      */
+    @JsonProperty(value = "totalSize", required = false)
     public void setTotalSize(Integer totalSize) {
         this.totalSize = totalSize;
     }
@@ -259,6 +260,8 @@ public class PageDto implements Page {
      * @return the first result number
      */
     @Override
+    @XmlElement(name = "firstResult", required = false)
+    @JsonProperty(value = "firstResult", required = false)
     public Integer getFirstResult() {
         return firstResult;
     }
@@ -269,28 +272,9 @@ public class PageDto implements Page {
      * @param firstResult
      *            the first result number
      */
+    @JsonProperty(value = "firstResult", required = false)
     public void setFirstResult(Integer firstResult) {
         this.firstResult = firstResult;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Page#getPreviousFirstResult()
-     */
-    @Override
-    public Integer getPreviousFirstResult() {
-        return ModelUtils.getPreviousFirstResult(this);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Page#getNextFirstResult()
-     */
-    @Override
-    public Integer getNextFirstResult() {
-        return ModelUtils.getNextFirstResult(this);
     }
 
     /**
@@ -299,6 +283,8 @@ public class PageDto implements Page {
      * @return the maximum number of results
      */
     @Override
+    @XmlElement(name = "maxResults", required = false)
+    @JsonProperty(value = "maxResults", required = false)
     public Integer getMaxResults() {
         return maxResults;
     }
@@ -309,38 +295,9 @@ public class PageDto implements Page {
      * @param maxResults
      *            the maximum number of results
      */
+    @JsonProperty(value = "maxResults", required = false)
     public void setMaxResults(Integer maxResults) {
         this.maxResults = maxResults;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Page#getPageSize()
-     */
-    @Override
-    public Integer getPageSize() {
-        return ModelUtils.getPageSize(this);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Page#getCurrentPage()
-     */
-    @Override
-    public Integer getCurrentPage() {
-        return ModelUtils.getCurrentPage(this);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Page#getPaginationSize(int)
-     */
-    @Override
-    public Integer getPaginationSize(int fieldSize) {
-        return ModelUtils.getPaginationSize(this, fieldSize);
     }
 
     /**
@@ -348,6 +305,8 @@ public class PageDto implements Page {
      * 
      * @return the comparator item
      */
+    @XmlElement(name = "comparatorItem", required = false)
+    @JsonProperty(value = "comparatorItem", required = false)
     @Override
     public ComparatorItem getComparatorItem() {
         return comparatorItem;
@@ -359,6 +318,7 @@ public class PageDto implements Page {
      * @param comparatorItem
      *            the comparator item
      */
+    @JsonProperty(value = "comparatorItem", required = false)
     public void setComparatorItem(ComparatorItem comparatorItem) {
         this.comparatorItem = comparatorItem;
     }
@@ -370,6 +330,8 @@ public class PageDto implements Page {
      * 
      * @return the entries of this page
      */
+    @XmlElementWrapper(name = "entries", required = false)
+    @XmlAnyElement(lax = true)
     @Override
     public List<Object> getEntries() {
         return entries;
@@ -386,6 +348,80 @@ public class PageDto implements Page {
             entries = new ArrayList<Object>();
         }
         this.entries = entries;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Page#getPageSize()
+     */
+    @XmlElement(name = "pageSize", required = false)
+    @JsonProperty(value = "pageSize", required = false)
+    @Override
+    public Integer getPageSize() {
+        return ModelUtils.getPageSize(this);
+    }
+    
+    @JsonProperty(value = "pageSize", required = false)
+    protected void setPageSize(Integer pageSize) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Page#getCurrentPage()
+     */
+    @Override
+    @XmlElement(name = "currentPage", required = false)
+    @JsonProperty(value = "currentPage", required = false)
+    public Integer getCurrentPage() {
+        return ModelUtils.getCurrentPage(this);
+    }
+    
+    @JsonProperty(value = "currentPage", required = false)
+    protected void setCurrentPage(Integer currentPage) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Page#getPreviousFirstResult()
+     */
+    @XmlElement(name = "previousFirstResult", required = false)
+    @JsonProperty(value = "previousFirstResult", required = false)
+    @Override
+    public Integer getPreviousFirstResult() {
+        return ModelUtils.getPreviousFirstResult(this);
+    }
+    
+    @JsonProperty(value = "previousFirstResult", required = false)
+    protected void setPreviousFirstResult(Integer previousFirstResult) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Page#getNextFirstResult()
+     */
+    @XmlElement(name = "nextFirstResult", required = false)
+    @JsonProperty(value = "nextFirstResult", required = false)
+    @Override
+    public Integer getNextFirstResult() {
+        return ModelUtils.getNextFirstResult(this);
+    }
+    
+    @JsonProperty(value = "nextFirstResult", required = false)
+    protected void setNextFirstResult(Integer nextFirstResult) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.model.Page#getPaginationSize(int)
+     */
+    @Override
+    public Integer getPaginationSize(int fieldSize) {
+        return ModelUtils.getPaginationSize(this, fieldSize);
     }
 
 }

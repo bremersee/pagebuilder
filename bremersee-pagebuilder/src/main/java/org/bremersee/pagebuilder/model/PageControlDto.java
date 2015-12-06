@@ -62,17 +62,17 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
         "queryParamName",
         "query"
 })
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlSeeAlso({
     MaxResultsSelectorOptionDto.class,
     PaginationDto.class,
     PaginationButtonDto.class
 })
-@JsonAutoDetect(fieldVisibility = Visibility.ANY, 
-    getterVisibility = Visibility.NONE, 
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
+    getterVisibility = Visibility.PUBLIC_ONLY, 
     creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.NONE, 
-    setterVisibility = Visibility.NONE)
+    isGetterVisibility = Visibility.PUBLIC_ONLY, 
+    setterVisibility = Visibility.PUBLIC_ONLY)
 @JsonInclude(Include.NON_EMPTY)
 @JsonPropertyOrder(value = {
         "page",
@@ -110,48 +110,24 @@ public class PageControlDto implements PageControl {
 
     private static final long serialVersionUID = 1L;
 
-    @XmlElement(name = "page", required = true, type = PageDto.class)
-    @JsonProperty(value = "page", required = true)
-    @JsonDeserialize(as = PageDto.class)
     private Page page;
 
-    @XmlElement(name = "pagination", required = false, type = PaginationDto.class)
-    @JsonProperty(value = "pagination", required = false)
-    @JsonDeserialize(as = PaginationDto.class)
     private Pagination pagination;
 
-    @XmlElement(name = "pageNumberParamName", defaultValue = "p")
-    @JsonProperty(value = "pageNumberParamName", required = true)
     private String pageNumberParamName = "p";
 
-    @XmlElement(name = "maxResultsParamName", defaultValue = "max")
-    @JsonProperty(value = "maxResultsParamName", required = true)
     private String maxResultsParamName = "max";
 
-    @XmlElementWrapper(name = "maxResultsSelectorOptions", required = false)
-    @XmlElement(name = "maxResultsSelectorOption", type = MaxResultsSelectorOptionDto.class)
-    @JsonProperty(value = "maxResultsSelectorOptions", required = false)
-    @JsonDeserialize(contentAs = MaxResultsSelectorOptionDto.class)
     private List<MaxResultsSelectorOption> maxResultsSelectorOptions = new ArrayList<MaxResultsSelectorOption>();
 
-    @XmlElement(name = "comparatorParamName", defaultValue = "c")
-    @JsonProperty(value = "comparatorParamName", required = true)
     private String comparatorParamName = "c";
 
-    @XmlElement(name = "comparatorParamValue", required = false)
-    @JsonProperty(value = "comparatorParamValue", required = false)
     private String comparatorParamValue;
 
-    @XmlElement(name = "querySupported", defaultValue = "true")
-    @JsonProperty(value = "querySupported", required = true)
     private boolean querySupported = true;
 
-    @XmlElement(name = "queryParamName", defaultValue = "q")
-    @JsonProperty(value = "queryParamName", required = true)
     private String queryParamName = "q";
 
-    @XmlElement(name = "query", required = false)
-    @JsonProperty(value = "query", required = false)
     private String query;
 
     /**
@@ -334,6 +310,8 @@ public class PageControlDto implements PageControl {
      * 
      * @see org.bremersee.pagebuilder.model.PageControl#getPage()
      */
+    @XmlElement(name = "page", required = true, type = PageDto.class)
+    @JsonProperty(value = "page", required = true)
     @Override
     public Page getPage() {
         return page;
@@ -342,6 +320,8 @@ public class PageControlDto implements PageControl {
     /**
      * Sets the page.
      */
+    @JsonProperty(value = "page", required = true)
+    @JsonDeserialize(as = PageDto.class)
     public void setPage(Page page) {
         this.page = page;
     }
@@ -351,6 +331,8 @@ public class PageControlDto implements PageControl {
      * 
      * @see org.bremersee.pagebuilder.model.PageControl#getPagination()
      */
+    @XmlElement(name = "pagination", required = false, type = PaginationDto.class)
+    @JsonProperty(value = "pagination", required = false)
     @Override
     public Pagination getPagination() {
         return pagination;
@@ -359,6 +341,8 @@ public class PageControlDto implements PageControl {
     /**
      * Sets the pagination.
      */
+    @JsonProperty(value = "pagination", required = false)
+    @JsonDeserialize(as = PaginationDto.class)
     public void setPagination(Pagination pagination) {
         this.pagination = pagination;
     }
@@ -368,6 +352,8 @@ public class PageControlDto implements PageControl {
      * 
      * @see org.bremersee.pagebuilder.model.PageControl#getPageNumberParamName()
      */
+    @XmlElement(name = "pageNumberParamName", defaultValue = "p")
+    @JsonProperty(value = "pageNumberParamName", required = true)
     @Override
     public String getPageNumberParamName() {
         return pageNumberParamName;
@@ -376,6 +362,7 @@ public class PageControlDto implements PageControl {
     /**
      * Sets the parameter name of page number.
      */
+    @JsonProperty(value = "pageNumberParamName", required = false)
     public void setPageNumberParamName(String pageNumberParamName) {
         if (StringUtils.isNotBlank(pageNumberParamName)) {
             this.pageNumberParamName = pageNumberParamName;
@@ -387,6 +374,8 @@ public class PageControlDto implements PageControl {
      * 
      * @see org.bremersee.pagebuilder.model.PageControl#getMaxResultsParamName()
      */
+    @XmlElement(name = "maxResultsParamName", defaultValue = "max")
+    @JsonProperty(value = "maxResultsParamName", required = true)
     @Override
     public String getMaxResultsParamName() {
         return maxResultsParamName;
@@ -395,6 +384,7 @@ public class PageControlDto implements PageControl {
     /**
      * Sets the parameter name of the max results.
      */
+    @JsonProperty(value = "maxResultsParamName", required = false)
     public void setMaxResultsParamName(String maxResultsParamName) {
         if (StringUtils.isNotBlank(maxResultsParamName)) {
             this.maxResultsParamName = maxResultsParamName;
@@ -408,6 +398,9 @@ public class PageControlDto implements PageControl {
      * org.bremersee.pagebuilder.model.PageControl#getMaxResultsSelectorOptions(
      * )
      */
+    @XmlElementWrapper(name = "maxResultsSelectorOptions", required = false)
+    @XmlElement(name = "maxResultsSelectorOption", type = MaxResultsSelectorOptionDto.class)
+    @JsonProperty(value = "maxResultsSelectorOptions", required = false)
     @Override
     public List<MaxResultsSelectorOption> getMaxResultsSelectorOptions() {
         return maxResultsSelectorOptions;
@@ -416,6 +409,8 @@ public class PageControlDto implements PageControl {
     /**
      * Sets the list with maximum result options.
      */
+    @JsonProperty(value = "maxResultsSelectorOptions", required = false)
+    @JsonDeserialize(contentAs = MaxResultsSelectorOptionDto.class)
     public void setMaxResultsSelectorOptions(List<MaxResultsSelectorOption> maxResultsSelectorOptions) {
         if (maxResultsSelectorOptions == null) {
             maxResultsSelectorOptions = new ArrayList<>();
@@ -428,6 +423,8 @@ public class PageControlDto implements PageControl {
      * 
      * @see org.bremersee.pagebuilder.model.PageControl#getComparatorParamName()
      */
+    @XmlElement(name = "comparatorParamName", defaultValue = "c")
+    @JsonProperty(value = "comparatorParamName", required = true)
     @Override
     public String getComparatorParamName() {
         return comparatorParamName;
@@ -436,6 +433,7 @@ public class PageControlDto implements PageControl {
     /**
      * Sets the parameter name of the comparator item.
      */
+    @JsonProperty(value = "comparatorParamName", required = false)
     public void setComparatorParamName(String comparatorParamName) {
         if (StringUtils.isNotBlank(comparatorParamName)) {
             this.comparatorParamName = comparatorParamName;
@@ -449,6 +447,8 @@ public class PageControlDto implements PageControl {
      * org.bremersee.pagebuilder.model.PageControl#getComparatorParamValue()
      */
     @Override
+    @XmlElement(name = "comparatorParamValue", required = false)
+    @JsonProperty(value = "comparatorParamValue", required = false)
     public String getComparatorParamValue() {
         return comparatorParamValue;
     }
@@ -456,6 +456,7 @@ public class PageControlDto implements PageControl {
     /**
      * Sets the serialized value of the comparator item.
      */
+    @JsonProperty(value = "comparatorParamValue", required = false)
     public void setComparatorParamValue(String comparatorParamValue) {
         this.comparatorParamValue = comparatorParamValue;
     }
@@ -466,6 +467,8 @@ public class PageControlDto implements PageControl {
      * @see org.bremersee.pagebuilder.model.PageControl#isQuerySupported()
      */
     @Override
+    @XmlElement(name = "querySupported", defaultValue = "true")
+    @JsonProperty(value = "querySupported", required = true)
     public boolean isQuerySupported() {
         return querySupported;
     }
@@ -473,6 +476,7 @@ public class PageControlDto implements PageControl {
     /**
      * Specifies whether the query field should be displayed or not.
      */
+    @JsonProperty(value = "querySupported", required = false)
     public void setQuerySupported(boolean querySupported) {
         this.querySupported = querySupported;
     }
@@ -483,6 +487,8 @@ public class PageControlDto implements PageControl {
      * @see org.bremersee.pagebuilder.model.PageControl#getQueryParamName()
      */
     @Override
+    @XmlElement(name = "queryParamName", defaultValue = "q")
+    @JsonProperty(value = "queryParamName", required = true)
     public String getQueryParamName() {
         return queryParamName;
     }
@@ -490,6 +496,7 @@ public class PageControlDto implements PageControl {
     /**
      * Sets the parameter name of the query.
      */
+    @JsonProperty(value = "queryParamName", required = false)
     public void setQueryParamName(String queryParamName) {
         if (StringUtils.isNotBlank(queryParamName)) {
             this.queryParamName = queryParamName;
@@ -501,6 +508,8 @@ public class PageControlDto implements PageControl {
      * 
      * @see org.bremersee.pagebuilder.model.PageControl#getQuery()
      */
+    @XmlElement(name = "query", required = false)
+    @JsonProperty(value = "query", required = false)
     @Override
     public String getQuery() {
         return query;
@@ -509,6 +518,7 @@ public class PageControlDto implements PageControl {
     /**
      * Sets the query value.
      */
+    @JsonProperty(value = "query", required = false)
     public void setQuery(String query) {
         this.query = query;
     }

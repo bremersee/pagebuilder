@@ -102,7 +102,7 @@ public class PaginationDto implements Pagination {
     private List<PaginationButton> allButtons = new ArrayList<PaginationButton>();
 
     @XmlElement(name = "maxPaginationButtons", defaultValue = "7")
-    @JsonProperty(value = "maxPaginationButtons", required = true)
+    @JsonProperty(value = "maxPaginationButtons", required = false)
     private int maxPaginationButtons = 7;
 
     @XmlElement(name = "firstPageButton", required = false, type = PaginationButtonDto.class)

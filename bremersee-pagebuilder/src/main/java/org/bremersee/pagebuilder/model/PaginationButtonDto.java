@@ -37,18 +37,20 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 //@formatter:off
 @XmlType(name = "paginationButtonType", propOrder = { 
-        "pageNumber", 
+        "pageNumber",
+        "displayedPageNumber",
         "active", 
         "url" })
-@XmlAccessorType(XmlAccessType.FIELD)
-@JsonAutoDetect(fieldVisibility = Visibility.ANY, 
-    getterVisibility = Visibility.NONE, 
+@XmlAccessorType(XmlAccessType.PROPERTY)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
+    getterVisibility = Visibility.PUBLIC_ONLY, 
     creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.NONE, 
-    setterVisibility = Visibility.NONE)
+    isGetterVisibility = Visibility.PUBLIC_ONLY, 
+    setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
 @JsonInclude(Include.NON_EMPTY)
 @JsonPropertyOrder(value = {
         "pageNumber",
+        "displayedPageNumber",
         "active",
         "url"
 })
@@ -77,16 +79,10 @@ public class PaginationButtonDto implements PaginationButton {
 
     private static final long serialVersionUID = 1L;
 
-    @XmlElement(name = "pageNumber", required = true)
-    @JsonProperty(value = "pageNumber", required = true)
     private int pageNumber;
 
-    @XmlElement(name = "active", required = true)
-    @JsonProperty(value = "active", required = true)
     private boolean active;
 
-    @XmlElement(name = "url", required = false)
-    @JsonProperty(value = "url", required = false)
     private String url;
 
     /**
@@ -182,8 +178,15 @@ public class PaginationButtonDto implements PaginationButton {
      * @see
      * org.bremersee.pagebuilder.model.PaginationButton#getDisplayedPageNumber()
      */
+    @XmlElement(name = "displayedPageNumber", required = true)
+    @JsonProperty(value = "displayedPageNumber", required = true)
+    @Override
     public String getDisplayedPageNumber() {
         return Integer.valueOf(getPageNumber() + 1).toString();
+    }
+    
+    @JsonProperty(value = "displayedPageNumber", required = false)
+    protected void setDisplayedPageNumber(String displayedPageNumber) {
     }
 
     /*
@@ -191,6 +194,8 @@ public class PaginationButtonDto implements PaginationButton {
      * 
      * @see org.bremersee.pagebuilder.model.PaginationButton#getPageNumber()
      */
+    @XmlElement(name = "pageNumber", required = true)
+    @JsonProperty(value = "pageNumber", required = true)
     @Override
     public int getPageNumber() {
         return pageNumber;
@@ -208,6 +213,8 @@ public class PaginationButtonDto implements PaginationButton {
      * 
      * @see org.bremersee.pagebuilder.model.PaginationButton#isActive()
      */
+    @XmlElement(name = "active", required = true)
+    @JsonProperty(value = "active", required = true)
     @Override
     public boolean isActive() {
         return active;
@@ -225,6 +232,8 @@ public class PaginationButtonDto implements PaginationButton {
      * 
      * @see org.bremersee.pagebuilder.model.PaginationButton#getUrl()
      */
+    @XmlElement(name = "url", required = false)
+    @JsonProperty(value = "url", required = false)
     @Override
     public String getUrl() {
         return url;

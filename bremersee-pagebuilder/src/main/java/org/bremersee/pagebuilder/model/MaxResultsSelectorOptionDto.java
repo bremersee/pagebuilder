@@ -22,6 +22,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -42,12 +44,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "value", 
         "displayedValue", 
         "selected" })
-@XmlAccessorType(XmlAccessType.FIELD)
-@JsonAutoDetect(fieldVisibility = Visibility.ANY, 
-    getterVisibility = Visibility.NONE, 
+@XmlAccessorType(XmlAccessType.PROPERTY)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
+    getterVisibility = Visibility.PUBLIC_ONLY, 
     creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.NONE, 
-    setterVisibility = Visibility.NONE)
+    isGetterVisibility = Visibility.PUBLIC_ONLY, 
+    setterVisibility = Visibility.PUBLIC_ONLY)
 @JsonInclude(Include.NON_EMPTY)
 @JsonPropertyOrder(value = {
         "value",
@@ -79,16 +81,10 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
 
     private static final long serialVersionUID = 1L;
 
-    @XmlElement(name = "value", required = true)
-    @JsonProperty(value = "value", required = true)
     private int value;
 
-    @XmlElement(name = "displayedValue", required = false)
-    @JsonProperty(value = "displayedValue", required = false)
     private String displayedValue;
 
-    @XmlElement(name = "selected", required = true)
-    @JsonProperty(value = "selected", required = true)
     private boolean selected;
 
     /**
@@ -185,6 +181,8 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
      * 
      * @see org.bremersee.pagebuilder.model.MaxResultsSelectorOption#getValue()
      */
+    @XmlElement(name = "value", required = true)
+    @JsonProperty(value = "value", required = true)
     @Override
     public int getValue() {
         return value;
@@ -193,6 +191,7 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
     /**
      * Sets the value of this option.
      */
+    @JsonProperty(value = "value", required = true)
     public void setValue(int value) {
         this.value = value;
     }
@@ -203,14 +202,20 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
      * @see org.bremersee.pagebuilder.model.MaxResultsSelectorOption#
      * getDisplayedValue()
      */
+    @XmlElement(name = "displayedValue", required = false)
+    @JsonProperty(value = "displayedValue", required = false)
     @Override
     public String getDisplayedValue() {
+        if (StringUtils.isBlank(displayedValue)) {
+            displayedValue = "" + value;
+        }
         return displayedValue;
     }
 
     /**
      * Sets the displayed value of this option.
      */
+    @JsonProperty(value = "displayedValue", required = false)
     public void setDisplayedValue(String displayedValue) {
         this.displayedValue = displayedValue;
     }
@@ -221,6 +226,8 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
      * @see
      * org.bremersee.pagebuilder.model.MaxResultsSelectorOption#isSelected()
      */
+    @XmlElement(name = "selected", required = true)
+    @JsonProperty(value = "selected", required = true)
     @Override
     public boolean isSelected() {
         return selected;
@@ -229,6 +236,7 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
     /**
      * Sets whether this option is selected or not.
      */
+    @JsonProperty(value = "selected", required = false)
     public void setSelected(boolean selected) {
         this.selected = selected;
     }

@@ -37,6 +37,10 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      <xs:element name="pageSize" type="xs:int" minOccurs="0"/>
+      <xs:element name="currentPage" type="xs:int" minOccurs="0"/>
+      <xs:element name="previousFirstResult" type="xs:int" minOccurs="0"/>
+      <xs:element name="nextFirstResult" type="xs:int" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -88,6 +92,7 @@
   <xs:complexType name="paginationButtonType">
     <xs:sequence>
       <xs:element name="pageNumber" type="xs:int"/>
+      <xs:element name="displayedPageNumber" type="xs:string"/>
       <xs:element name="active" type="xs:boolean"/>
       <xs:element name="url" type="xs:string" minOccurs="0"/>
     </xs:sequence>
