@@ -26,10 +26,10 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.bremersee.comparator.model.ComparatorItem;
-import org.bremersee.pagebuilder.model.PageControl;
-import org.bremersee.pagebuilder.model.PageControl.MaxResultsSelectorOption;
-import org.bremersee.pagebuilder.model.PageControl.Pagination;
-import org.bremersee.pagebuilder.model.PageControl.PaginationButton;
+import org.bremersee.pagebuilder.model.PageControlDto;
+import org.bremersee.pagebuilder.model.PageControlDto.MaxResultsSelectorOption;
+import org.bremersee.pagebuilder.model.PageControlDto.Pagination;
+import org.bremersee.pagebuilder.model.PageControlDto.PaginationButton;
 import org.bremersee.pagebuilder.model.PageDto;
 import org.bremersee.utils.WebUtils;
 
@@ -42,7 +42,7 @@ import org.bremersee.utils.WebUtils;
  */
 class DefaultPageControlFactory extends PageControlFactory {
 
-    public PageControl newPageControl(
+    public PageControlDto newPageControl(
 			PageDto page, 
 			String pageUrl, 
 			String query, 
@@ -51,7 +51,7 @@ class DefaultPageControlFactory extends PageControlFactory {
 		return buildPageControl(page, pageUrl, query, locale);
 	}
 	
-	protected PageControl buildPageControl(
+	protected PageControlDto buildPageControl(
             PageDto page, 
             String pageUrl, 
             String query, 
@@ -66,7 +66,7 @@ class DefaultPageControlFactory extends PageControlFactory {
 			locale = Locale.getDefault();
 		}
 		
-		PageControl pageControl = new PageControl();
+		PageControlDto pageControl = new PageControlDto();
 		
 		pageControl.setComparatorParamName(getComparatorParamName());
 		pageControl.setMaxResultsParamName(getMaxResultsParamName());

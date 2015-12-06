@@ -24,8 +24,8 @@ import javax.xml.bind.annotation.XmlRegistry;
 @XmlRegistry
 public class ObjectFactory {
     
-    public PageControl createPageControl() {
-        return new PageControl();
+    public PageControlDto createPageControlDto() {
+        return new PageControlDto();
     }
     
     public PageDto createPageDto() {

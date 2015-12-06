@@ -21,7 +21,7 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.bremersee.comparator.ComparatorItemTransformer;
 import org.bremersee.comparator.ComparatorItemTransformerImpl;
-import org.bremersee.pagebuilder.model.PageControl;
+import org.bremersee.pagebuilder.model.PageControlDto;
 import org.bremersee.pagebuilder.model.PageDto;
 
 /**
@@ -337,7 +337,7 @@ public abstract class PageControlFactory {
 	}
 
 	/**
-	 * Creates a new {@link PageControl} from the given page.<br/>
+	 * Creates a new {@link PageControlDto} from the given page.<br/>
 	 * The page URL must be the plain URL (with no page control query
 	 * parameters), e. g.: http://example.org/myapp/mypage.html<br/>
 	 * The query is the value of the query field of the page and is optional.
@@ -354,6 +354,6 @@ public abstract class PageControlFactory {
 	 *            the locale
 	 * @return the created page control
 	 */
-	public abstract PageControl newPageControl(PageDto page, String pageUrl, String query, Locale locale);
+	public abstract PageControlDto newPageControl(PageDto page, String pageUrl, String query, Locale locale);
 
 }

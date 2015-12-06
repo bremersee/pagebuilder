@@ -53,12 +53,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 })
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlSeeAlso({
-    PageControl.MaxResultsSelectorOption.class,
-    PageControl.Pagination.class,
-    PageControl.PaginationButton.class
+    PageControlDto.MaxResultsSelectorOption.class,
+    PageControlDto.Pagination.class,
+    PageControlDto.PaginationButton.class
 })
 @JsonInclude(Include.NON_EMPTY)
-public class PageControl implements Serializable {
+public class PageControlDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -106,7 +106,7 @@ public class PageControl implements Serializable {
     /**
      * Default constructor. 
      */
-    public PageControl() {
+    public PageControlDto() {
     }
 
     public PageDto getPage() {
@@ -436,7 +436,7 @@ public class PageControl implements Serializable {
     })
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlSeeAlso({
-        PageControl.PaginationButton.class
+        PageControlDto.PaginationButton.class
     })
     @JsonInclude(Include.NON_EMPTY)
     public static class Pagination implements Serializable {
