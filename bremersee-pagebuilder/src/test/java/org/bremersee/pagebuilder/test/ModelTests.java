@@ -300,14 +300,13 @@ public class ModelTests {
 
             ObjectMapper om = new ObjectMapper();
 
-            // // that works
-            // AnnotationIntrospector primary = new
-            // JacksonAnnotationIntrospector();
-            // AnnotationIntrospector secondary = new
-            // JaxbAnnotationIntrospector();
-            // AnnotationIntrospector pair =
-            // AnnotationIntrospector.pair(primary, secondary);
+            //@formatter:off
+            // // instead of @JsonDeserialize(as = PageDto.class)
+            // AnnotationIntrospector primary = new JacksonAnnotationIntrospector();
+            // AnnotationIntrospector secondary = new JaxbAnnotationIntrospector();
+            // AnnotationIntrospector pair = AnnotationIntrospector.pair(primary, secondary);
             // om.setAnnotationIntrospector(pair);
+            //@formatter:on
 
             String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(pageControl);
 
