@@ -16,14 +16,9 @@
 
 package org.bremersee.pagebuilder.model;
 
-import java.io.IOException;
-import java.util.Map;
-
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.Validate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * <p>
@@ -35,34 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @XmlTransient
 public abstract class ModelUtils {
 
-    private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
-
     private ModelUtils() {
-    }
-
-    /**
-     * Transforms a JSON map to an object.
-     * 
-     * @param map
-     *            the JSON map
-     * @param valueType
-     *            the class of the target object
-     * @param objectMapper
-     *            the JSON object mapper (optional)
-     * @return the target object
-     * @throws IOException
-     *             if transformation fails
-     */
-    public static <T> T jsonMapToObject(Map<String, Object> map, Class<T> valueType, ObjectMapper objectMapper)
-            throws IOException {
-        if (map == null) {
-            return null;
-        }
-        Validate.notNull(valueType, "valueType must not be null");
-        if (objectMapper == null) {
-            objectMapper = DEFAULT_OBJECT_MAPPER;
-        }
-        return objectMapper.readValue(objectMapper.writeValueAsBytes(map), valueType);
     }
 
     /**

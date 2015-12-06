@@ -16,6 +16,13 @@
 
 package org.bremersee.pagebuilder;
 
+import java.io.IOException;
+import java.util.Map;
+
+import org.apache.commons.lang3.Validate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * <p>
  * Utility methods.
@@ -24,6 +31,8 @@ package org.bremersee.pagebuilder;
  * @author Christian Bremer
  */
 public abstract class PageBuilderUtils {
+
+    private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
     private PageBuilderUtils() {
     }
@@ -44,6 +53,31 @@ public abstract class PageBuilderUtils {
             firstResult = (long) Integer.MAX_VALUE;
         }
         return firstResult.intValue();
+    }
+
+    /**
+     * Transforms a JSON map to an object.
+     * 
+     * @param map
+     *            the JSON map
+     * @param valueType
+     *            the class of the target object
+     * @param objectMapper
+     *            the JSON object mapper (optional)
+     * @return the target object
+     * @throws IOException
+     *             if transformation fails
+     */
+    public static <T> T jsonMapToObject(Map<String, Object> map, Class<T> valueType, ObjectMapper objectMapper)
+            throws IOException {
+        if (map == null) {
+            return null;
+        }
+        Validate.notNull(valueType, "valueType must not be null");
+        if (objectMapper == null) {
+            objectMapper = DEFAULT_OBJECT_MAPPER;
+        }
+        return objectMapper.readValue(objectMapper.writeValueAsBytes(map), valueType);
     }
 
 }

@@ -28,10 +28,10 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.bremersee.comparator.model.ComparatorItem;
+import org.bremersee.pagebuilder.PageBuilderUtils;
 import org.bremersee.pagebuilder.model.MaxResultsSelectorOption;
 import org.bremersee.pagebuilder.model.MaxResultsSelectorOptionDto;
 import org.bremersee.pagebuilder.model.Page;
-import org.bremersee.pagebuilder.model.ModelUtils;
 import org.bremersee.pagebuilder.model.PageControlDto;
 import org.bremersee.pagebuilder.model.PageDto;
 import org.bremersee.pagebuilder.model.PageRequestDto;
@@ -153,10 +153,10 @@ public class ModelTests {
             Map<String, Object> map = (Map) o;
             if (map.containsKey("name")) {
                 // it's a pet
-                obj = ModelUtils.jsonMapToObject(map, Pet.class, om);
+                obj = PageBuilderUtils.jsonMapToObject(map, Pet.class, om);
             } else {
                 // it's a person
-                obj = ModelUtils.jsonMapToObject(map, Person.class, om);
+                obj = PageBuilderUtils.jsonMapToObject(map, Person.class, om);
             }
             jsonEntries.add(obj);
         }
