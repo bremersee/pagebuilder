@@ -20,11 +20,11 @@ import java.util.Collection;
 
 import org.bremersee.comparator.ObjectComparator;
 import org.bremersee.comparator.model.ComparatorItem;
-import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.model.Page;
 
 /**
  * <p>
- * A page builder creates a {@link PageDto} form a list of items.
+ * A page builder creates a {@link Page} form a list of items.
  * </p>
  * <p>
  * There are two ways to create a page:
@@ -47,25 +47,25 @@ import org.bremersee.pagebuilder.model.PageDto;
  */
 public interface PageBuilder {
 
-	/**
-	 * Creates a page with the specified parameters. The entries will not be
-	 * filtered nor sorted.
-	 * 
-	 * @param entries
-	 *            the entries on the page
-	 * @param firstResult
-	 *            the number of the first entry of all available entries
-	 * @param maxResults
-	 *            the maximum number of entries (
-	 *            {@code size of entries <= maxResults}
-	 * @param totalSize
-	 *            the size of all available entries
-	 * @param comparatorItem
-	 *            the comparator item
-	 * @return the page with specified parameters
-	 */
-	//@formatter:off
-    PageDto buildPage(
+    /**
+     * Creates a page with the specified parameters. The entries will not be
+     * filtered nor sorted.
+     * 
+     * @param entries
+     *            the entries on the page
+     * @param firstResult
+     *            the number of the first entry of all available entries
+     * @param maxResults
+     *            the maximum number of entries (
+     *            {@code size of entries <= maxResults}
+     * @param totalSize
+     *            the size of all available entries
+     * @param comparatorItem
+     *            the comparator item
+     * @return the page with specified parameters
+     */
+    //@formatter:off
+    Page buildPage(
     		Collection<? extends Object> entries, 
     		Integer firstResult, 
     		Integer maxResults, 
@@ -73,35 +73,35 @@ public interface PageBuilder {
             ComparatorItem comparatorItem);
 	//@formatter:on
 
-	/**
-	 * Creates a page with the specified parameters. The entries will be
-	 * filtered:
-	 * <ul>
-	 * <li>First sort the entries, if an object comparator is present.</li>
-	 * <li>Than get all accepted items, if a filter is present.</li>
-	 * <li>Add {@code maxResults} items from {@code firstResult} position to the
-	 * page.</li>
-	 * <li>The total size attribute of the page is the size of the specified
-	 * entries.</li>
-	 * </ul>
-	 * 
-	 * @param entries
-	 *            all available entries that should be filtered by
-	 *            {@code firstResult}, {@code maxResults} and {@code filter},
-	 *            the total size is the size of the entries
-	 * @param firstResult
-	 *            the number of the first entry of the specified entries
-	 * @param maxResults
-	 *            the maximum number of entries (
-	 *            {@code size of page <= maxResults})
-	 * @param objectComparator
-	 *            an object comparator (optional)
-	 * @param filter
-	 *            a filter to get accepted items (optional)
-	 * @return the page with filtered entries
-	 */
-	//@formatter:off
-    PageDto buildFilteredPage(
+    /**
+     * Creates a page with the specified parameters. The entries will be
+     * filtered:
+     * <ul>
+     * <li>First sort the entries, if an object comparator is present.</li>
+     * <li>Than get all accepted items, if a filter is present.</li>
+     * <li>Add {@code maxResults} items from {@code firstResult} position to the
+     * page.</li>
+     * <li>The total size attribute of the page is the size of the specified
+     * entries.</li>
+     * </ul>
+     * 
+     * @param entries
+     *            all available entries that should be filtered by
+     *            {@code firstResult}, {@code maxResults} and {@code filter},
+     *            the total size is the size of the entries
+     * @param firstResult
+     *            the number of the first entry of the specified entries
+     * @param maxResults
+     *            the maximum number of entries (
+     *            {@code size of page <= maxResults})
+     * @param objectComparator
+     *            an object comparator (optional)
+     * @param filter
+     *            a filter to get accepted items (optional)
+     * @return the page with filtered entries
+     */
+    //@formatter:off
+    Page buildFilteredPage(
     		Collection<? extends Object> entries, 
     		Integer firstResult,
     		Integer maxResults,

@@ -27,8 +27,8 @@ import org.bremersee.comparator.model.ComparatorItem;
 import org.bremersee.pagebuilder.PageBuilderUtils;
 import org.bremersee.pagebuilder.PageControlFactory;
 import org.bremersee.pagebuilder.example.service.PersonService;
+import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageControl;
-import org.bremersee.pagebuilder.model.PageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -90,13 +90,13 @@ public class RestfulSelectorController {
 
         ComparatorItem comparatorItem = comparatorItemTransformer.fromString(comparator, false, null);
 
-        PageDto pageDto = personService.findPersons(
+        Page page = personService.findPersons(
                 query, 
                 PageBuilderUtils.getFirstResult(pageNumber, maxResults), 
                 maxResults, 
                 comparatorItem);
 
-        PageControl pageControl = pageControlFactory.newPageControl(pageDto, "restful-selector.html", query, resolveLocale(request));
+        PageControl pageControl = pageControlFactory.newPageControl(page, "restful-selector.html", query, resolveLocale(request));
 
         model.addAttribute("pageControl", pageControl);
 

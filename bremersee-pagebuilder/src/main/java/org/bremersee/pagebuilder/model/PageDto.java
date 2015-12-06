@@ -16,11 +16,11 @@
 
 package org.bremersee.pagebuilder.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
@@ -30,26 +30,71 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.bremersee.comparator.model.ComparatorItem;
+import org.bremersee.pagebuilder.PageBuilderUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * <p>
- * A page consist at least a list of items. Furthermore it may has
- * information about the size of all available items, the number of the first
- * item of this page, the maximum number of items and how they are sorted.
+ * A page consist at least a list of items. Furthermore it may has information
+ * about the size of all available items, the number of the first item of this
+ * page, the maximum number of items and how they are sorted.
+ * </p>
+ * <p>
+ * This page implementation can be processed by a {@link JAXBContext} and a
+ * Jackson JSON Processor.
  * </p>
  * 
  * @author Christian Bremer
  */
+//@formatter:off
 @XmlRootElement(name = "page")
-@XmlType(name = "pageType", propOrder = { "totalSize", "firstResult", "maxResults", "comparatorItem", "entries" })
+@XmlType(name = "pageType", propOrder = { 
+		"totalSize", 
+		"firstResult", 
+		"maxResults", 
+		"comparatorItem", 
+		"entries" 
+})
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, 
+    getterVisibility = Visibility.NONE, 
+    creatorVisibility = Visibility.NONE, 
+    isGetterVisibility = Visibility.NONE, 
+    setterVisibility = Visibility.NONE)
 @JsonInclude(Include.NON_EMPTY)
-public class PageDto implements Serializable {
+@JsonPropertyOrder(value = {
+        "totalSize", 
+        "firstResult", 
+        "maxResults", 
+        "comparatorItem", 
+        "entries" 
+})
+//@formatter:on
+public class PageDto implements Page {
+
+    /**
+     * If the given page is {@code null}, {@code null} will be returned.<br/>
+     * If the given page is an instance of {@code PageDto}, that instance will
+     * be returned. Otherwise a new instance will be created.
+     * 
+     * @param page
+     *            a page
+     */
+    public static PageDto toPageDto(Page page) {
+        if (page == null) {
+            return null;
+        }
+        if (page instanceof PageDto) {
+            return (PageDto) page;
+        }
+        return new PageDto(page);
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -77,6 +122,46 @@ public class PageDto implements Serializable {
      * Default constructor.
      */
     public PageDto() {
+    }
+
+    /**
+     * Creates a page with the given parameters.
+     * 
+     * @param totalSize
+     *            the size of all available entries
+     * @param firstResult
+     *            the first result number
+     * @param maxResults
+     *            the maximum number of results
+     * @param comparatorItem
+     *            the comparator item
+     * @param entries
+     *            the entries of this page
+     */
+    public PageDto(Integer totalSize, Integer firstResult, Integer maxResults, ComparatorItem comparatorItem,
+            List<Object> entries) {
+        super();
+        this.totalSize = totalSize;
+        this.firstResult = firstResult;
+        this.maxResults = maxResults;
+        this.comparatorItem = comparatorItem;
+        setEntries(entries);
+    }
+
+    /**
+     * Creates a page from another page.
+     * 
+     * @param page
+     *            the other page
+     */
+    public PageDto(Page page) {
+        if (page != null) {
+            this.totalSize = page.getTotalSize();
+            this.firstResult = page.getFirstResult();
+            this.maxResults = page.getMaxResults();
+            this.comparatorItem = page.getComparatorItem();
+            setEntries(page.getEntries());
+        }
     }
 
     /*
@@ -154,6 +239,7 @@ public class PageDto implements Serializable {
      * 
      * @return the size of all available entries (may be {@code null})
      */
+    @Override
     public Integer getTotalSize() {
         return totalSize;
     }
@@ -173,6 +259,7 @@ public class PageDto implements Serializable {
      * 
      * @return the first result number
      */
+    @Override
     public Integer getFirstResult() {
         return firstResult;
     }
@@ -187,48 +274,24 @@ public class PageDto implements Serializable {
         this.firstResult = firstResult;
     }
 
-    /**
-     * Calculate the previous first result number. It requires that
-     * {@code totalSize}, {@code maxResults} and {@code firstResult} are set.
-     * Otherwise {@code null} will be returned.<br/>
-     * If the previous first number is smaller than {@code 0}, {@code null} will
-     * be returned, too.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the previous first result number or {@code null}
+     * @see org.bremersee.pagebuilder.model.Page#getPreviousFirstResult()
      */
-    @JsonIgnore
+    @Override
     public Integer getPreviousFirstResult() {
-
-        if (getTotalSize() != null && getFirstResult() != null && getMaxResults() != null) {
-            long previous = getFirstResult() - getMaxResults();
-            if (previous <= Integer.MIN_VALUE) {
-                return null;
-            }
-            return (int) previous < 0 ? null : (int) previous;
-        }
-        return null;
+        return PageBuilderUtils.getPreviousFirstResult(this);
     }
 
-    /**
-     * Calculate the next first result number. It requires that
-     * {@code totalSize}, {@code maxResults} and {@code firstResult} are set.
-     * Otherwise {@code null} will be returned.<br/>
-     * If the next first number is bigger than {@link Integer#MAX_VALUE} or
-     * {@code totalSize}, {@code null} will be returned, too.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the next first result number or {@code null}
+     * @see org.bremersee.pagebuilder.model.Page#getNextFirstResult()
      */
-    @JsonIgnore
+    @Override
     public Integer getNextFirstResult() {
-
-        if (getTotalSize() != null && getFirstResult() != null && getMaxResults() != null) {
-            long next = getFirstResult() + getMaxResults();
-            if (next >= Integer.MAX_VALUE) {
-                return null;
-            }
-            return (int) next >= getTotalSize() ? null : (int) next;
-        }
-        return null;
+        return PageBuilderUtils.getNextFirstResult(this);
     }
 
     /**
@@ -236,6 +299,7 @@ public class PageDto implements Serializable {
      * 
      * @return the maximum number of results
      */
+    @Override
     public Integer getMaxResults() {
         return maxResults;
     }
@@ -250,69 +314,34 @@ public class PageDto implements Serializable {
         this.maxResults = maxResults;
     }
 
-    /**
-     * Calculate the number of available pages. It requires that
-     * {@code totalSize} and {@code maxResults} are set. Otherwise {@code null}
-     * will be returned.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the number of available pages or {@code null}
+     * @see org.bremersee.pagebuilder.model.Page#getPageSize()
      */
-    @JsonIgnore
+    @Override
     public Integer getPageSize() {
-        if (getTotalSize() != null && getMaxResults() != null && getMaxResults() > 0) {
-            return Double.valueOf(Math.ceil((double) getTotalSize() / (double) getMaxResults())).intValue();
-        }
-        return null;
+        return PageBuilderUtils.getPageSize(this);
     }
 
-    /**
-     * Calculate the current page number. It requires that {@code totalSize} and
-     * {@code maxResults} are set. Otherwise {@code null} will be returned.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the current page number or {@code null}
+     * @see org.bremersee.pagebuilder.model.Page#getCurrentPage()
      */
-    @JsonIgnore
+    @Override
     public Integer getCurrentPage() {
-        if (getFirstResult() != null && getMaxResults() != null && getMaxResults() > 0) {
-            return Double.valueOf(Math.floor((double) getFirstResult() / (double) getMaxResults())).intValue();
-        }
-        return null;
+        return PageBuilderUtils.getCurrentPage(this);
     }
 
-    /**
-     * Calculate the pagination size depending on the number of fields (
-     * {@code fieldSize}). It requires the the page size is not {@code null}.
+    /*
+     * (non-Javadoc)
      * 
-     * <pre>
-     *    ---    ---    ---    ---    ---      ---    ---    ---    ---
-     *   | 1 |  | 2 |  | 3 |  | 4 |  | 5 |    | 6 |  | 7 |  | 8 |  | 9 | 
-     *    ---    ---    ---    ---    ---      ---    ---    ---    ---
-     *   Page1  Page2  Page3  Page4  Page5    Page6  Page7  Page8  Page9
-     *   |                               |    |                               |
-     *    -------------------------------      -------------------------------
-     *              field size                           field size
-     *   |                                                                    |
-     *    --------------------------------------------------------------------
-     *                            pagination size = 2
-     * </pre>
-     * 
-     * @param fieldSize
-     *            the field size
-     * @return the pagination size or {@code null}
+     * @see org.bremersee.pagebuilder.model.Page#getPaginationSize(int)
      */
+    @Override
     public Integer getPaginationSize(int fieldSize) {
-
-        Integer pageSize = getPageSize();
-        if (pageSize != null) {
-            if (pageSize == 0) {
-                return 0;
-            }
-            if (fieldSize < pageSize) {
-                fieldSize = pageSize;
-            }
-            return Double.valueOf(Math.ceil((double) pageSize / (double) fieldSize)).intValue();
-        }
-        return null;
+        return PageBuilderUtils.getPaginationSize(this, fieldSize);
     }
 
     /**
@@ -320,6 +349,7 @@ public class PageDto implements Serializable {
      * 
      * @return the comparator item
      */
+    @Override
     public ComparatorItem getComparatorItem() {
         return comparatorItem;
     }
@@ -341,6 +371,7 @@ public class PageDto implements Serializable {
      * 
      * @return the entries of this page
      */
+    @Override
     public List<Object> getEntries() {
         return entries;
     }

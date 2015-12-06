@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
+package org.bremersee.pagebuilder.model;
+
+import java.io.Serializable;
+
 /**
  * @author Christian Bremer
+ *
  */
-//@formatter:off
-@javax.xml.bind.annotation.XmlSchema(
-        namespace = "http://bremersee.org/xmlschemas/pagebuilder/v1/test", 
-        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-//@formatter:on
-package org.bremersee.pagebuilder.test.model;
+public interface PaginationButton extends Serializable {
+
+    int getPageNumber();
+
+    boolean isActive();
+
+    String getUrl();
+
+}

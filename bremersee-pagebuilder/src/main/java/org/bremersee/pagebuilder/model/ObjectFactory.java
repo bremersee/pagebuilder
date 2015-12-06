@@ -23,15 +23,15 @@ import javax.xml.bind.annotation.XmlRegistry;
  */
 @XmlRegistry
 public class ObjectFactory {
-    
+
     public PageControlDto createPageControlDto() {
         return new PageControlDto();
     }
-    
+
     public PageDto createPageDto() {
         return new PageDto();
     }
-    
+
     public PageRequestDto createPageRequestDto() {
         return new PageRequestDto();
     }

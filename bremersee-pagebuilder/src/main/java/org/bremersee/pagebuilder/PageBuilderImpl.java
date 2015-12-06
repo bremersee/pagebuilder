@@ -33,100 +33,114 @@ import org.bremersee.pagebuilder.model.PageDto;
  * @author Christian Bremer
  */
 public class PageBuilderImpl implements PageBuilder {
-	
+
     /**
      * An optional filter.
      */
-	private PageBuilderFilter pageBuilderFilter;
-	
-	/**
-	 * Return the filter for this page builder or {@code null} if no filter is present.
-	 * @return the filter or {@code null}
-	 */
-	protected PageBuilderFilter getPageBuilderFilter() {
+    private PageBuilderFilter pageBuilderFilter;
+
+    /**
+     * Return the filter for this page builder or {@code null} if no filter is
+     * present.
+     * 
+     * @return the filter or {@code null}
+     */
+    protected PageBuilderFilter getPageBuilderFilter() {
         return pageBuilderFilter;
     }
 
-	/**
-	 * Set the filter for this page builder.
-	 * @param pageBuilderFilter the filter for this page builder
-	 */
+    /**
+     * Set the filter for this page builder.
+     * 
+     * @param pageBuilderFilter
+     *            the filter for this page builder
+     */
     public void setPageBuilderFilter(PageBuilderFilter pageBuilderFilter) {
         this.pageBuilderFilter = pageBuilderFilter;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
-	public String toString() {
-		return getClass().getName();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.bremersee.pagebuilder.PageBuilder#buildPage(java.util.Collection, java.lang.Integer, java.lang.Integer, java.lang.Integer, org.bremersee.comparator.model.ComparatorItem)
-	 */
-	@Override
-	public PageDto buildPage(Collection<? extends Object> entries,
-			Integer firstResult, Integer maxResults, Integer totalSize, ComparatorItem comparatorItem) {
-		
-		PageDto page = new PageDto();
-		page.setComparatorItem(comparatorItem);
-		page.setFirstResult(firstResult);
-		page.setMaxResults(maxResults);
-		page.setTotalSize(totalSize);
-		if (entries != null) {
-			page.getEntries().addAll(entries);
-		}
-		return page;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.bremersee.pagebuilder.PageBuilder#buildFilteredPage(java.util.Collection, java.lang.Integer, java.lang.Integer, org.bremersee.comparator.ObjectComparator, java.lang.Object)
-	 */
-	@Override
-	public PageDto buildFilteredPage(Collection<? extends Object> entries,
-			Integer firstResult, Integer maxResults,
-			ObjectComparator objectComparator, Object permission) {
-		
-		final int _firstResult = firstResult == null || firstResult < 0 ? 0 : firstResult;
-		final int _maxResults = maxResults == null || maxResults < 0 ? Integer.MAX_VALUE : maxResults;
-		
-		PageDto page = new PageDto();
-		
-		int n = 0;
-		if (entries != null) {
-			
-			if (objectComparator != null) {
-				if (!(entries instanceof List)) {
-					entries = new ArrayList<Object>(entries);
-				}
-				Collections.sort((List<?>)entries, objectComparator);
-				page.setComparatorItem(objectComparator.getComparatorItem());
-			}
-			
-			for (final Object entry : entries) {
-				
-				if (permission == null || accept(entry, permission)) {
-					
-					if (_firstResult <= n && page.getEntries().size() < _maxResults) {
-						page.getEntries().add(entry);
-					}
-					n++;
-				}
-			}
-		}
-		
-		page.setFirstResult(_firstResult);
-		page.setMaxResults(_maxResults);
-		page.setTotalSize(n);
-		return page;
-	}
-	
-	private boolean accept(Object entry, Object filter) {
-		if (pageBuilderFilter != null) {
-			return pageBuilderFilter.accept(entry, filter);
-		}
-		return true;
-	}
+    public String toString() {
+        return getClass().getName();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bremersee.pagebuilder.PageBuilder#buildPage(java.util.Collection,
+     * java.lang.Integer, java.lang.Integer, java.lang.Integer,
+     * org.bremersee.comparator.model.ComparatorItem)
+     */
+    @Override
+    public PageDto buildPage(Collection<? extends Object> entries, Integer firstResult, Integer maxResults,
+            Integer totalSize, ComparatorItem comparatorItem) {
+
+        PageDto page = new PageDto();
+        page.setComparatorItem(comparatorItem);
+        page.setFirstResult(firstResult);
+        page.setMaxResults(maxResults);
+        page.setTotalSize(totalSize);
+        if (entries != null) {
+            page.getEntries().addAll(entries);
+        }
+        return page;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.PageBuilder#buildFilteredPage(java.util.
+     * Collection, java.lang.Integer, java.lang.Integer,
+     * org.bremersee.comparator.ObjectComparator, java.lang.Object)
+     */
+    @Override
+    public PageDto buildFilteredPage(Collection<? extends Object> entries, Integer firstResult, Integer maxResults,
+            ObjectComparator objectComparator, Object permission) {
+
+        final int _firstResult = firstResult == null || firstResult < 0 ? 0 : firstResult;
+        final int _maxResults = maxResults == null || maxResults < 0 ? Integer.MAX_VALUE : maxResults;
+
+        PageDto page = new PageDto();
+
+        int n = 0;
+        if (entries != null) {
+
+            if (objectComparator != null) {
+                if (!(entries instanceof List)) {
+                    entries = new ArrayList<Object>(entries);
+                }
+                Collections.sort((List<?>) entries, objectComparator);
+                page.setComparatorItem(objectComparator.getComparatorItem());
+            }
+
+            for (final Object entry : entries) {
+
+                if (permission == null || accept(entry, permission)) {
+
+                    if (_firstResult <= n && page.getEntries().size() < _maxResults) {
+                        page.getEntries().add(entry);
+                    }
+                    n++;
+                }
+            }
+        }
+
+        page.setFirstResult(_firstResult);
+        page.setMaxResults(_maxResults);
+        page.setTotalSize(n);
+        return page;
+    }
+
+    private boolean accept(Object entry, Object filter) {
+        if (pageBuilderFilter != null) {
+            return pageBuilderFilter.accept(entry, filter);
+        }
+        return true;
+    }
 }

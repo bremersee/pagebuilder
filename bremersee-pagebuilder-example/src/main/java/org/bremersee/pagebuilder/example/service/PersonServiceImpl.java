@@ -24,7 +24,7 @@ import org.bremersee.comparator.model.ComparatorItem;
 import org.bremersee.pagebuilder.PageBuilder;
 import org.bremersee.pagebuilder.example.domain.Person;
 import org.bremersee.pagebuilder.example.domain.PersonRepository;
-import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.model.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +47,7 @@ public class PersonServiceImpl implements PersonService {
      * @see org.bremersee.comparator.example.service.PersonService#findPersons(java.lang.String, java.lang.Integer, java.lang.Integer, org.bremersee.comparator.model.ComparatorItem)
      */
     @Override
-    public PageDto findPersons(String query, Integer firstResult, Integer maxResults, ComparatorItem comparatorItem) {
+    public Page findPersons(String query, Integer firstResult, Integer maxResults, ComparatorItem comparatorItem) {
 
         if (comparatorItem == null) {
             comparatorItem = new ComparatorItem("id", true);
@@ -56,8 +56,8 @@ public class PersonServiceImpl implements PersonService {
         ObjectComparator objectComparator = objectComparatorFactory.newObjectComparator(comparatorItem);
         
         List<Person> persons = personRepository.findByQuery(query);
-        PageDto pageDto = pageBuilder.buildFilteredPage(persons, firstResult, maxResults, objectComparator, null);
-        return pageDto;
+        Page page = pageBuilder.buildFilteredPage(persons, firstResult, maxResults, objectComparator, null);
+        return page;
     }
     
 }

@@ -39,15 +39,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @XmlAttribute(required = true)
     @JsonProperty(required = true)
     private String firstname;
-    
+
     @XmlAttribute(required = true)
     @JsonProperty(required = true)
     private String lastname;
-    
+
     @XmlElement(required = false)
     @JsonProperty(required = false)
     @JsonInclude(Include.NON_NULL)

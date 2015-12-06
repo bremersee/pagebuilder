@@ -27,11 +27,11 @@ public class ObjectFactory {
     public Address createAddress() {
         return new Address();
     }
-    
+
     public Person createPerson() {
         return new Person();
     }
-    
+
     public Pet createPet() {
         return new Pet();
     }

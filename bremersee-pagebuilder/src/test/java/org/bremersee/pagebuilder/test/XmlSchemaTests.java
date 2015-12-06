@@ -31,11 +31,13 @@ public class XmlSchemaTests {
 
     @Before
     public void createJAXBContext() throws JAXBException {
+        //@formatter:off
         this.jaxbContext = JAXBContext.newInstance(
                 org.bremersee.comparator.model.ObjectFactory.class.getPackage().getName()
                 + ":"
                 + org.bremersee.pagebuilder.model.ObjectFactory.class.getPackage().getName()
                 );
+        //@formatter:on
     }
 
     @Test
@@ -49,5 +51,5 @@ public class XmlSchemaTests {
 
         System.out.println("OK\n");
     }
-    
+
 }

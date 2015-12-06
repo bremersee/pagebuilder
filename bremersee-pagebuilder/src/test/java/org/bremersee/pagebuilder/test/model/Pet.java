@@ -35,11 +35,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Pet implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @XmlAttribute(required = true)
     @JsonProperty(required = true)
     private String name;
-    
+
     public Pet() {
     }
 

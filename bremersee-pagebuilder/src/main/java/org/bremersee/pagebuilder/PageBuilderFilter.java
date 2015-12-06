@@ -30,25 +30,25 @@ public interface PageBuilderFilter {
     /**
      * Determines whether an item should be added to a page or not.
      * 
-     * @param targetDomainObject
+     * @param pageItem
      *            the item that can be accepted or not
      * @param filter
      *            the filter
      * @return {@code true} if the item is accepted otherwise {@code false}
      */
-    boolean accept(Object targetDomainObject, Object filter);
+    boolean accept(Object pageItem, Object filter);
 
     /**
      * Determines whether an item should be added to a page or not.
      * 
-     * @param targetId
+     * @param pageItemId
      *            the ID of the item
-     * @param targetType
+     * @param pageItemType
      *            the type (class) of the item
      * @param filter
      *            the filter
      * @return {@code true} if the item is accepted otherwise {@code false}
      */
-    boolean accept(Serializable targetId, String targetType, Object filter);
+    boolean accept(Serializable pageItemId, String pageItemType, Object filter);
 
 }

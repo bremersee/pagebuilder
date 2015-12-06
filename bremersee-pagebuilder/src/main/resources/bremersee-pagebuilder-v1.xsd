@@ -95,7 +95,7 @@
 
   <xs:complexType name="maxResultsSelectorOptionType">
     <xs:sequence>
-      <xs:element name="pageNumber" type="xs:int"/>
+      <xs:element name="value" type="xs:int"/>
       <xs:element name="displayedValue" type="xs:string" minOccurs="0"/>
       <xs:element name="selected" type="xs:boolean"/>
     </xs:sequence>

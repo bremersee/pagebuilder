@@ -16,8 +16,6 @@
 
 package org.bremersee.pagebuilder.model;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
@@ -27,18 +25,60 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.bremersee.comparator.model.ComparatorItem;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 
 /**
  * @author Christian Bremer
  */
+//@formatter:off
 @XmlRootElement(name = "pageRequest")
-@XmlType(name = "pageRequestType", propOrder = { "firstResult", "maxResults", "comparatorItem", "query", "extension" })
+@XmlType(name = "pageRequestType", propOrder = { 
+		"firstResult", 
+		"maxResults", 
+		"comparatorItem", 
+		"query", 
+		"extension" 
+})
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonAutoDetect(fieldVisibility = Visibility.ANY, 
+    getterVisibility = Visibility.NONE, 
+    creatorVisibility = Visibility.NONE, 
+    isGetterVisibility = Visibility.NONE, 
+    setterVisibility = Visibility.NONE)
 @JsonInclude(Include.NON_EMPTY)
-public class PageRequestDto implements Serializable {
+@JsonPropertyOrder(value = {
+        "firstResult", 
+        "maxResults", 
+        "comparatorItem", 
+        "query", 
+        "extension" 
+})
+//@formatter:on
+public class PageRequestDto implements PageRequest {
+
+    /**
+     * If the given page request is {@code null}, {@code null} will be returned.
+     * <br/>
+     * If the given page request is an instance of {@code PageRequestDto}, that
+     * instance will be returned. Otherwise a new instance will be created.
+     * 
+     * @param pageRequest
+     *            a page request
+     */
+    public static PageRequestDto toPageRequestDto(PageRequest pageRequest) {
+        if (pageRequest == null) {
+            return null;
+        }
+        if (pageRequest instanceof PageRequestDto) {
+            return (PageRequestDto) pageRequest;
+        }
+        return new PageRequestDto(pageRequest);
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -112,7 +152,25 @@ public class PageRequestDto implements Serializable {
         this.extension = extension;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Creates a page request from the given one.
+     * 
+     * @param pageRequest
+     *            a page request
+     */
+    public PageRequestDto(PageRequest pageRequest) {
+        if (pageRequest != null) {
+            this.firstResult = pageRequest.getFirstResult();
+            this.maxResults = pageRequest.getMaxResults();
+            this.comparatorItem = pageRequest.getComparatorItem();
+            this.query = pageRequest.getQuery();
+            this.extension = pageRequest.getExtension();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -121,7 +179,9 @@ public class PageRequestDto implements Serializable {
                 + comparatorItem + ", query=" + query + ", extension=" + extension + "]";
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -136,7 +196,9 @@ public class PageRequestDto implements Serializable {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -181,6 +243,7 @@ public class PageRequestDto implements Serializable {
      * 
      * @return the first result
      */
+    @Override
     public Integer getFirstResult() {
         return firstResult;
     }
@@ -200,6 +263,7 @@ public class PageRequestDto implements Serializable {
      * 
      * @return the number of maximum results
      */
+    @Override
     public Integer getMaxResults() {
         return maxResults;
     }
@@ -219,6 +283,7 @@ public class PageRequestDto implements Serializable {
      * 
      * @return the comparator item
      */
+    @Override
     public ComparatorItem getComparatorItem() {
         return comparatorItem;
     }
@@ -238,6 +303,7 @@ public class PageRequestDto implements Serializable {
      * 
      * @return the search query
      */
+    @Override
     public String getQuery() {
         return query;
     }
@@ -257,6 +323,7 @@ public class PageRequestDto implements Serializable {
      * 
      * @return a custom extension
      */
+    @Override
     public Object getExtension() {
         return extension;
     }
