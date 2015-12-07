@@ -152,6 +152,13 @@ class DefaultPageControlFactory extends PageControlFactory {
                 && pageNumber < page.getPageSize(); pageNumber++) {
             pagination.getButtons().add(pagination.getAllButtons().get(pageNumber));
         }
+        
+        while (page.getPageSize() >= maxPaginationButtons
+                && pageNumberOfFirstButton - 1 >= 0
+                && pagination.getButtons().size() < maxPaginationButtons) {
+            pageNumberOfFirstButton = pageNumberOfFirstButton - 1;
+            pagination.getButtons().add(0, pagination.getAllButtons().get(pageNumberOfFirstButton));
+        }
 
         boolean firstPageDisabled = page.getCurrentPage() == 0;
         String firstPageUrl = firstPageDisabled ? "#"
