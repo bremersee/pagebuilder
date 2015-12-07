@@ -20,7 +20,7 @@ import org.bremersee.comparator.model.ComparatorItem;
 import org.bremersee.pagebuilder.model.Page;
 
 /**
- * @author Christian Bremer <a href="mailto:christian@bremersee.org">christian@bremersee.org</a>
+ * @author Christian Bremer
  */
 public interface PersonService {
     

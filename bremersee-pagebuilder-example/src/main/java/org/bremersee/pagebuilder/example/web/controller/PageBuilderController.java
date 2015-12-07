@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.LocaleResolver;
 
 /**
- * @author Christian Bremer <a href="mailto:christian@bremersee.org">christian@bremersee.org</a>
+ * @author Christian Bremer
  */
 @Controller
 public class PageBuilderController {

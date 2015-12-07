@@ -22,7 +22,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
- * @author Christian Bremer <a href="mailto:christian@bremersee.org">christian@bremersee.org</a>
+ * @author Christian Bremer
  */
 @Component
 public class PersonRepositoryImpl implements PersonRepository {

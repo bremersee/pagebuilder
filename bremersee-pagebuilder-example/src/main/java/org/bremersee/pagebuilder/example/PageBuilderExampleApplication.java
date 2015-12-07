@@ -26,7 +26,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- * @author Christian Bremer <a href="mailto:christian@bremersee.org">christian@bremersee.org</a>
+ * @author Christian Bremer
  */
 @SpringBootApplication
 public class PageBuilderExampleApplication {

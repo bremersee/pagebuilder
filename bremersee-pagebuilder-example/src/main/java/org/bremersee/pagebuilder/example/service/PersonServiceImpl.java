@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author Christian Bremer <a href="mailto:christian@bremersee.org">christian@bremersee.org</a>
+ * @author Christian Bremer
  */
 @Service
 public class PersonServiceImpl implements PersonService {

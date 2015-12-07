@@ -19,7 +19,7 @@ package org.bremersee.pagebuilder.example.domain;
 import java.io.Serializable;
 
 /**
- * @author Christian Bremer <a href="mailto:christian@bremersee.org">christian@bremersee.org</a>
+ * @author Christian Bremer
  */
 public class Person implements Serializable {
 
