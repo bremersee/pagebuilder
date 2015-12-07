@@ -41,7 +41,7 @@ import org.springframework.web.servlet.LocaleResolver;
  * @author Christian Bremer <a href="mailto:christian@bremersee.org">christian@bremersee.org</a>
  */
 @Controller
-public class RestfulSelectorController {
+public class PageBuilderController {
 
     @Autowired
     protected PersonService personService;
@@ -81,7 +81,7 @@ public class RestfulSelectorController {
         return locale;
     }
 
-    @RequestMapping(value = "/restful-selector.html", method = RequestMethod.GET)
+    @RequestMapping(value = "/restful.html", method = RequestMethod.GET)
     public String displayRestful(HttpServletRequest request, Model model,
             @RequestParam(value = "q", defaultValue = "") String query,
             @RequestParam(value = "max", defaultValue = "4") int maxResults,
@@ -96,10 +96,11 @@ public class RestfulSelectorController {
                 maxResults, 
                 comparatorItem);
 
-        PageControl pageControl = pageControlFactory.newPageControl(page, "restful-selector.html", query, resolveLocale(request));
+        PageControl pageControl = pageControlFactory.newPageControl(page, "restful.html", query, resolveLocale(request));
 
         model.addAttribute("pageControl", pageControl);
 
-        return "restful-selector";
+        return "restful";
     }
+    
 }

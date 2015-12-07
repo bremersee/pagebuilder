@@ -23,6 +23,13 @@
             <h1>Bremersee PageBuilder Example</h1>
         </div>
         
+        <div style="padding-bottom: 24px;">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="restful.html">Restful</a></li>
+                <li role="presentation" class="disabled"><a href="#">Ajax</a></li>
+            </ul>
+        </div>
+        
         <nav class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -106,11 +113,11 @@
                         <span>#</span>
                         <span>
                             <a class="dropup" href="#" 
-                               th:href="@{restful-selector.html(c='id,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='id,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
                                 <span class="caret"></span>
                             </a>
                             <a class="dropdown" href="#" 
-                               th:href="@{restful-selector.html(c='id,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='id,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
                                 <span class="caret"></span>
                             </a>
                         </span>
@@ -119,11 +126,11 @@
                         <span>First Name</span>
                         <span>
                             <a class="dropup" href="#" 
-                               th:href="@{restful-selector.html(c='firstname,asc|lastname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='firstname,asc|lastname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
                                 <span class="caret"></span>
                             </a>
                             <a class="dropdown" href="#" 
-                               th:href="@{restful-selector.html(c='firstname,desc|lastname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='firstname,desc|lastname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
                                 <span class="caret"></span>
                             </a>
                         </span>
@@ -132,11 +139,11 @@
                         <span>Last Name</span>
                         <span>
                             <a class="dropup" href="#" 
-                               th:href="@{restful-selector.html(c='lastname,asc|firstname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='lastname,asc|firstname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
                                 <span class="caret"></span>
                             </a>
                             <a class="dropdown" href="#" 
-                               th:href="@{restful-selector.html(c='lastname,desc|firstname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='lastname,desc|firstname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
                                 <span class="caret"></span>
                             </a>
                         </span>
@@ -148,11 +155,11 @@
                         <span>City</span>
                         <span>
                             <a class="dropup" href="#" 
-                               th:href="@{restful-selector.html(c='address.city,asc|lastname,asc|firstname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='address.city,asc|lastname,asc|firstname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
                                 <span class="caret"></span>
                             </a>
                             <a class="dropdown" href="#" 
-                               th:href="@{restful-selector.html(c='address.city,desc|lastname,desc|firstname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='address.city,desc|lastname,desc|firstname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
                                 <span class="caret"></span>
                             </a>
                         </span>
@@ -174,6 +181,35 @@
             </tbody>
         </table>
         
+        <div style="text-align: center;">
+            <nav style="display: inline-block;">
+                <ul class="pagination">
+                    <li th:class="${pageControl.pagination.firstPageButton.active} ? '' : 'disabled'">
+                        <a href="#" th:href="@{${pageControl.pagination.firstPageButton.url}}" aria-label="First">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:class="${pageControl.pagination.previousPageButton.active} ? '' : 'disabled'">
+                        <a href="#" th:href="@{${pageControl.pagination.previousPageButton.url}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="button : ${pageControl.pagination.buttons}" th:class="${button.active} ? 'active' : ''">
+                        <a href="#" th:href="@{${button.url}}" th:text="${button.displayedPageNumber}">1</a>
+                    </li>
+                    <li th:class="${pageControl.pagination.nextPageButton.active} ? '' : 'disabled'">
+                        <a href="#" th:href="@{${pageControl.pagination.nextPageButton.url}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li th:class="${pageControl.pagination.lastPageButton.active} ? '' : 'disabled'">
+                        <a href="#" th:href="@{${pageControl.pagination.lastPageButton.url}}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </body>
 </html>
