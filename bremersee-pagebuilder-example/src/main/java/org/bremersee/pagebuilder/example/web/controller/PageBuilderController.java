@@ -24,17 +24,20 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.bremersee.comparator.ComparatorItemTransformer;
 import org.bremersee.comparator.model.ComparatorItem;
-import org.bremersee.pagebuilder.PageBuilderUtils;
 import org.bremersee.pagebuilder.PageControlFactory;
 import org.bremersee.pagebuilder.example.service.PersonService;
-import org.bremersee.pagebuilder.model.Page;
-import org.bremersee.pagebuilder.model.PageControl;
+import org.bremersee.pagebuilder.model.PageControlDto;
+import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.model.PageRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 
 /**
@@ -59,13 +62,13 @@ public class PageBuilderController {
         pageControlFactory = PageControlFactory.newInstance()
                 .setComparatorItemTransformer(comparatorItemTransformer)
                 .setComparatorParamName("c")
-                .setMaxResultsParamName("max")
-                .setMaxResultsSelectorMaxValue(6)
-                .setMaxResultsSelectorMinValue(2)
-                .setMaxResultsSelectorStep(2).setPageNumberParamName("p")
+                .setPageSizeParamName("s")
+                .setPageSizeSelectorMaxValue(6)
+                .setPageSizeSelectorMinValue(2)
+                .setPageSizeSelectorStep(2).setPageNumberParamName("p")
                 .setQueryParamName("q")
                 .setQuerySupported(true)
-                .setSelectAllResultsAvailable(true);
+                .setSelectAllEntriesAvailable(true);
     }
     
     protected Locale resolveLocale(HttpServletRequest request) {
@@ -83,24 +86,62 @@ public class PageBuilderController {
 
     @RequestMapping(value = "/restful.html", method = RequestMethod.GET)
     public String displayRestful(HttpServletRequest request, Model model,
-            @RequestParam(value = "q", defaultValue = "") String query,
-            @RequestParam(value = "max", defaultValue = "4") int maxResults,
             @RequestParam(value = "p", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "s", defaultValue = "4") int pageSize,
+            @RequestParam(value = "q", defaultValue = "") String query,
             @RequestParam(value = "c", defaultValue = "") String comparator) {
 
-        ComparatorItem comparatorItem = comparatorItemTransformer.fromString(comparator, false, null);
+        if (StringUtils.isBlank(comparator)) {
+            comparator = comparatorItemTransformer.toString(new ComparatorItem("id"), false, null);
+        }
+        
+        PageRequestDto pageRequest = new PageRequestDto(pageNumber, pageSize, comparatorItemTransformer.fromString(comparator, false, null), query);
 
-        Page page = personService.findPersons(
-                query, 
-                PageBuilderUtils.getFirstResult(pageNumber, maxResults), 
-                maxResults, 
-                comparatorItem);
+        PageDto page = personService.findPersons(pageRequest);
 
-        PageControl pageControl = pageControlFactory.newPageControl(page, "restful.html", query, resolveLocale(request));
+        PageControlDto pageControl = pageControlFactory.newPageControl(page, "restful.html", resolveLocale(request));
 
         model.addAttribute("pageControl", pageControl);
 
         return "restful";
+    }
+    
+    @RequestMapping(value = "/ajax.html", method = RequestMethod.GET)
+    public String displayAjax(HttpServletRequest request, Model model,
+            @RequestParam(value = "q", defaultValue = "") String query,
+            @RequestParam(value = "s", defaultValue = "4") int pageSize,
+            @RequestParam(value = "p", defaultValue = "0") int pageNumber,
+            @RequestParam(value = "c", defaultValue = "") String comparator) {
+
+        if (StringUtils.isBlank(comparator)) {
+            comparator = comparatorItemTransformer.toString(new ComparatorItem("id"), false, null);
+        }
+        
+        PageRequestDto pageRequest = new PageRequestDto(pageNumber, pageSize, comparatorItemTransformer.fromString(comparator, false, null), query);
+
+        PageDto page = personService.findPersons(pageRequest);
+
+        PageControlDto pageControl = pageControlFactory.newPageControl(page, "ajax.html", resolveLocale(request));
+
+        model.addAttribute("pageControl", pageControl);
+
+        return "ajax";
+    }
+    
+    @RequestMapping(
+            value = "/page-control.json", 
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody PageControlDto getPageControl(
+            HttpServletRequest request,
+            @RequestBody PageRequestDto pageRequest) {
+        
+        PageDto page = personService.findPersons(pageRequest);
+
+        PageControlDto pageControl = pageControlFactory.newPageControl(page, "ajax.html", resolveLocale(request));
+
+        return pageControl;
     }
     
 }

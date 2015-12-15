@@ -38,7 +38,9 @@ public class PageBuilderExampleApplication {
     
     @Bean
     public PageBuilder pageBuilder() {
-        return new PageBuilderImpl();
+        PageBuilderImpl pageBuilder = new PageBuilderImpl();
+        pageBuilder.setObjectComparatorFactory(objectComparatorFactory());
+        return pageBuilder;
     }
     
     @Bean

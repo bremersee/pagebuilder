@@ -17,13 +17,14 @@
 package org.bremersee.pagebuilder.example.service;
 
 import org.bremersee.comparator.model.ComparatorItem;
-import org.bremersee.pagebuilder.model.Page;
+import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.model.PageRequestDto;
 
 /**
  * @author Christian Bremer
  */
 public interface PersonService {
     
-    Page findPersons(String query, Integer firstResult, Integer maxResults, ComparatorItem comparatorItem);
+    PageDto findPersons(PageRequestDto pageRequest);
 
 }

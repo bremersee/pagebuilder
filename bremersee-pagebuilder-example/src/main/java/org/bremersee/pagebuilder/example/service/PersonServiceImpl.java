@@ -18,13 +18,11 @@ package org.bremersee.pagebuilder.example.service;
 
 import java.util.List;
 
-import org.bremersee.comparator.ObjectComparator;
-import org.bremersee.comparator.ObjectComparatorFactory;
-import org.bremersee.comparator.model.ComparatorItem;
 import org.bremersee.pagebuilder.PageBuilder;
 import org.bremersee.pagebuilder.example.domain.Person;
 import org.bremersee.pagebuilder.example.domain.PersonRepository;
-import org.bremersee.pagebuilder.model.Page;
+import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.model.PageRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,25 +36,13 @@ public class PersonServiceImpl implements PersonService {
     protected PersonRepository personRepository;
 
     @Autowired
-    protected ObjectComparatorFactory objectComparatorFactory;
-    
-    @Autowired
     protected PageBuilder pageBuilder;
     
-    /* (non-Javadoc)
-     * @see org.bremersee.comparator.example.service.PersonService#findPersons(java.lang.String, java.lang.Integer, java.lang.Integer, org.bremersee.comparator.model.ComparatorItem)
-     */
     @Override
-    public Page findPersons(String query, Integer firstResult, Integer maxResults, ComparatorItem comparatorItem) {
+    public PageDto findPersons(PageRequestDto pageRequest) {
 
-        if (comparatorItem == null) {
-            comparatorItem = new ComparatorItem("id", true);
-        }
-        
-        ObjectComparator objectComparator = objectComparatorFactory.newObjectComparator(comparatorItem);
-        
-        List<Person> persons = personRepository.findByQuery(query);
-        Page page = pageBuilder.buildFilteredPage(persons, firstResult, maxResults, objectComparator, null);
+        List<Person> persons = personRepository.findByQuery(pageRequest.getQuery());
+        PageDto page = pageBuilder.buildFilteredPage(persons, pageRequest, null);
         return page;
     }
     

@@ -26,7 +26,7 @@
         <div style="padding-bottom: 24px;">
             <ul class="nav nav-tabs">
                 <li role="presentation" class="active"><a href="restful.html">Restful</a></li>
-                <li role="presentation" class="disabled"><a href="#">Ajax</a></li>
+                <li role="presentation"><a href="ajax.html">Ajax</a></li>
             </ul>
         </div>
         
@@ -50,9 +50,9 @@
                             <form class="navbar-form navbar-left" method="get">
                                 <input type="hidden" name="_p" th:attr="name=${pageControl.pageNumberParamName}" value="0" />
                                 <input type="hidden" name="_c" th:attr="name=${pageControl.comparatorParamName}" th:value="${pageControl.comparatorParamValue}" />
-                                <input type="hidden" name="_max" th:attr="name=${pageControl.maxResultsParamName}" th:value="${pageControl.page.maxResults}" />
+                                <input type="hidden" name="_max" th:attr="name=${pageControl.pageSizeParamName}" th:value="${pageControl.page.pageRequest.pageSize}" />
                                 <div class="form-group">
-                                    <input type="text" name="_q" th:attr="name=${pageControl.queryParamName}" th:value="${pageControl.query}" class="form-control" />
+                                    <input type="text" name="_q" th:attr="name=${pageControl.queryParamName}" th:value="${pageControl.page.pageRequest.query}" class="form-control" />
                                 </div>
                             </form>
                         </li>
@@ -60,13 +60,13 @@
                             <form class="navbar-form navbar-left" method="get">
                                 <input type="hidden" name="_p" th:attr="name=${pageControl.pageNumberParamName}" value="0" />
                                 <input type="hidden" name="_c" th:attr="name=${pageControl.comparatorParamName}" th:value="${pageControl.comparatorParamValue}" />
-                                <input type="hidden" name="_q" th:attr="name=${pageControl.queryParamName}" th:value="${pageControl.query}" />
+                                <input type="hidden" name="_q" th:attr="name=${pageControl.queryParamName}" th:value="${pageControl.page.pageRequest.query}" />
                                 <div class="form-group">
-                                    <select name="_max" th:attr="name=${pageControl.maxResultsParamName}" class="form-control" style="width:auto" onchange="this.form.submit()">
-                                        <option th:each="part : ${pageControl.maxResultsSelectorOptions}" 
-                                                th:selected="${part.selected}"
-                                                th:value="${part.value}"
-                                                th:text="${part.displayedValue}">10</option>
+                                    <select name="_max" th:attr="name=${pageControl.pageSizeParamName}" class="form-control" style="width:auto" onchange="this.form.submit()">
+                                        <option th:each="pageSizeOption : ${pageControl.pageSizeSelectorOptions}" 
+                                                th:selected="${pageSizeOption.selected}"
+                                                th:value="${pageSizeOption.value}"
+                                                th:text="${pageSizeOption.displayedValue}">10</option>
                                     </select>
                                 </div>
                             </form>
@@ -74,27 +74,27 @@
                         <li>
                             <form class="navbar-form navbar-left" method="get">
                                 <input type="hidden" name="_c" th:attr="name=${pageControl.comparatorParamName}" th:value="${pageControl.comparatorParamValue}" />
-                                <input type="hidden" name="_max" th:attr="name=${pageControl.maxResultsParamName}" th:value="${pageControl.page.maxResults}" />
-                                <input type="hidden" name="_q" th:attr="name=${pageControl.queryParamName}" th:value="${pageControl.query}" />
+                                <input type="hidden" name="_max" th:attr="name=${pageControl.pageSizeParamName}" th:value="${pageControl.page.pageRequest.pageSize}" />
+                                <input type="hidden" name="_q" th:attr="name=${pageControl.queryParamName}" th:value="${pageControl.page.pageRequest.query}" />
                                 <a href="#" 
-                                   th:href="@{${pageControl.pagination.previousPageButton.url}}" 
+                                   th:href="@{${pageControl.pagination.previousPageLink.url}}" 
                                    class="btn btn-default disabled" 
-                                   th:class="${pageControl.pagination.previousPageButton.active}? 'btn btn-default' : 'btn btn-default disabled'"
+                                   th:class="${pageControl.pagination.previousPageLink.active}? 'btn btn-default' : 'btn btn-default disabled'"
                                    role="button">
                                     <span class="glyphicon glyphicon-minus-sign" aria-hidden="true" aria-label="Previous Page"></span>
                                 </a>
                                 <div class="form-group">
                                     <select name="_p" th:attr="name=${pageControl.pageNumberParamName}" class="form-control" style="width:auto" onchange="this.form.submit()">
-                                        <option th:each="part : ${pageControl.pagination.allButtons}" 
-                                                th:selected="${part.active}"
-                                                th:value="${part.pageNumber}"
-                                                th:text="${part.displayedPageNumber}">1</option>
+                                        <option th:each="link : ${pageControl.pageRequestLinks}" 
+                                                th:selected="${link.active}"
+                                                th:value="${link.pageNumber}"
+                                                th:text="${link.displayedPageNumber}">1</option>
                                     </select>
                                 </div>
                                 <a href="#" 
-                                   th:href="@{${pageControl.pagination.nextPageButton.url}}" 
+                                   th:href="@{${pageControl.pagination.nextPageLink.url}}" 
                                    class="btn btn-default disabled" 
-                                   th:class="${pageControl.pagination.nextPageButton.active}? 'btn btn-default' : 'btn btn-default disabled'"
+                                   th:class="${pageControl.pagination.nextPageLink.active}? 'btn btn-default' : 'btn btn-default disabled'"
                                    role="button">
                                     <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" aria-label="Next Page"></span>
                                 </a>
@@ -113,11 +113,11 @@
                         <span>#</span>
                         <span>
                             <a class="dropup" href="#" 
-                               th:href="@{restful.html(c='id,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='id,asc',q=${pageControl.page.pageRequest.query},s=${pageControl.page.pageRequest.pageSize},p=${pageControl.page.pageRequest.pageNumber})}">
                                 <span class="caret"></span>
                             </a>
                             <a class="dropdown" href="#" 
-                               th:href="@{restful.html(c='id,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='id,desc',q=${pageControl.page.pageRequest.query},s=${pageControl.page.pageRequest.pageSize},p=${pageControl.page.pageRequest.pageNumber})}">
                                 <span class="caret"></span>
                             </a>
                         </span>
@@ -126,11 +126,11 @@
                         <span>First Name</span>
                         <span>
                             <a class="dropup" href="#" 
-                               th:href="@{restful.html(c='firstname,asc|lastname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='firstname,asc|lastname,asc',q=${pageControl.page.pageRequest.query},s=${pageControl.page.pageRequest.pageSize},p=${pageControl.page.pageRequest.pageNumber})}">
                                 <span class="caret"></span>
                             </a>
                             <a class="dropdown" href="#" 
-                               th:href="@{restful.html(c='firstname,desc|lastname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='firstname,desc|lastname,desc',q=${pageControl.page.pageRequest.query},s=${pageControl.page.pageRequest.pageSize},p=${pageControl.page.pageRequest.pageNumber})}">
                                 <span class="caret"></span>
                             </a>
                         </span>
@@ -139,11 +139,11 @@
                         <span>Last Name</span>
                         <span>
                             <a class="dropup" href="#" 
-                               th:href="@{restful.html(c='lastname,asc|firstname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='lastname,asc|firstname,asc',q=${pageControl.page.pageRequest.query},s=${pageControl.page.pageRequest.pageSize},p=${pageControl.page.pageRequest.pageNumber})}">
                                 <span class="caret"></span>
                             </a>
                             <a class="dropdown" href="#" 
-                               th:href="@{restful.html(c='lastname,desc|firstname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='lastname,desc|firstname,desc',q=${pageControl.page.pageRequest.query},s=${pageControl.page.pageRequest.pageSize},p=${pageControl.page.pageRequest.pageNumber})}">
                                 <span class="caret"></span>
                             </a>
                         </span>
@@ -155,11 +155,11 @@
                         <span>City</span>
                         <span>
                             <a class="dropup" href="#" 
-                               th:href="@{restful.html(c='address.city,asc|lastname,asc|firstname,asc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='address.city,asc|lastname,asc|firstname,asc',q=${pageControl.page.pageRequest.query},s=${pageControl.page.pageRequest.pageSize},p=${pageControl.page.pageRequest.pageNumber})}">
                                 <span class="caret"></span>
                             </a>
                             <a class="dropdown" href="#" 
-                               th:href="@{restful.html(c='address.city,desc|lastname,desc|firstname,desc',q=${pageControl.query},max=${pageControl.page.maxResults},p=${pageControl.page.currentPage})}">
+                               th:href="@{restful.html(c='address.city,desc|lastname,desc|firstname,desc',q=${pageControl.page.pageRequest.query},s=${pageControl.page.pageRequest.pageSize},p=${pageControl.page.pageRequest.pageNumber})}">
                                 <span class="caret"></span>
                             </a>
                         </span>
@@ -184,26 +184,26 @@
         <div style="text-align: center;">
             <nav style="display: inline-block;">
                 <ul class="pagination">
-                    <li th:class="${pageControl.pagination.firstPageButton.active} ? '' : 'disabled'">
-                        <a href="#" th:href="@{${pageControl.pagination.firstPageButton.url}}" aria-label="First">
+                    <li th:class="${pageControl.pagination.firstPageLink.active} ? '' : 'disabled'">
+                        <a href="#" th:href="@{${pageControl.pagination.firstPageLink.url}}" aria-label="First">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li th:class="${pageControl.pagination.previousPageButton.active} ? '' : 'disabled'">
-                        <a href="#" th:href="@{${pageControl.pagination.previousPageButton.url}}" aria-label="Previous">
+                    <li th:class="${pageControl.pagination.previousPageLink.active} ? '' : 'disabled'">
+                        <a href="#" th:href="@{${pageControl.pagination.previousPageLink.url}}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li th:each="button : ${pageControl.pagination.buttons}" th:class="${button.active} ? 'active' : ''">
-                        <a href="#" th:href="@{${button.url}}" th:text="${button.displayedPageNumber}">1</a>
+                    <li th:each="link : ${pageControl.pagination.links}" th:class="${link.active} ? 'active' : ''">
+                        <a href="#" th:href="@{${link.url}}" th:text="${link.displayedPageNumber}">1</a>
                     </li>
-                    <li th:class="${pageControl.pagination.nextPageButton.active} ? '' : 'disabled'">
-                        <a href="#" th:href="@{${pageControl.pagination.nextPageButton.url}}" aria-label="Next">
+                    <li th:class="${pageControl.pagination.nextPageLink.active} ? '' : 'disabled'">
+                        <a href="#" th:href="@{${pageControl.pagination.nextPageLink.url}}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
-                    <li th:class="${pageControl.pagination.lastPageButton.active} ? '' : 'disabled'">
-                        <a href="#" th:href="@{${pageControl.pagination.lastPageButton.url}}" aria-label="Last">
+                    <li th:class="${pageControl.pagination.lastPageLink.active} ? '' : 'disabled'">
+                        <a href="#" th:href="@{${pageControl.pagination.lastPageLink.url}}" aria-label="Last">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
