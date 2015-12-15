@@ -16,6 +16,7 @@
 
 package org.bremersee.pagebuilder.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,22 +26,21 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * <p>
- * A {@link PageControl} can be used to display a {@link Page} on a web site.
+ * A {@link PageControl} can be used to display a {@link PageDto} on a web site.
  * <br/>
  * This page control can be processed by a {@link JAXBContext} and the Jackson
  * JSON processor.
@@ -49,86 +49,64 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  * @author Christian Bremer
  */
 //@formatter:off
+@XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlRootElement(name = "pageControl")
 @XmlType(name = "pageControlType", propOrder = {
         "page",
+        "pageRequestLinks",
+        "pageSizeSelectorOptions",
         "pagination",
-        "pageNumberParamName",
-        "maxResultsParamName",
-        "maxResultsSelectorOptions",
-        "comparatorParamName",
-        "comparatorParamValue",
         "querySupported",
         "queryParamName",
-        "query"
+        "pageNumberParamName",
+        "pageSizeParamName",
+        "comparatorParamName",
+        "comparatorParamValue"
 })
-@XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlSeeAlso({
-    MaxResultsSelectorOptionDto.class,
-    PaginationDto.class,
-    PaginationButtonDto.class
-})
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.ALWAYS)
 @JsonAutoDetect(fieldVisibility = Visibility.NONE, 
-    getterVisibility = Visibility.PUBLIC_ONLY, 
+    getterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
     creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.PUBLIC_ONLY, 
-    setterVisibility = Visibility.PUBLIC_ONLY)
-@JsonInclude(Include.NON_EMPTY)
+    isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
+    setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
 @JsonPropertyOrder(value = {
         "page",
+        "pageRequestLinks",
+        "pageSizeSelectorOptions",
         "pagination",
-        "pageNumberParamName",
-        "maxResultsParamName",
-        "maxResultsSelectorOptions",
-        "comparatorParamName",
-        "comparatorParamValue",
         "querySupported",
         "queryParamName",
-        "query"
+        "pageNumberParamName",
+        "pageSizeParamName",
+        "comparatorParamName",
+        "comparatorParamValue"
 })
 //@formatter:on
-public class PageControlDto implements PageControl {
-
-    /**
-     * If the given page control is {@code null}, {@code null} will be returned.
-     * <br/>
-     * If the given Page control is an instance of {@code PageControlDto} , that
-     * instance will be returned. Otherwise a new instance will be created.
-     * 
-     * @param pageControl
-     *            a page control
-     */
-    public static PageControlDto toPageControlDto(PageControl pageControl) {
-        if (pageControl == null) {
-            return null;
-        }
-        if (pageControl instanceof PageControlDto) {
-            return (PageControlDto) pageControl;
-        }
-        return new PageControlDto(pageControl);
-    }
+public class PageControlDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Page page;
+    private PageDto page;
+    
+    private List<PageRequestLinkDto> pageRequestLinks = new ArrayList<PageRequestLinkDto>();
 
-    private Pagination pagination;
+    private List<PageSizeSelectorOptionDto> pageSizeSelectorOptions = new ArrayList<PageSizeSelectorOptionDto>();
 
-    private String pageNumberParamName = "p";
-
-    private String maxResultsParamName = "max";
-
-    private List<MaxResultsSelectorOption> maxResultsSelectorOptions = new ArrayList<MaxResultsSelectorOption>();
-
-    private String comparatorParamName = "c";
-
-    private String comparatorParamValue;
+    private PaginationDto pagination;
 
     private boolean querySupported = true;
 
     private String queryParamName = "q";
 
-    private String query;
+    private String pageNumberParamName = "p";
+
+    private String pageSizeParamName = "s";
+
+    private String comparatorParamName = "c";
+
+    private String comparatorParamValue;
 
     /**
      * Default constructor.
@@ -145,9 +123,9 @@ public class PageControlDto implements PageControl {
      *            the pagination
      * @param pageNumberParamName
      *            the parameter name of the page number
-     * @param maxResultsParamName
+     * @param pageSizeParamName
      *            the parameter name of the maximum results
-     * @param maxResultsSelectorOptions
+     * @param pageSizeSelectorOptions
      *            the options for the maximum results selector
      * @param comparatorParamName
      *            the parameter name of the comparator item
@@ -158,162 +136,28 @@ public class PageControlDto implements PageControl {
      *            {@code false}
      * @param queryParamName
      *            the parameter name of the query
-     * @param query
-     *            the query value
      */
-    public PageControlDto(Page page, Pagination pagination, String pageNumberParamName, String maxResultsParamName,
-            List<MaxResultsSelectorOption> maxResultsSelectorOptions, String comparatorParamName,
-            String comparatorParamValue, boolean querySupported, String queryParamName, String query) {
+    public PageControlDto(PageDto page, PaginationDto pagination, String pageNumberParamName, String pageSizeParamName,
+            List<PageSizeSelectorOptionDto> pageSizeSelectorOptions, String comparatorParamName,
+            String comparatorParamValue, boolean querySupported, String queryParamName) {
         super();
         this.page = page;
         this.pagination = pagination;
         this.pageNumberParamName = pageNumberParamName;
-        this.maxResultsParamName = maxResultsParamName;
-        setMaxResultsSelectorOptions(maxResultsSelectorOptions);
+        this.pageSizeParamName = pageSizeParamName;
+        setPageSizeSelectorOptions(pageSizeSelectorOptions);
         this.comparatorParamName = comparatorParamName;
         this.comparatorParamValue = comparatorParamValue;
         this.querySupported = querySupported;
         this.queryParamName = queryParamName;
-        this.query = query;
     }
 
     /**
-     * Creates a page control from another page control.
-     * 
-     * @param pageControl
-     *            the other page control
+     * Returns the page.
      */
-    public PageControlDto(PageControl pageControl) {
-        if (pageControl != null) {
-            this.page = PageDto.toPageDto(pageControl.getPage());
-            this.pagination = PaginationDto.toPaginationDto(pageControl.getPagination());
-            this.pageNumberParamName = pageControl.getPageNumberParamName();
-            this.maxResultsParamName = pageControl.getMaxResultsParamName();
-            if (pageControl.getMaxResultsSelectorOptions() != null) {
-                for (MaxResultsSelectorOption o : pageControl.getMaxResultsSelectorOptions()) {
-                    if (o != null) {
-                        getMaxResultsSelectorOptions()
-                                .add(MaxResultsSelectorOptionDto.toMaxResultsSelectorOptionDto(o));
-                    }
-                }
-            }
-            this.comparatorParamName = pageControl.getComparatorParamName();
-            this.comparatorParamValue = pageControl.getComparatorParamValue();
-            this.querySupported = pageControl.isQuerySupported();
-            this.queryParamName = pageControl.getQueryParamName();
-            this.query = pageControl.getQuery();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "PageControlDto [page=" + page + ", pagination=" + pagination + ", pageNumberParamName="
-                + pageNumberParamName + ", maxResultsParamName=" + maxResultsParamName + ", maxResultsSelectorOptions="
-                + maxResultsSelectorOptions + ", comparatorParamName=" + comparatorParamName + ", comparatorParamValue="
-                + comparatorParamValue + ", querySupported=" + querySupported + ", queryParamName=" + queryParamName
-                + ", query=" + query + "]";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((comparatorParamName == null) ? 0 : comparatorParamName.hashCode());
-        result = prime * result + ((comparatorParamValue == null) ? 0 : comparatorParamValue.hashCode());
-        result = prime * result + ((maxResultsParamName == null) ? 0 : maxResultsParamName.hashCode());
-        result = prime * result + ((maxResultsSelectorOptions == null) ? 0 : maxResultsSelectorOptions.hashCode());
-        result = prime * result + ((page == null) ? 0 : page.hashCode());
-        result = prime * result + ((pageNumberParamName == null) ? 0 : pageNumberParamName.hashCode());
-        result = prime * result + ((pagination == null) ? 0 : pagination.hashCode());
-        result = prime * result + ((query == null) ? 0 : query.hashCode());
-        result = prime * result + ((queryParamName == null) ? 0 : queryParamName.hashCode());
-        result = prime * result + (querySupported ? 1231 : 1237);
-        return result;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        PageControlDto other = (PageControlDto) obj;
-        if (comparatorParamName == null) {
-            if (other.comparatorParamName != null)
-                return false;
-        } else if (!comparatorParamName.equals(other.comparatorParamName))
-            return false;
-        if (comparatorParamValue == null) {
-            if (other.comparatorParamValue != null)
-                return false;
-        } else if (!comparatorParamValue.equals(other.comparatorParamValue))
-            return false;
-        if (maxResultsParamName == null) {
-            if (other.maxResultsParamName != null)
-                return false;
-        } else if (!maxResultsParamName.equals(other.maxResultsParamName))
-            return false;
-        if (maxResultsSelectorOptions == null) {
-            if (other.maxResultsSelectorOptions != null)
-                return false;
-        } else if (!maxResultsSelectorOptions.equals(other.maxResultsSelectorOptions))
-            return false;
-        if (page == null) {
-            if (other.page != null)
-                return false;
-        } else if (!page.equals(other.page))
-            return false;
-        if (pageNumberParamName == null) {
-            if (other.pageNumberParamName != null)
-                return false;
-        } else if (!pageNumberParamName.equals(other.pageNumberParamName))
-            return false;
-        if (pagination == null) {
-            if (other.pagination != null)
-                return false;
-        } else if (!pagination.equals(other.pagination))
-            return false;
-        if (query == null) {
-            if (other.query != null)
-                return false;
-        } else if (!query.equals(other.query))
-            return false;
-        if (queryParamName == null) {
-            if (other.queryParamName != null)
-                return false;
-        } else if (!queryParamName.equals(other.queryParamName))
-            return false;
-        if (querySupported != other.querySupported)
-            return false;
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.PageControl#getPage()
-     */
-    @XmlElement(name = "page", required = true, type = PageDto.class)
+    @XmlElement(name = "page", required = true)
     @JsonProperty(value = "page", required = true)
-    @Override
-    public Page getPage() {
+    public PageDto getPage() {
         return page;
     }
 
@@ -321,20 +165,31 @@ public class PageControlDto implements PageControl {
      * Sets the page.
      */
     @JsonProperty(value = "page", required = true)
-    @JsonDeserialize(as = PageDto.class)
-    public void setPage(Page page) {
+    public void setPage(PageDto page) {
         this.page = page;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.PageControl#getPagination()
+    @XmlElementWrapper(name = "pageRequestLinks", required = false)
+    @XmlElement(name = "pageRequestLink")
+    @JsonProperty(value = "pageRequestLinks", required = false)
+    public List<PageRequestLinkDto> getPageRequestLinks() {
+        return pageRequestLinks;
+    }
+
+    @JsonProperty(value = "pageRequestLinks", required = false)
+    public void setPageRequestLinks(List<PageRequestLinkDto> pageRequestLinks) {
+        if (pageRequestLinks == null) {
+            pageRequestLinks = new ArrayList<PageRequestLinkDto>();
+        }
+        this.pageRequestLinks = pageRequestLinks;
+    }
+
+    /**
+     * Returns the pagination.
      */
-    @XmlElement(name = "pagination", required = false, type = PaginationDto.class)
+    @XmlElement(name = "pagination", required = false)
     @JsonProperty(value = "pagination", required = false)
-    @Override
-    public Pagination getPagination() {
+    public PaginationDto getPagination() {
         return pagination;
     }
 
@@ -342,19 +197,15 @@ public class PageControlDto implements PageControl {
      * Sets the pagination.
      */
     @JsonProperty(value = "pagination", required = false)
-    @JsonDeserialize(as = PaginationDto.class)
-    public void setPagination(Pagination pagination) {
+    public void setPagination(PaginationDto pagination) {
         this.pagination = pagination;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.PageControl#getPageNumberParamName()
+    /**
+     * Returns the parameter name of the page number.
      */
     @XmlElement(name = "pageNumberParamName", defaultValue = "p")
     @JsonProperty(value = "pageNumberParamName", required = true)
-    @Override
     public String getPageNumberParamName() {
         return pageNumberParamName;
     }
@@ -369,63 +220,51 @@ public class PageControlDto implements PageControl {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.PageControl#getMaxResultsParamName()
+    /**
+     * Returns the parameter name of the page size.
      */
-    @XmlElement(name = "maxResultsParamName", defaultValue = "max")
-    @JsonProperty(value = "maxResultsParamName", required = true)
-    @Override
-    public String getMaxResultsParamName() {
-        return maxResultsParamName;
+    @XmlElement(name = "pageSizeParamName", defaultValue = "s")
+    @JsonProperty(value = "pageSizeParamName", required = true)
+    public String getPageSizeParamName() {
+        return pageSizeParamName;
     }
 
     /**
      * Sets the parameter name of the max results.
      */
-    @JsonProperty(value = "maxResultsParamName", required = false)
-    public void setMaxResultsParamName(String maxResultsParamName) {
-        if (StringUtils.isNotBlank(maxResultsParamName)) {
-            this.maxResultsParamName = maxResultsParamName;
+    @JsonProperty(value = "pageSizeParamName", required = false)
+    public void setPageSizeParamName(String pageSizeParamName) {
+        if (StringUtils.isNotBlank(pageSizeParamName)) {
+            this.pageSizeParamName = pageSizeParamName;
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bremersee.pagebuilder.model.PageControl#getMaxResultsSelectorOptions(
-     * )
+    /**
+     * Returns a list with page size selector options.
      */
-    @XmlElementWrapper(name = "maxResultsSelectorOptions", required = false)
-    @XmlElement(name = "maxResultsSelectorOption", type = MaxResultsSelectorOptionDto.class)
-    @JsonProperty(value = "maxResultsSelectorOptions", required = false)
-    @Override
-    public List<MaxResultsSelectorOption> getMaxResultsSelectorOptions() {
-        return maxResultsSelectorOptions;
+    @XmlElementWrapper(name = "pageSizeSelectorOptions", required = false)
+    @XmlElement(name = "pageSizeSelectorOption")
+    @JsonProperty(value = "pageSizeSelectorOptions", required = false)
+    public List<PageSizeSelectorOptionDto> getPageSizeSelectorOptions() {
+        return pageSizeSelectorOptions;
     }
 
     /**
      * Sets the list with maximum result options.
      */
-    @JsonProperty(value = "maxResultsSelectorOptions", required = false)
-    @JsonDeserialize(contentAs = MaxResultsSelectorOptionDto.class)
-    public void setMaxResultsSelectorOptions(List<MaxResultsSelectorOption> maxResultsSelectorOptions) {
-        if (maxResultsSelectorOptions == null) {
-            maxResultsSelectorOptions = new ArrayList<>();
+    @JsonProperty(value = "pageSizeSelectorOptions", required = false)
+    public void setPageSizeSelectorOptions(List<PageSizeSelectorOptionDto> pageSizeSelectorOptions) {
+        if (pageSizeSelectorOptions == null) {
+            pageSizeSelectorOptions = new ArrayList<>();
         }
-        this.maxResultsSelectorOptions = maxResultsSelectorOptions;
+        this.pageSizeSelectorOptions = pageSizeSelectorOptions;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.PageControl#getComparatorParamName()
+    /**
+     * Returns the parameter name of the comparator item.
      */
     @XmlElement(name = "comparatorParamName", defaultValue = "c")
     @JsonProperty(value = "comparatorParamName", required = true)
-    @Override
     public String getComparatorParamName() {
         return comparatorParamName;
     }
@@ -440,13 +279,9 @@ public class PageControlDto implements PageControl {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bremersee.pagebuilder.model.PageControl#getComparatorParamValue()
+    /**
+     * Returns the serialized value of the comparator item.
      */
-    @Override
     @XmlElement(name = "comparatorParamValue", required = false)
     @JsonProperty(value = "comparatorParamValue", required = false)
     public String getComparatorParamValue() {
@@ -461,12 +296,10 @@ public class PageControlDto implements PageControl {
         this.comparatorParamValue = comparatorParamValue;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.PageControl#isQuerySupported()
+    /**
+     * Returns {@code true} if a query field should be displayed, otherwise
+     * {@code false}.
      */
-    @Override
     @XmlElement(name = "querySupported", defaultValue = "true")
     @JsonProperty(value = "querySupported", required = true)
     public boolean isQuerySupported() {
@@ -481,12 +314,9 @@ public class PageControlDto implements PageControl {
         this.querySupported = querySupported;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.PageControl#getQueryParamName()
+    /**
+     * Returns the parameter name of the query.
      */
-    @Override
     @XmlElement(name = "queryParamName", defaultValue = "q")
     @JsonProperty(value = "queryParamName", required = true)
     public String getQueryParamName() {
@@ -501,26 +331,6 @@ public class PageControlDto implements PageControl {
         if (StringUtils.isNotBlank(queryParamName)) {
             this.queryParamName = queryParamName;
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.PageControl#getQuery()
-     */
-    @XmlElement(name = "query", required = false)
-    @JsonProperty(value = "query", required = false)
-    @Override
-    public String getQuery() {
-        return query;
-    }
-
-    /**
-     * Sets the query value.
-     */
-    @JsonProperty(value = "query", required = false)
-    public void setQuery(String query) {
-        this.query = query;
     }
 
 }

@@ -36,4 +36,16 @@ public class ObjectFactory {
         return new PageRequestDto();
     }
 
+    public PageRequestLinkDto createPageRequestLinkDto() {
+        return new PageRequestLinkDto();
+    }
+    
+    public PageSizeSelectorOptionDto createPageSizeSelectorOptionDto() {
+        return new PageSizeSelectorOptionDto();
+    }
+    
+    public PaginationDto createPaginationDto() {
+        return new PaginationDto();
+    }
+
 }

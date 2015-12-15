@@ -16,120 +16,85 @@
 
 package org.bremersee.pagebuilder.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * <p>
- * A pagination can be used to display pagination buttons on a web site.
+ * A pagination can be used to display pagination links or buttons on a web site:
+ * <pre>
+ *  ----    ---    ---    ---     ===     ---    ---    ---    ----
+ * | << |  | < |  | 1 |  | 2 |  || 3 ||  | 4 |  | 5 |  | > |  | >> | 
+ *  ----    ---    ---    ---     ===     ---    ---    ---    ----
+ * First   Prev.  Page   Page     Page   Page   Page   Next    Last 
+ * Page    Page   No 0   No 1     No 2   No 3   No 4   Page    Page
+ *                               active
+ *                |                                 |
+ *                 ------ maxPaginationLinks -------
+ * </pre>
  * </p>
  * 
  * @author Christian Bremer
  */
 //@formatter:off
+@XmlAccessorType(XmlAccessType.PROPERTY)
+@XmlRootElement(name = "pagination")
 @XmlType(name = "paginationType", propOrder = {
-        "allButtons",
-        "maxPaginationButtons",
-        "firstPageButton",
-        "previousPageButton",
-        "buttons",
-        "nextPageButton",
-        "lastPageButton"
+        "maxPaginationLinks",
+        "firstPageLink",
+        "previousPageLink",
+        "links",
+        "nextPageLink",
+        "lastPageLink"
 })
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlSeeAlso({
-    PaginationButtonDto.class
-})
-@JsonAutoDetect(fieldVisibility = Visibility.DEFAULT, 
-    getterVisibility = Visibility.NONE, 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.ALWAYS)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
+    getterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
     creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.NONE, 
-    setterVisibility = Visibility.NONE)
-@JsonInclude(Include.NON_EMPTY)
+    isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
+    setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
 @JsonPropertyOrder(value = {
-        "allButtons",
-        "maxPaginationButtons",
-        "firstPageButton",
-        "previousPageButton",
-        "buttons",
-        "nextPageButton",
-        "lastPageButton"
+        "maxPaginationLinks",
+        "firstPageLink",
+        "previousPageLink",
+        "links",
+        "nextPageLink",
+        "lastPageLink"
 })
 //@formatter:on
-public class PaginationDto implements Pagination {
-
-    /**
-     * If the given pagination is {@code null}, {@code null} will be returned.
-     * <br/>
-     * If the given pagination is an instance of {@code PaginationDto}, that
-     * instance will be returned. Otherwise a new instance will be created.
-     * 
-     * @param pagination
-     *            a pagination
-     */
-    public static PaginationDto toPaginationDto(Pagination pagination) {
-        if (pagination == null) {
-            return null;
-        }
-        if (pagination instanceof PaginationDto) {
-            return (PaginationDto) pagination;
-        }
-        return new PaginationDto(pagination);
-    }
+public class PaginationDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @XmlElementWrapper(name = "allButtons", required = false)
-    @XmlElement(name = "paginationButton", type = PaginationButtonDto.class)
-    @JsonProperty(value = "allButtons", required = false)
-    @JsonDeserialize(contentAs = PaginationButtonDto.class)
-    private List<PaginationButton> allButtons = new ArrayList<PaginationButton>();
+    private int maxPaginationLinks = 7;
 
-    @XmlElement(name = "maxPaginationButtons", defaultValue = "7")
-    @JsonProperty(value = "maxPaginationButtons", required = false)
-    private int maxPaginationButtons = 7;
+    private PageRequestLinkDto firstPageLink;
 
-    @XmlElement(name = "firstPageButton", required = false, type = PaginationButtonDto.class)
-    @JsonProperty(value = "firstPageButton", required = false)
-    @JsonDeserialize(as = PaginationButtonDto.class)
-    private PaginationButton firstPageButton;
+    private PageRequestLinkDto previousPageLink;
 
-    @XmlElement(name = "previousPageButton", required = false, type = PaginationButtonDto.class)
-    @JsonProperty(value = "previousPageButton", required = false)
-    @JsonDeserialize(as = PaginationButtonDto.class)
-    private PaginationButton previousPageButton;
+    private List<PageRequestLinkDto> links = new ArrayList<PageRequestLinkDto>();
 
-    @XmlElementWrapper(name = "paginationButtons", required = false)
-    @XmlElement(name = "paginationButton", type = PaginationButtonDto.class)
-    @JsonProperty(value = "paginationButtons", required = false)
-    @JsonDeserialize(contentAs = PaginationButtonDto.class)
-    private List<PaginationButton> buttons = new ArrayList<PaginationButton>();
+    private PageRequestLinkDto nextPageLink;
 
-    @XmlElement(name = "nextPageButton", required = false, type = PaginationButtonDto.class)
-    @JsonProperty(value = "nextPageButton", required = false)
-    @JsonDeserialize(as = PaginationButtonDto.class)
-    private PaginationButton nextPageButton;
-
-    @XmlElement(name = "lastPageButton", required = false, type = PaginationButtonDto.class)
-    @JsonProperty(value = "lastPageButton", required = false)
-    @JsonDeserialize(as = PaginationButtonDto.class)
-    private PaginationButton lastPageButton;
+    private PageRequestLinkDto lastPageLink;
 
     /**
      * Default constructor.
@@ -138,277 +103,113 @@ public class PaginationDto implements Pagination {
     }
 
     /**
-     * Creates a pagination with the given parameters.
-     * 
-     * @param maxPaginationButtons
-     *            the maximum numbers of pagination buttons.
-     * @param allButtons
-     *            all pagination buttons
-     * @param firstPageButton
-     *            the first pagination button
-     * @param previousPageButton
-     *            the previous pagination button
-     * @param paginationButtons
-     *            the pagination buttons
-     * @param nextPageButton
-     *            the next pagination button
-     * @param lastPageButton
-     *            the last pagination button
+     * Returns the maximum number of pagination links.
      */
-    public PaginationDto(int maxPaginationButtons, Collection<? extends PaginationButton> allButtons,
-            PaginationButton firstPageButton, PaginationButton previousPageButton,
-            Collection<? extends PaginationButton> paginationButtons, PaginationButton nextPageButton,
-            PaginationButton lastPageButton) {
-
-        if (allButtons != null) {
-            this.allButtons.addAll(allButtons);
-        }
-        this.maxPaginationButtons = maxPaginationButtons;
-        this.firstPageButton = firstPageButton;
-        this.previousPageButton = previousPageButton;
-        if (paginationButtons != null) {
-            this.buttons.addAll(paginationButtons);
-        }
-        this.nextPageButton = nextPageButton;
-        this.lastPageButton = lastPageButton;
+    @XmlElement(name = "maxPaginationLinks", defaultValue = "7")
+    @JsonProperty(value = "maxPaginationLinks", required = true)
+    public int getMaxPaginationLinks() {
+        return maxPaginationLinks;
     }
 
     /**
-     * Creates a pagination from another one.
-     * 
-     * @param pagination
-     *            the other pagination
+     * Sets the maximum number of pagination links.
      */
-    public PaginationDto(Pagination pagination) {
-        if (pagination != null) {
-            if (pagination.getAllButtons() != null) {
-                for (PaginationButton button : pagination.getAllButtons()) {
-                    if (button != null) {
-                        this.allButtons.add(PaginationButtonDto.toPaginationButtonDto(button));
-                    }
-                }
-            }
-            this.maxPaginationButtons = pagination.getMaxPaginationButtons();
-            this.firstPageButton = PaginationButtonDto.toPaginationButtonDto(pagination.getFirstPageButton());
-            this.previousPageButton = PaginationButtonDto.toPaginationButtonDto(pagination.getPreviousPageButton());
-            if (pagination.getButtons() != null) {
-                for (PaginationButton button : pagination.getButtons()) {
-                    if (button != null) {
-                        this.buttons.add(PaginationButtonDto.toPaginationButtonDto(button));
-                    }
-                }
-            }
-            this.nextPageButton = PaginationButtonDto.toPaginationButtonDto(pagination.getNextPageButton());
-            this.lastPageButton = PaginationButtonDto.toPaginationButtonDto(pagination.getLastPageButton());
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "Pagination [maxPaginationButtons=" + maxPaginationButtons + ", firstPageButton=" + firstPageButton
-                + ", previousPageButton=" + previousPageButton + ", buttons=" + buttons + ", nextPageButton="
-                + nextPageButton + ", lastPageButton=" + lastPageButton + "]";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((allButtons == null) ? 0 : allButtons.hashCode());
-        result = prime * result + ((buttons == null) ? 0 : buttons.hashCode());
-        result = prime * result + ((firstPageButton == null) ? 0 : firstPageButton.hashCode());
-        result = prime * result + ((lastPageButton == null) ? 0 : lastPageButton.hashCode());
-        result = prime * result + maxPaginationButtons;
-        result = prime * result + ((nextPageButton == null) ? 0 : nextPageButton.hashCode());
-        result = prime * result + ((previousPageButton == null) ? 0 : previousPageButton.hashCode());
-        return result;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        PaginationDto other = (PaginationDto) obj;
-        if (allButtons == null) {
-            if (other.allButtons != null)
-                return false;
-        } else if (!allButtons.equals(other.allButtons))
-            return false;
-        if (buttons == null) {
-            if (other.buttons != null)
-                return false;
-        } else if (!buttons.equals(other.buttons))
-            return false;
-        if (firstPageButton == null) {
-            if (other.firstPageButton != null)
-                return false;
-        } else if (!firstPageButton.equals(other.firstPageButton))
-            return false;
-        if (lastPageButton == null) {
-            if (other.lastPageButton != null)
-                return false;
-        } else if (!lastPageButton.equals(other.lastPageButton))
-            return false;
-        if (maxPaginationButtons != other.maxPaginationButtons)
-            return false;
-        if (nextPageButton == null) {
-            if (other.nextPageButton != null)
-                return false;
-        } else if (!nextPageButton.equals(other.nextPageButton))
-            return false;
-        if (previousPageButton == null) {
-            if (other.previousPageButton != null)
-                return false;
-        } else if (!previousPageButton.equals(other.previousPageButton))
-            return false;
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Pagination#getMaxPaginationButtons()
-     */
-    @Override
-    public int getMaxPaginationButtons() {
-        return maxPaginationButtons;
-    }
-
-    /**
-     * Sets the maximum number of pagination buttons.
-     */
-    public void setMaxPaginationButtons(int maxPaginationButtons) {
+    @JsonProperty(value = "maxPaginationLinks", required = false)
+    public void setMaxPaginationLinks(int maxPaginationButtons) {
         if (maxPaginationButtons < 1) {
             maxPaginationButtons = 1;
         } else {
-            this.maxPaginationButtons = maxPaginationButtons;
+            this.maxPaginationLinks = maxPaginationButtons;
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Pagination#getPreviousPageButton()
+    /**
+     * Returns the first pagination link.
      */
-    @Override
-    public PaginationButton getPreviousPageButton() {
-        return previousPageButton;
+    @XmlElement(name = "firstPageLink", required = false)
+    @JsonProperty(value = "firstPageLink", required = false)
+    public PageRequestLinkDto getFirstPageLink() {
+        return firstPageLink;
     }
 
     /**
-     * Sets the previous pagination button.
+     * Sets the first pagination link.
      */
-    public void setPreviousPageButton(PaginationButton previousPageButton) {
-        this.previousPageButton = previousPageButton;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Pagination#getNextPageButton()
-     */
-    @Override
-    public PaginationButton getNextPageButton() {
-        return nextPageButton;
+    @JsonProperty(value = "firstPageLink", required = false)
+    public void setFirstPageLink(PageRequestLinkDto firstPageLink) {
+        this.firstPageLink = firstPageLink;
     }
 
     /**
-     * Sets the next pagination button.
+     * Returns the previous pagination link.
      */
-    public void setNextPageButton(PaginationButton nextPageButton) {
-        this.nextPageButton = nextPageButton;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Pagination#getAllButtons()
-     */
-    @Override
-    public List<PaginationButton> getAllButtons() {
-        return allButtons;
+    @XmlElement(name = "previousPageLink", required = false)
+    @JsonProperty(value = "previousPageLink", required = false)
+    public PageRequestLinkDto getPreviousPageLink() {
+        return previousPageLink;
     }
 
     /**
-     * Sets all pagination buttons.
+     * Sets the previous pagination link.
      */
-    public void setAllButtons(List<PaginationButton> allButtons) {
-        if (allButtons == null) {
-            allButtons = new ArrayList<>();
+    @JsonProperty(value = "previousPageLink", required = false)
+    public void setPreviousPageLink(PageRequestLinkDto previousPageLink) {
+        this.previousPageLink = previousPageLink;
+    }
+
+    /**
+     * Returns the pagination links.
+     */
+    @XmlElementWrapper(name = "links", required = false)
+    @XmlElement(name = "link")
+    @JsonProperty(value = "links", required = false)
+    public List<PageRequestLinkDto> getLinks() {
+        return links;
+    }
+
+    /**
+     * Sets the pagination links.
+     */
+    @JsonProperty(value = "links", required = false)
+    public void setLinks(List<PageRequestLinkDto> links) {
+        if (links == null) {
+            links = new ArrayList<>();
         }
-        this.allButtons = allButtons;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Pagination#getButtons()
-     */
-    @Override
-    public List<PaginationButton> getButtons() {
-        return buttons;
+        this.links = links;
     }
 
     /**
-     * Sets the pagination buttons.
+     * Returns the next pagination link.
      */
-    public void setButtons(List<PaginationButton> buttons) {
-        if (buttons == null) {
-            buttons = new ArrayList<>();
-        }
-        this.buttons = buttons;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Pagination#getFirstPageButton()
-     */
-    @Override
-    public PaginationButton getFirstPageButton() {
-        return firstPageButton;
+    @XmlElement(name = "nextPageLink", required = false)
+    @JsonProperty(value = "nextPageLink", required = false)
+    public PageRequestLinkDto getNextPageLink() {
+        return nextPageLink;
     }
 
     /**
-     * Sets the first pagination button.
+     * Sets the next pagination link.
      */
-    public void setFirstPageButton(PaginationButton firstPageButton) {
-        this.firstPageButton = firstPageButton;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Pagination#getLastPageButton()
-     */
-    public PaginationButton getLastPageButton() {
-        return lastPageButton;
+    @JsonProperty(value = "nextPageLink", required = false)
+    public void setNextPageLink(PageRequestLinkDto nextPageLink) {
+        this.nextPageLink = nextPageLink;
     }
 
     /**
-     * Sets the last pagination button.
+     * Returns the last pagination link.
      */
-    public void setLastPageButton(PaginationButton lastPageButton) {
-        this.lastPageButton = lastPageButton;
+    @XmlElement(name = "lastPageLink", required = false)
+    @JsonProperty(value = "lastPageLink", required = false)
+    public PageRequestLinkDto getLastPageLink() {
+        return lastPageLink;
+    }
+
+    /**
+     * Sets the last pagination link.
+     */
+    @JsonProperty(value = "lastPageLink", required = false)
+    public void setLastPageLink(PageRequestLinkDto lastPageLink) {
+        this.lastPageLink = lastPageLink;
     }
 
 }

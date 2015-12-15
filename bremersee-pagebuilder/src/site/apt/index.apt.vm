@@ -1,4 +1,13 @@
 Bremersee Page Builder
 
-  This project contains classes for building a page.
+  This project contains classes for building a page / pagination.
+  
+  A page is a subset of all available items that should be displayed on a web site.
+  It has a beginning number (first result) and a maximum number of entries (maximum results).
+  It knows the size of all available items, the number of pages and the current page number.
+  The first result number of the previous and the next page can be calculated. 
+  
+* Usage
+
+  Generating a page depends on the list of items present.
   

@@ -16,90 +16,87 @@
 
 package org.bremersee.pagebuilder.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
+import org.apache.commons.lang3.Validate;
 import org.bremersee.comparator.model.ComparatorItem;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * @author Christian Bremer
  */
 //@formatter:off
+@XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlRootElement(name = "pageRequest")
 @XmlType(name = "pageRequestType", propOrder = { 
+		"pageNumber", 
+		"pageSize",
 		"firstResult", 
-		"maxResults", 
 		"comparatorItem", 
 		"query", 
 		"extension" 
 })
-@XmlAccessorType(XmlAccessType.FIELD)
-@JsonAutoDetect(fieldVisibility = Visibility.ANY, 
-    getterVisibility = Visibility.NONE, 
+@XmlSeeAlso({
+    PageRequestLinkDto.class
+})
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.ALWAYS)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
+    getterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
     creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.NONE, 
-    setterVisibility = Visibility.NONE)
-@JsonInclude(Include.NON_EMPTY)
+    isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
+    setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
 @JsonPropertyOrder(value = {
+        "pageNumber",
+        "pageSize", 
         "firstResult", 
-        "maxResults", 
         "comparatorItem", 
         "query", 
         "extension" 
 })
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,  
+    property = "_type_",
+    visible = true,
+    defaultImpl = PageRequestDto.class
+)
+@JsonSubTypes({
+    @Type(value = PageRequestDto.class, name = "PageRequestDto"),
+    @Type(value = PageRequestLinkDto.class, name = "PageRequestLinkDto")
+})
 //@formatter:on
-public class PageRequestDto implements PageRequest {
-
-    /**
-     * If the given page request is {@code null}, {@code null} will be returned.
-     * <br/>
-     * If the given page request is an instance of {@code PageRequestDto}, that
-     * instance will be returned. Otherwise a new instance will be created.
-     * 
-     * @param pageRequest
-     *            a page request
-     */
-    public static PageRequestDto toPageRequestDto(PageRequest pageRequest) {
-        if (pageRequest == null) {
-            return null;
-        }
-        if (pageRequest instanceof PageRequestDto) {
-            return (PageRequestDto) pageRequest;
-        }
-        return new PageRequestDto(pageRequest);
-    }
+public class PageRequestDto implements Serializable, Comparable<PageRequestDto> {
 
     private static final long serialVersionUID = 1L;
+    
+    private int pageNumber = 0;
 
-    @XmlElement(name = "firstResult", required = false)
-    @JsonProperty(value = "firstResult", required = false)
-    private Integer firstResult;
+    private int pageSize = Integer.MAX_VALUE;
 
-    @XmlElement(name = "maxResults", required = false)
-    @JsonProperty(value = "maxResults", required = false)
-    private Integer maxResults;
-
-    @XmlElement(name = "comparatorItem", required = false)
-    @JsonProperty(value = "comparatorItem", required = false)
     private ComparatorItem comparatorItem;
 
-    @XmlElement(name = "query", required = false)
-    @JsonProperty(value = "query", required = false)
     private String query;
 
-    @XmlAnyElement(lax = true)
-    @JsonProperty(value = "extension", required = false)
     private Object extension;
 
     /**
@@ -108,99 +105,45 @@ public class PageRequestDto implements PageRequest {
     public PageRequestDto() {
     }
 
-    /**
-     * Creates a page request with the specified parameters.
-     * 
-     * @param firstResult
-     *            the first result (may be {@code null})
-     * @param maxResults
-     *            the number of maximum results (may be {@code null})
-     * @param comparatorItem
-     *            the comparator item (may be {@code null})
-     * @param query
-     *            the search query (may be {@code null})
-     */
-    public PageRequestDto(Integer firstResult, Integer maxResults, ComparatorItem comparatorItem, String query) {
+    public PageRequestDto(int pageNumber, int pageSize) {
+        this(pageNumber, pageSize, null, null, null);
+    }
+
+    public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem) {
+        this(pageNumber, pageSize, comparatorItem, null, null);
+    }
+
+    public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query) {
+        this(pageNumber, pageSize, comparatorItem, query, null);
+    }
+
+    public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query, Object extension) {
         super();
-        this.firstResult = firstResult;
-        this.maxResults = maxResults;
-        this.comparatorItem = comparatorItem;
-        this.query = query;
+        setPageNumber(pageNumber);
+        setPageSize(pageSize);
+        setComparatorItem(comparatorItem);
+        setQuery(query);
+        setExtension(extension);
     }
-
-    /**
-     * Creates a page request with the specified parameters.
-     * 
-     * @param firstResult
-     *            the first result (may be {@code null})
-     * @param maxResults
-     *            the number of maximum results (may be {@code null})
-     * @param comparatorItem
-     *            the comparator item (may be {@code null})
-     * @param query
-     *            the search query (may be {@code null})
-     * @param extension
-     *            a custom extension (may be {@code null})
-     */
-    public PageRequestDto(Integer firstResult, Integer maxResults, ComparatorItem comparatorItem, String query,
-            Object extension) {
-        super();
-        this.firstResult = firstResult;
-        this.maxResults = maxResults;
-        this.comparatorItem = comparatorItem;
-        this.query = query;
-        this.extension = extension;
-    }
-
-    /**
-     * Creates a page request from the given one.
-     * 
-     * @param pageRequest
-     *            a page request
-     */
-    public PageRequestDto(PageRequest pageRequest) {
-        if (pageRequest != null) {
-            this.firstResult = pageRequest.getFirstResult();
-            this.maxResults = pageRequest.getMaxResults();
-            this.comparatorItem = pageRequest.getComparatorItem();
-            this.query = pageRequest.getQuery();
-            this.extension = pageRequest.getExtension();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
+    
     @Override
     public String toString() {
-        return "PageRequestDto [firstResult=" + firstResult + ", maxResults=" + maxResults + ", comparatorItem="
+        return "PageRequestDto [pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", comparatorItem="
                 + comparatorItem + ", query=" + query + ", extension=" + extension + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((comparatorItem == null) ? 0 : comparatorItem.hashCode());
         result = prime * result + ((extension == null) ? 0 : extension.hashCode());
-        result = prime * result + ((firstResult == null) ? 0 : firstResult.hashCode());
-        result = prime * result + ((maxResults == null) ? 0 : maxResults.hashCode());
+        result = prime * result + pageNumber;
+        result = prime * result + pageSize;
         result = prime * result + ((query == null) ? 0 : query.hashCode());
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -220,15 +163,9 @@ public class PageRequestDto implements PageRequest {
                 return false;
         } else if (!extension.equals(other.extension))
             return false;
-        if (firstResult == null) {
-            if (other.firstResult != null)
-                return false;
-        } else if (!firstResult.equals(other.firstResult))
+        if (pageNumber != other.pageNumber)
             return false;
-        if (maxResults == null) {
-            if (other.maxResults != null)
-                return false;
-        } else if (!maxResults.equals(other.maxResults))
+        if (pageSize != other.pageSize)
             return false;
         if (query == null) {
             if (other.query != null)
@@ -238,102 +175,113 @@ public class PageRequestDto implements PageRequest {
         return true;
     }
 
-    /**
-     * Returns the first result (may be {@code null}).
-     * 
-     * @return the first result
-     */
     @Override
-    public Integer getFirstResult() {
-        return firstResult;
+    public int compareTo(PageRequestDto pageRequest) {
+        if (pageRequest == null) {
+            return -1;
+        }
+        return getPageNumber() - pageRequest.getPageNumber();
     }
 
     /**
-     * Sets the first result.
-     * 
-     * @param firstResult
-     *            the first result (may be {@code null})
+     * Returns the requested page number (starting with 0).
      */
-    public void setFirstResult(Integer firstResult) {
-        this.firstResult = firstResult;
+    @XmlElement(name = "pageNumber", required = true)
+    @JsonProperty(value = "pageNumber", required = true)
+    public int getPageNumber() {
+        return pageNumber;
     }
 
     /**
-     * Returns the number of maximum results (may be {@code null}).
-     * 
-     * @return the number of maximum results
+     * Sets the requested page number (starting with 0).
      */
-    @Override
-    public Integer getMaxResults() {
-        return maxResults;
+    @JsonProperty(value = "pageNumber", required = true)
+    public void setPageNumber(int pageNumber) {
+        Validate.isTrue(pageNumber >= 0, "Page number must be 0 or greater than 0.");
+        this.pageNumber = pageNumber;
     }
 
     /**
-     * Sets the number of maximum results
-     * 
-     * @param maxResults
-     *            the number of maximum results (may be {@code null})
+     * Returns the maximum number of elements on the page (is always greater than 0).
      */
-    public void setMaxResults(Integer maxResults) {
-        this.maxResults = maxResults;
+    @XmlElement(name = "pageSize", required = true)
+    @JsonProperty(value = "pageSize", required = true)
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    /**
+     * Sets the maximum number of elements on the page (must be greater than 0).
+     */
+    @JsonProperty(value = "pageSize", required = true)
+    public void setPageSize(int pageSize) {
+        Validate.isTrue(pageSize >= 1, "Page number must be 1 or greater than 1.");
+        this.pageSize = pageSize;
+    }
+
+    /**
+     * Returns the first result (offset).
+     */
+    @XmlElement(name = "firstResult", required = false)
+    @JsonProperty(value = "firstResult", required = false)
+    public int getFirstResult() {
+        return getPageNumber() * getPageSize();
+    }
+
+    /**
+     * Sets the first result (offset).
+     */
+    @JsonProperty(value = "firstResult", required = false)
+    protected void setFirstResult(Integer firstResult) {
     }
 
     /**
      * Returns the comparator item (may be {@code null}).
-     * 
-     * @return the comparator item
      */
-    @Override
+    @XmlElement(name = "comparatorItem", required = false)
+    @JsonProperty(value = "comparatorItem", required = false)
     public ComparatorItem getComparatorItem() {
         return comparatorItem;
     }
 
     /**
-     * Sets the comparator item
-     * 
-     * @param comparatorItem
-     *            the comparator item (may be {@code null})
+     * Sets the comparator item (may be {@code null}).
      */
+    @JsonProperty(value = "comparatorItem", required = false)
     public void setComparatorItem(ComparatorItem comparatorItem) {
         this.comparatorItem = comparatorItem;
     }
 
     /**
      * Returns the search query (may be {@code null}).
-     * 
-     * @return the search query
      */
-    @Override
+    @XmlElement(name = "query", required = false)
+    @JsonProperty(value = "query", required = false)
     public String getQuery() {
         return query;
     }
 
     /**
-     * Sets the search query
-     * 
-     * @param query
-     *            the search query (may be {@code null})
+     * Sets the search query (may be {@code null}).
      */
+    @JsonProperty(value = "query", required = false)
     public void setQuery(String query) {
         this.query = query;
     }
 
     /**
      * Returns a custom extension (may be {@code null}).
-     * 
-     * @return a custom extension
      */
-    @Override
+    @XmlAnyElement(lax = true)
+    @JsonProperty(value = "extension", required = false)
     public Object getExtension() {
         return extension;
     }
 
     /**
-     * Sets a custom extension.
-     * 
-     * @param extension
-     *            a custom extension (may be {@code null})
+     * Sets a custom extension (may be {@code null}).
      */
+    @JsonProperty(value = "extension", required = false)
     public void setExtension(Object extension) {
         this.extension = extension;
     }

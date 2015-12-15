@@ -21,15 +21,15 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.bremersee.comparator.ComparatorItemTransformer;
 import org.bremersee.comparator.ComparatorItemTransformerImpl;
-import org.bremersee.pagebuilder.model.PageControl;
-import org.bremersee.pagebuilder.model.Page;
+import org.bremersee.pagebuilder.model.PageControlDto;
+import org.bremersee.pagebuilder.model.PageDto;
 
 /**
  * <p>
- * Factory to create {@link PageControl}s.
+ * Factory to create {@link PageControlDto}s.
  * </p>
  * <p>
- * A {@link PageControl} can be used to display a {@link Page} on a web site.
+ * A {@link PageControlDto} can be used to display a {@link PageDto} on a web site.
  * </p>
  * 
  * @author Christian Bremer
@@ -44,27 +44,27 @@ public abstract class PageControlFactory {
     /**
      * Default value.
      */
-    public static final int DEFAULT_MAX_PAGINATION_BUTTONS = 7;
+    public static final int DEFAULT_MAX_PAGINATION_LINKS = 7;
 
     /**
      * Default value.
      */
-    public static final int DEFAULT_MAX_RESULTS_MIN_VALUE = 10;
+    public static final int DEFAULT_PAGE_SIZE_SELECTOR_MIN_VALUE = 10;
 
     /**
      * Default value.
      */
-    public static final int DEFAULT_MAX_RESULTS_MAX_VALUE = 100;
+    public static final int DEFAULT_PAGE_SIZE_SELECTOR_MAX_VALUE = 100;
 
     /**
      * Default value.
      */
-    public static final int DEFAULT_MAX_RESULTS_SELECTOR_STEP = 10;
+    public static final int DEFAULT_PAGE_SIZE_SELECTOR_STEP = 10;
 
     /**
      * Default value.
      */
-    public static final boolean DEFAULT_SELECT_ALL_RESULTS_AVAILABLE = true;
+    public static final boolean DEFAULT_SELECT_ALL_ENTRIES_AVAILABLE = true;
 
     /**
      * Returns a new factory instance.
@@ -115,21 +115,21 @@ public abstract class PageControlFactory {
 
     private String queryParamName = "q";
 
-    private String maxResultsParamName = "max";
+    private String pageSizeParamName = "s";
 
     private String pageNumberParamName = "p";
 
     private String comparatorParamName = "c";
 
-    private int maxResultsSelectorMinValue = DEFAULT_MAX_RESULTS_MIN_VALUE;
+    private int pageSizeSelectorMinValue = DEFAULT_PAGE_SIZE_SELECTOR_MIN_VALUE;
 
-    private int maxResultsSelectorMaxValue = DEFAULT_MAX_RESULTS_MAX_VALUE;
+    private int pageSizeSelectorMaxValue = DEFAULT_PAGE_SIZE_SELECTOR_MAX_VALUE;
 
-    private int maxResultsSelectorStep = DEFAULT_MAX_RESULTS_SELECTOR_STEP;
+    private int pageSizeSelectorStep = DEFAULT_PAGE_SIZE_SELECTOR_STEP;
 
-    private boolean selectAllResultsAvailable = DEFAULT_SELECT_ALL_RESULTS_AVAILABLE;
+    private boolean selectAllEntriesAvailable = DEFAULT_SELECT_ALL_ENTRIES_AVAILABLE;
 
-    private int maxPaginationButtons = DEFAULT_MAX_PAGINATION_BUTTONS;
+    private int maxPaginationLinks = DEFAULT_MAX_PAGINATION_LINKS;
 
     private boolean isQuerySupported = true;
 
@@ -183,24 +183,24 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Gets the name of the max. results query parameter. Default is 'max'.
+     * Gets the name of the page size query parameter. Default is 's'.
      * 
-     * @return the name of the max. results query parameter
+     * @return the name of the page size query parameter
      */
-    public String getMaxResultsParamName() {
-        return maxResultsParamName;
+    public String getPageSizeParamName() {
+        return pageSizeParamName;
     }
 
     /**
-     * Sets the name of the max. results query parameter. Default is 'max'.
+     * Sets the name page size query parameter. Default is 's'.
      * 
-     * @param maxResultsParamName
-     *            the name of the max. results query parameter
+     * @param pageSizeParamName
+     *            the name of page size query parameter
      * @return the page control factory
      */
-    public PageControlFactory setMaxResultsParamName(String maxResultsParamName) {
-        if (StringUtils.isNotBlank(maxResultsParamName)) {
-            this.maxResultsParamName = maxResultsParamName;
+    public PageControlFactory setPageSizeParamName(String pageSizeParamName) {
+        if (StringUtils.isNotBlank(pageSizeParamName)) {
+            this.pageSizeParamName = pageSizeParamName;
         }
         return this;
     }
@@ -229,7 +229,7 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Gets the name of the comparator query parameter. Default is 'q'.
+     * Gets the name of the comparator query parameter. Default is 'c'.
      * 
      * @return the name of the comparator query parameter
      */
@@ -238,7 +238,7 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Sets the name of the comparator query parameter. Default is 'q'.
+     * Sets the name of the comparator query parameter. Default is 'c'.
      * 
      * @param comparatorParamName
      *            the name of the comparator query parameter
@@ -252,114 +252,114 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Gets the minimum value, that the maximum results per page selector can
+     * Gets the minimum value, that the page size selector can
      * have. Default is '10'.
      * 
      * @return the minimum value
      */
-    public int getMaxResultsSelectorMinValue() {
-        return maxResultsSelectorMinValue;
+    public int getPageSizeSelectorMinValue() {
+        return pageSizeSelectorMinValue;
     }
 
     /**
-     * Sets the minimum value, that the maximum results per page selector can
+     * Sets the minimum value, that the page size selector can
      * have. Default is '10'.
      * 
-     * @param maxResultsSelectorMinValue
+     * @param pageSizeSelectorMinValue
      *            the minimum value
      * @return the page control factory
      */
-    public PageControlFactory setMaxResultsSelectorMinValue(int maxResultsSelectorMinValue) {
-        this.maxResultsSelectorMinValue = maxResultsSelectorMinValue;
+    public PageControlFactory setPageSizeSelectorMinValue(int pageSizeSelectorMinValue) {
+        this.pageSizeSelectorMinValue = pageSizeSelectorMinValue;
         return this;
     }
 
     /**
-     * Gets the maximum value, that the maximum results per page selector can
+     * Gets the maximum value, that the page size selector can
      * have. Default is '100'.
      * 
      * @return the maximum value
      */
     public int getMaxResultsSelectorMaxValue() {
-        return maxResultsSelectorMaxValue;
+        return pageSizeSelectorMaxValue;
     }
 
     /**
-     * Sets the maximum value, that the maximum results per page selector can
+     * Sets the maximum value, that the page size selector can
      * have. Default is '100'.
      * 
-     * @param maxResultsSelectorMaxValue
+     * @param pageSizeSelectorMaxValue
      *            the maximum value
      * @return the page control factory
      */
-    public PageControlFactory setMaxResultsSelectorMaxValue(int maxResultsSelectorMaxValue) {
-        this.maxResultsSelectorMaxValue = maxResultsSelectorMaxValue;
+    public PageControlFactory setPageSizeSelectorMaxValue(int pageSizeSelectorMaxValue) {
+        this.pageSizeSelectorMaxValue = pageSizeSelectorMaxValue;
         return this;
     }
 
     /**
-     * Gets the step size of the maximum results per page selector. Default is
+     * Gets the step size of the page size selector. Default is
      * '10'.
      * 
-     * @return the step size of the maximum results per page selector
+     * @return the step size of the page size selector
      */
-    public int getMaxResultsSelectorStep() {
-        return maxResultsSelectorStep;
+    public int getPageSizeSelectorStep() {
+        return pageSizeSelectorStep;
     }
 
     /**
-     * Sets the step size of the maximum results per page selector. Default is
+     * Sets the step size of the page size selector. Default is
      * '10'.
      * 
-     * @param maxResultsSelectorStep
-     *            the step size of the maximum results per page selector
+     * @param pageSizeSelectorStep
+     *            the step size of the page size selector
      * @return the page control factory
      */
-    public PageControlFactory setMaxResultsSelectorStep(int maxResultsSelectorStep) {
-        this.maxResultsSelectorStep = maxResultsSelectorStep;
+    public PageControlFactory setPageSizeSelectorStep(int pageSizeSelectorStep) {
+        this.pageSizeSelectorStep = pageSizeSelectorStep;
         return this;
     }
 
     /**
-     * Returns {@code true} if the maximum results per page selector has an item
+     * Returns {@code true} if the page size selector has an item
      * to choose all available entries, otherwise {@code false}. Default is
      * 'true'.
      */
-    public boolean isSelectAllResultsAvailable() {
-        return selectAllResultsAvailable;
+    public boolean isSelectAllEntriesAvailable() {
+        return selectAllEntriesAvailable;
     }
 
     /**
      * Specifies whether the maximum results per page selector has an item to
      * choose all available entries or not. Default is 'true'.
      * 
-     * @param selectAllResultsAvailable
+     * @param selectAllEntriesAvailable
      *            {@code true} or {@code false}
      * @return the page control factory
      */
-    public PageControlFactory setSelectAllResultsAvailable(boolean selectAllResultsAvailable) {
-        this.selectAllResultsAvailable = selectAllResultsAvailable;
+    public PageControlFactory setSelectAllEntriesAvailable(boolean selectAllEntriesAvailable) {
+        this.selectAllEntriesAvailable = selectAllEntriesAvailable;
         return this;
     }
 
     /**
-     * Returns the maximum numbers of pagination buttons. Default is '7'.
+     * Returns the maximum numbers of pagination links. Default is '7'.
      * 
-     * @return the maximum numbers of pagination buttons
+     * @return the maximum numbers of pagination links
      */
-    public int getMaxPaginationButtons() {
-        return maxPaginationButtons;
+    public int getMaxPaginationLinks() {
+        return maxPaginationLinks;
     }
 
     /**
-     * Sets the maximum numbers of pagination buttons. Default is '7'.
+     * Sets the maximum numbers of pagination links. Default is '7'.
      * 
-     * @param maxPaginationButtons
-     *            the maximum numbers of pagination buttons
+     * @param maxPaginationLinks
+     *            the maximum numbers of pagination links
      * @return the page control factory
      */
-    public PageControlFactory setMaxPaginationButtons(int maxPaginationButtons) {
-        this.maxPaginationButtons = maxPaginationButtons;
+    public PageControlFactory setMaxPaginationLinks(int maxPaginationLinks) {
+        this.maxPaginationLinks = maxPaginationLinks;
         return this;
     }
 
@@ -389,23 +389,19 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Creates a new {@link PageControl} from the given page.<br/>
+     * Creates a new {@link PageControlDto} from the given page.<br/>
      * The page URL must be the plain URL (with no page control query
      * parameters), e. g.: http://example.org/myapp/mypage.html<br/>
-     * The query is the value of the query field of the page and is optional.
-     * <br/>
      * If the locale is not present, the default locale will be used.
      * 
      * @param page
      *            the page
      * @param pageUrl
      *            the plain page URL
-     * @param query
-     *            the query value
      * @param locale
      *            the locale
      * @return the created page control
      */
-    public abstract PageControl newPageControl(Page page, String pageUrl, String query, Locale locale);
+    public abstract PageControlDto newPageControl(PageDto page, String pageUrl, Locale locale);
 
 }

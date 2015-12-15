@@ -16,16 +16,20 @@
 
 package org.bremersee.pagebuilder.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,51 +37,34 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * <p>
- * An option of a maximum result selector that can be processed by a
+ * An option of page size selector that can be processed by a
  * {@link JAXBContext} and the Jackson JSON processor.
  * </p>
  * 
  * @author Christian Bremer
  */
 //@formatter:off
-@XmlType(name = "maxResultsSelectorOptionType", propOrder = { 
+@XmlAccessorType(XmlAccessType.PROPERTY)
+@XmlRootElement(name = "pageSizeSelectorOption")
+@XmlType(name = "pageSizeSelectorOptionType", propOrder = { 
         "value", 
         "displayedValue", 
         "selected" })
-@XmlAccessorType(XmlAccessType.PROPERTY)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.ALWAYS)
 @JsonAutoDetect(fieldVisibility = Visibility.NONE, 
     getterVisibility = Visibility.PUBLIC_ONLY, 
     creatorVisibility = Visibility.NONE, 
     isGetterVisibility = Visibility.PUBLIC_ONLY, 
     setterVisibility = Visibility.PUBLIC_ONLY)
-@JsonInclude(Include.NON_EMPTY)
 @JsonPropertyOrder(value = {
         "value",
         "displayedValue",
         "selected"
 })
 //@formatter:on
-public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
-
-    /**
-     * If the given option is {@code null}, {@code null} will be returned.<br/>
-     * If the given option is an instance of {@code MaxResultsSelectorOptionDto}
-     * , that instance will be returned. Otherwise a new instance will be
-     * created.
-     * 
-     * @param maxResultsSelectorOption
-     *            a maximum result option
-     */
-    public static MaxResultsSelectorOptionDto toMaxResultsSelectorOptionDto(
-            MaxResultsSelectorOption maxResultsSelectorOption) {
-        if (maxResultsSelectorOption == null) {
-            return null;
-        }
-        if (maxResultsSelectorOption instanceof MaxResultsSelectorOptionDto) {
-            return (MaxResultsSelectorOptionDto) maxResultsSelectorOption;
-        }
-        return new MaxResultsSelectorOptionDto(maxResultsSelectorOption);
-    }
+public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageSizeSelectorOptionDto> {
 
     private static final long serialVersionUID = 1L;
 
@@ -90,11 +77,11 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
     /**
      * Default constructor.
      */
-    public MaxResultsSelectorOptionDto() {
+    public PageSizeSelectorOptionDto() {
     }
 
     /**
-     * Creates a {@link MaxResultsSelectorOptionDto} with the given parameters.
+     * Creates a {@link PageSizeSelectorOptionDto} with the given parameters.
      * 
      * @param value
      *            the value
@@ -104,25 +91,10 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
      *            {@code true} if the option is selected, otherwise
      *            {@code false}
      */
-    public MaxResultsSelectorOptionDto(int value, String displayedValue, boolean selected) {
+    public PageSizeSelectorOptionDto(int value, String displayedValue, boolean selected) {
         this.value = value;
         this.displayedValue = displayedValue;
         this.selected = selected;
-    }
-
-    /**
-     * Creates a {@link MaxResultsSelectorOptionDto} from another
-     * {@link MaxResultsSelectorOption}.
-     * 
-     * @param maxResultsSelectorOption
-     *            the other maximum result option
-     */
-    public MaxResultsSelectorOptionDto(MaxResultsSelectorOption maxResultsSelectorOption) {
-        if (maxResultsSelectorOption != null) {
-            this.value = maxResultsSelectorOption.getValue();
-            this.displayedValue = maxResultsSelectorOption.getDisplayedValue();
-            this.selected = maxResultsSelectorOption.isSelected();
-        }
     }
 
     /*
@@ -162,7 +134,7 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        MaxResultsSelectorOptionDto other = (MaxResultsSelectorOptionDto) obj;
+        PageSizeSelectorOptionDto other = (PageSizeSelectorOptionDto) obj;
         if (value != other.value)
             return false;
         return true;
@@ -172,18 +144,15 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
      * Compares the values of the options.
      */
     @Override
-    public int compareTo(MaxResultsSelectorOption o) {
+    public int compareTo(PageSizeSelectorOptionDto o) {
         return value - o.getValue();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.MaxResultsSelectorOption#getValue()
+    /**
+     * Returns the value (the page size) of this option.
      */
     @XmlElement(name = "value", required = true)
     @JsonProperty(value = "value", required = true)
-    @Override
     public int getValue() {
         return value;
     }
@@ -196,18 +165,14 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
         this.value = value;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.MaxResultsSelectorOption#
-     * getDisplayedValue()
+    /**
+     * Returns the displayed value (normally the page size plus one).
      */
     @XmlElement(name = "displayedValue", required = false)
     @JsonProperty(value = "displayedValue", required = false)
-    @Override
     public String getDisplayedValue() {
         if (StringUtils.isBlank(displayedValue)) {
-            displayedValue = "" + value;
+            return Integer.toString(value + 1);
         }
         return displayedValue;
     }
@@ -220,15 +185,11 @@ public class MaxResultsSelectorOptionDto implements MaxResultsSelectorOption {
         this.displayedValue = displayedValue;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bremersee.pagebuilder.model.MaxResultsSelectorOption#isSelected()
+    /**
+     * Returns {@code true} if the option is selected, otherwise {@code false}.
      */
     @XmlElement(name = "selected", required = true)
     @JsonProperty(value = "selected", required = true)
-    @Override
     public boolean isSelected() {
         return selected;
     }

@@ -28,27 +28,27 @@ import java.io.Serializable;
 public interface PageBuilderFilter {
 
     /**
-     * Determines whether an item should be added to a page or not.
+     * Determines whether an element should be added to a page or not.
      * 
-     * @param pageItem
-     *            the item that can be accepted or not
-     * @param filter
-     *            the filter
-     * @return {@code true} if the item is accepted otherwise {@code false}
+     * @param pageElement
+     *            the element that can be accepted or not
+     * @param filterCriteria
+     *            the filter criteria (can be {@code null})
+     * @return {@code true} if the element is accepted otherwise {@code false}
      */
-    boolean accept(Object pageItem, Object filter);
+    boolean accept(Object pageElement, Object filterCriteria);
 
     /**
-     * Determines whether an item should be added to a page or not.
+     * Determines whether an element should be added to a page or not.
      * 
-     * @param pageItemId
-     *            the ID of the item
-     * @param pageItemType
-     *            the type (class) of the item
-     * @param filter
-     *            the filter
-     * @return {@code true} if the item is accepted otherwise {@code false}
+     * @param pageElementId
+     *            the ID of the element
+     * @param pageElementType
+     *            the type (class) of the element
+     * @param filterCriteria
+     *            the filter criteria (can be {@code null})
+     * @return {@code true} if the element is accepted otherwise {@code false}
      */
-    boolean accept(Serializable pageItemId, String pageItemType, Object filter);
+    boolean accept(Serializable pageElementId, String pageElementType, Object filterCriteria);
 
 }

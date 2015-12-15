@@ -38,24 +38,6 @@ public abstract class PageBuilderUtils {
     }
 
     /**
-     * Calculates the first result of a given page number and the maximum
-     * results.
-     * 
-     * @param pageNumber
-     *            the page number
-     * @param maxResults
-     *            maximum results
-     * @return the first result
-     */
-    public static int getFirstResult(int pageNumber, int maxResults) {
-        Long firstResult = (long) pageNumber * (long) maxResults;
-        if (firstResult > Integer.MAX_VALUE) {
-            firstResult = (long) Integer.MAX_VALUE;
-        }
-        return firstResult.intValue();
-    }
-
-    /**
      * Transforms a JSON map to an object.
      * 
      * @param map

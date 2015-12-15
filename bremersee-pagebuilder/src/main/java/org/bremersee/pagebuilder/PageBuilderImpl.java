@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.bremersee.comparator.ObjectComparator;
-import org.bremersee.comparator.model.ComparatorItem;
+import org.bremersee.comparator.ObjectComparatorFactory;
 import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.model.PageRequestDto;
 
 /**
  * <p>
@@ -33,6 +33,8 @@ import org.bremersee.pagebuilder.model.PageDto;
  * @author Christian Bremer
  */
 public class PageBuilderImpl implements PageBuilder {
+    
+    private ObjectComparatorFactory objectComparatorFactory = ObjectComparatorFactory.newInstance();
 
     /**
      * An optional filter.
@@ -40,10 +42,24 @@ public class PageBuilderImpl implements PageBuilder {
     private PageBuilderFilter pageBuilderFilter;
 
     /**
+     * Returns the object comparator factory. 
+     */
+    protected ObjectComparatorFactory getObjectComparatorFactory() {
+        return objectComparatorFactory;
+    }
+
+    /**
+     * Sets the object comparator factory. A default one is present.
+     */
+    public void setObjectComparatorFactory(ObjectComparatorFactory objectComparatorFactory) {
+        if (objectComparatorFactory != null) {
+            this.objectComparatorFactory = objectComparatorFactory;
+        }
+    }
+
+    /**
      * Return the filter for this page builder or {@code null} if no filter is
      * present.
-     * 
-     * @return the filter or {@code null}
      */
     protected PageBuilderFilter getPageBuilderFilter() {
         return pageBuilderFilter;
@@ -51,96 +67,69 @@ public class PageBuilderImpl implements PageBuilder {
 
     /**
      * Set the filter for this page builder.
-     * 
-     * @param pageBuilderFilter
-     *            the filter for this page builder
      */
     public void setPageBuilderFilter(PageBuilderFilter pageBuilderFilter) {
         this.pageBuilderFilter = pageBuilderFilter;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return getClass().getName();
+        return "PageBuilderImpl [pageBuilderFilter=" + pageBuilderFilter + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bremersee.pagebuilder.PageBuilder#buildPage(java.util.Collection,
-     * java.lang.Integer, java.lang.Integer, java.lang.Integer,
-     * org.bremersee.comparator.model.ComparatorItem)
+    /* (non-Javadoc)
+     * @see org.bremersee.pagebuilder.PageBuilder#buildPage(java.util.Collection, org.bremersee.pagebuilder.model.PageRequestDto, long)
      */
     @Override
-    public PageDto buildPage(Collection<? extends Object> entries, Integer firstResult, Integer maxResults,
-            Integer totalSize, ComparatorItem comparatorItem) {
+    public PageDto buildPage(Collection<? extends Object> pageEntries, PageRequestDto pageRequest, long totalSize) {
+        return new PageDto(pageEntries, pageRequest, totalSize);
+    }
 
-        PageDto page = new PageDto();
-        page.setComparatorItem(comparatorItem);
-        page.setFirstResult(firstResult);
-        page.setMaxResults(maxResults);
-        page.setTotalSize(totalSize);
-        if (entries != null) {
-            page.getEntries().addAll(entries);
+    /* (non-Javadoc)
+     * @see org.bremersee.pagebuilder.PageBuilder#buildFilteredPage(java.util.Collection, org.bremersee.pagebuilder.model.PageRequestDto, java.lang.Object)
+     */
+    @Override
+    public PageDto buildFilteredPage(Collection<? extends Object> allAvailableEntries, PageRequestDto pageRequest, Object filterCriteria) {
+        if (allAvailableEntries == null) {
+            return new PageDto(allAvailableEntries, pageRequest, 0L);
         }
-        return page;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.PageBuilder#buildFilteredPage(java.util.
-     * Collection, java.lang.Integer, java.lang.Integer,
-     * org.bremersee.comparator.ObjectComparator, java.lang.Object)
-     */
-    @Override
-    public PageDto buildFilteredPage(Collection<? extends Object> entries, Integer firstResult, Integer maxResults,
-            ObjectComparator objectComparator, Object permission) {
-
-        final int _firstResult = firstResult == null || firstResult < 0 ? 0 : firstResult;
-        final int _maxResults = maxResults == null || maxResults < 0 ? Integer.MAX_VALUE : maxResults;
-
-        PageDto page = new PageDto();
-
-        int n = 0;
-        if (entries != null) {
-
-            if (objectComparator != null) {
-                if (!(entries instanceof List)) {
-                    entries = new ArrayList<Object>(entries);
-                }
-                Collections.sort((List<?>) entries, objectComparator);
-                page.setComparatorItem(objectComparator.getComparatorItem());
-            }
-
-            for (final Object entry : entries) {
-
-                if (permission == null || accept(entry, permission)) {
-
-                    if (_firstResult <= n && page.getEntries().size() < _maxResults) {
-                        page.getEntries().add(entry);
-                    }
-                    n++;
+        if (pageRequest == null) {
+            pageRequest = new PageRequestDto();
+        }
+        List<Object> allEntries = new ArrayList<>(allAvailableEntries);
+        if (pageRequest.getComparatorItem() != null) {
+            Collections.sort(allEntries, objectComparatorFactory.newObjectComparator(pageRequest.getComparatorItem()));
+        }
+        List<Object> filteredEntries;
+        if (getPageBuilderFilter() == null) {
+            filteredEntries = allEntries;
+        } else {
+            filteredEntries = new ArrayList<Object>(allAvailableEntries.size());
+            for (Object entry : allEntries) {
+                if (getPageBuilderFilter().accept(entry, filterCriteria)) {
+                    filteredEntries.add(entry);
                 }
             }
         }
+        List<Object> pageEntries = new ArrayList<>(filteredEntries.size());
+        if (pageRequest.getFirstResult() < filteredEntries.size()) {
+            int lastResult = pageRequest.getFirstResult() + pageRequest.getPageSize();
+            for (int i = pageRequest.getFirstResult(); i < lastResult; i++) {
+                if (i < filteredEntries.size()) {
+                    pageEntries.add(filteredEntries.get(i));
+                }
+            }
+        }
+        
+        PageDto page = new PageDto();
+        page.setEntries(pageEntries);
+        page.setPageRequest(pageRequest);
+        page.setTotalSize(filteredEntries.size());
 
-        page.setFirstResult(_firstResult);
-        page.setMaxResults(_maxResults);
-        page.setTotalSize(n);
         return page;
     }
-
-    private boolean accept(Object entry, Object filter) {
-        if (pageBuilderFilter != null) {
-            return pageBuilderFilter.accept(entry, filter);
-        }
-        return true;
-    }
+    
 }

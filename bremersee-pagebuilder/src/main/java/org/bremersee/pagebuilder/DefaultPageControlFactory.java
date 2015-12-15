@@ -26,13 +26,10 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.bremersee.comparator.model.ComparatorItem;
-import org.bremersee.pagebuilder.model.MaxResultsSelectorOption;
-import org.bremersee.pagebuilder.model.MaxResultsSelectorOptionDto;
-import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageControlDto;
 import org.bremersee.pagebuilder.model.PageDto;
-import org.bremersee.pagebuilder.model.Pagination;
-import org.bremersee.pagebuilder.model.PaginationButtonDto;
+import org.bremersee.pagebuilder.model.PageRequestLinkDto;
+import org.bremersee.pagebuilder.model.PageSizeSelectorOptionDto;
 import org.bremersee.pagebuilder.model.PaginationDto;
 import org.bremersee.utils.WebUtils;
 
@@ -45,27 +42,13 @@ import org.bremersee.utils.WebUtils;
  */
 class DefaultPageControlFactory extends PageControlFactory {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bremersee.pagebuilder.PageControlFactory#newPageControl(org.bremersee
-     * .pagebuilder.model.PageDto, java.lang.String, java.lang.String,
-     * java.util.Locale)
-     */
     @Override
-    public PageControlDto newPageControl(Page page, String pageUrl, String query, Locale locale) {
-
-        return buildPageControl(page, pageUrl, query, locale);
-    }
-
-    private PageControlDto buildPageControl(Page page, String pageUrl, String query, Locale locale) {
+    public PageControlDto newPageControl(PageDto page, String pageUrl, Locale locale) {
 
         Validate.notNull(page, "page must not be null");
-        if (page.getMaxResults() == null || page.getMaxResults() < 1) {
-            PageDto pageDto = PageDto.toPageDto(page);
-            pageDto.setMaxResults(Integer.MAX_VALUE);
-            page = pageDto;
+
+        if (pageUrl == null) {
+            pageUrl = "";
         }
 
         if (locale == null) {
@@ -74,30 +57,39 @@ class DefaultPageControlFactory extends PageControlFactory {
 
         PageControlDto pageControl = new PageControlDto();
 
-        pageControl.setComparatorParamName(getComparatorParamName());
-        pageControl.setMaxResultsParamName(getMaxResultsParamName());
-        pageControl.setPageNumberParamName(getPageNumberParamName());
-        pageControl.setQueryParamName(getQueryParamName());
-
         pageControl.setPage(page);
 
+        pageControl.setPageNumberParamName(getPageNumberParamName());
+        pageControl.setPageSizeParamName(getPageSizeParamName());
+
+        pageControl.setComparatorParamName(getComparatorParamName());
         pageControl.setComparatorParamValue(
-                getComparatorItemTransformer().toString(page.getComparatorItem(), false, null));
+                getComparatorItemTransformer().toString(page.getPageRequest().getComparatorItem(), false, null));
 
-        pageControl.setMaxResultsSelectorOptions(buildMaxResultsSelectorOptions(page.getMaxResults(), locale));
-
-        pageControl.setPagination(buildPagination(page, pageUrl, query));
-
+        pageControl.setQueryParamName(getQueryParamName());
         pageControl.setQuerySupported(isQuerySupported());
-        pageControl.setQuery(query);
+
+        for (int pageNumber = 0; pageNumber < page.getTotalPages(); pageNumber++) {
+            PageRequestLinkDto pageRequestLink = new PageRequestLinkDto();
+            pageRequestLink.setActive(pageNumber == page.getPageRequest().getPageNumber());
+            pageRequestLink.setPageNumber(pageNumber);
+            pageRequestLink.setUrl(buildUrl(pageUrl, pageNumber, page.getPageRequest().getPageSize(),
+                    page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery()));
+            pageControl.getPageRequestLinks().add(pageRequestLink);
+        }
+
+        pageControl
+                .setPageSizeSelectorOptions(buildPageSizeSelectorOptions(page.getPageRequest().getPageSize(), locale));
+
+        pageControl.setPagination(buildPagination(page, pageControl.getPageRequestLinks(), pageUrl));
 
         return pageControl;
     }
 
-    private String buildUrl(String url, int pageNo, int maxResults, ComparatorItem comparatorItem, String query) {
+    private String buildUrl(String url, int pageNo, int pageSize, ComparatorItem comparatorItem, String query) {
 
-        String newUrl = WebUtils.addUrlParameter(url, getPageNumberParamName(), Integer.valueOf(pageNo).toString());
-        newUrl = WebUtils.addUrlParameter(newUrl, getMaxResultsParamName(), Integer.valueOf(maxResults).toString());
+        String newUrl = WebUtils.addUrlParameter(url, getPageNumberParamName(), Integer.toString(pageNo));
+        newUrl = WebUtils.addUrlParameter(newUrl, getPageSizeParamName(), Integer.toString(pageSize));
         String comparatorParamValue = getComparatorItemTransformer().toString(comparatorItem, false, null);
         if (StringUtils.isNotBlank(comparatorParamValue)) {
             newUrl = WebUtils.addUrlParameter(newUrl, getComparatorParamName(), comparatorParamValue);
@@ -108,139 +100,132 @@ class DefaultPageControlFactory extends PageControlFactory {
         return newUrl;
     }
 
-    private Pagination buildPagination(Page page, String pageUrl, String query) {
-
-        int maxPaginationButtons = getMaxPaginationButtons();
-
-        if (maxPaginationButtons < 1) {
-            maxPaginationButtons = 1;
-        }
+    private PaginationDto buildPagination(PageDto page, List<PageRequestLinkDto> pageRequestLinks, String pageUrl) {
 
         Validate.notEmpty(pageUrl, "pageUrl must not be empty");
-        Validate.notNull(page.getPageSize(), "page.getPageSize() must not be null");
-        Validate.notNull(page.getCurrentPage(), "page.getCurrentPage() must not be null");
 
-        if (page.getPageSize() < maxPaginationButtons) {
-            maxPaginationButtons = page.getPageSize();
+        int maxPaginationLinks = getMaxPaginationLinks();
+        if (maxPaginationLinks < 1) {
+            maxPaginationLinks = 1;
+        }
+
+        if (page.getTotalPages() < maxPaginationLinks) {
+            maxPaginationLinks = page.getTotalPages();
         }
 
         PaginationDto pagination = new PaginationDto();
-        pagination.setMaxPaginationButtons(maxPaginationButtons);
-
-        for (int pageNumber = 0; pageNumber < page.getPageSize(); pageNumber++) {
-
-            PaginationButtonDto paginationEntry = new PaginationButtonDto();
-            paginationEntry.setActive(pageNumber == page.getCurrentPage());
-            paginationEntry.setPageNumber(pageNumber);
-            paginationEntry
-                    .setUrl(buildUrl(pageUrl, pageNumber, page.getMaxResults(), page.getComparatorItem(), query));
-
-            pagination.getAllButtons().add(paginationEntry);
-        }
+        pagination.setMaxPaginationLinks(maxPaginationLinks);
 
         int pageNumberOfFirstButton;
-        if (maxPaginationButtons % 2 == 0) {
-            pageNumberOfFirstButton = page.getCurrentPage() - maxPaginationButtons / 2 + 1;
+        if (maxPaginationLinks % 2 == 0) {
+            pageNumberOfFirstButton = page.getPageRequest().getPageNumber() - maxPaginationLinks / 2 + 1;
         } else {
-            int middle = Double.valueOf(Math.floor(maxPaginationButtons / 2.)).intValue();
-            pageNumberOfFirstButton = page.getCurrentPage() - middle;
+            int middle = Double.valueOf(Math.floor(maxPaginationLinks / 2.)).intValue();
+            pageNumberOfFirstButton = page.getPageRequest().getPageNumber() - middle;
         }
         if (pageNumberOfFirstButton < 0) {
             pageNumberOfFirstButton = 0;
         }
-        for (int pageNumber = pageNumberOfFirstButton; pageNumber < pageNumberOfFirstButton + maxPaginationButtons
-                && pageNumber < page.getPageSize(); pageNumber++) {
-            pagination.getButtons().add(pagination.getAllButtons().get(pageNumber));
+        for (int pageNumber = pageNumberOfFirstButton; pageNumber < pageNumberOfFirstButton + maxPaginationLinks
+                && pageNumber < page.getTotalPages(); pageNumber++) {
+            pagination.getLinks().add(pageRequestLinks.get(pageNumber));
         }
-        
-        while (page.getPageSize() >= maxPaginationButtons
-                && pageNumberOfFirstButton - 1 >= 0
-                && pagination.getButtons().size() < maxPaginationButtons) {
+
+        while (page.getTotalPages() >= maxPaginationLinks && pageNumberOfFirstButton - 1 >= 0
+                && pagination.getLinks().size() < maxPaginationLinks) {
             pageNumberOfFirstButton = pageNumberOfFirstButton - 1;
-            pagination.getButtons().add(0, pagination.getAllButtons().get(pageNumberOfFirstButton));
+            pagination.getLinks().add(0, pageRequestLinks.get(pageNumberOfFirstButton));
         }
 
-        boolean firstPageDisabled = page.getCurrentPage() == 0;
+        boolean firstPageDisabled = page.getPageRequest().getPageNumber() == 0;
         String firstPageUrl = firstPageDisabled ? "#"
-                : buildUrl(pageUrl, 0, page.getMaxResults(), page.getComparatorItem(), query);
-        PaginationButtonDto firstPage = new PaginationButtonDto(0, !firstPageDisabled, firstPageUrl);
-        pagination.setFirstPageButton(firstPage);
+                : buildUrl(pageUrl, 0, page.getPageRequest().getPageSize(), page.getPageRequest().getComparatorItem(),
+                        page.getPageRequest().getQuery());
+        PageRequestLinkDto firstPage = new PageRequestLinkDto(pageRequestLinks.get(0), !firstPageDisabled,
+                firstPageUrl);
+        pagination.setFirstPageLink(firstPage);
 
-        boolean previousPageDisabled = page.getCurrentPage() == 0;
+        boolean previousPageDisabled = page.getPageRequest().getPageNumber() == 0;
         String previousPageUrl = previousPageDisabled ? "#"
-                : buildUrl(pageUrl, page.getCurrentPage() - 1, page.getMaxResults(), page.getComparatorItem(), query);
-        PaginationButtonDto previousPage = new PaginationButtonDto(page.getCurrentPage() - 1, !previousPageDisabled,
-                previousPageUrl);
-        pagination.setPreviousPageButton(previousPage);
+                : buildUrl(pageUrl, page.getPageRequest().getPageNumber() - 1, page.getPageRequest().getPageSize(),
+                        page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery());
+        int previousPageNumber = previousPageDisabled ? 0 : page.getPageRequest().getPageNumber() - 1;
+        PageRequestLinkDto previousPage = new PageRequestLinkDto(pageRequestLinks.get(previousPageNumber),
+                !previousPageDisabled, previousPageUrl);
+        pagination.setPreviousPageLink(previousPage);
 
-        boolean nextPageDisabled = page.getCurrentPage() == page.getPageSize() - 1;
+        boolean nextPageDisabled = page.getPageRequest().getPageNumber() == page.getTotalPages() - 1;
         String nextPageUrl = nextPageDisabled ? "#"
-                : buildUrl(pageUrl, page.getCurrentPage() + 1, page.getMaxResults(), page.getComparatorItem(), query);
-        PaginationButtonDto nextPage = new PaginationButtonDto(page.getCurrentPage() + 1, !nextPageDisabled,
+                : buildUrl(pageUrl, page.getPageRequest().getPageNumber() + 1, page.getPageRequest().getPageSize(),
+                        page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery());
+        int nextPageNumber = nextPageDisabled ? page.getTotalPages() - 1 : page.getPageRequest().getPageNumber() + 1;
+        PageRequestLinkDto nextPage = new PageRequestLinkDto(pageRequestLinks.get(nextPageNumber), !nextPageDisabled,
                 nextPageUrl);
-        pagination.setNextPageButton(nextPage);
+        pagination.setNextPageLink(nextPage);
 
-        boolean lastPageDisabled = page.getCurrentPage() == page.getPageSize() - 1;
+        boolean lastPageDisabled = page.getPageRequest().getPageNumber() == page.getTotalPages() - 1;
         String lastPageUrl = lastPageDisabled ? "#"
-                : buildUrl(pageUrl, page.getPageSize() - 1, page.getMaxResults(), page.getComparatorItem(), query);
-        PaginationButtonDto lastPage = new PaginationButtonDto(page.getPageSize() - 1, !lastPageDisabled, lastPageUrl);
-        pagination.setLastPageButton(lastPage);
+                : buildUrl(pageUrl, page.getTotalPages() - 1, page.getPageRequest().getPageSize(),
+                        page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery());
+        PageRequestLinkDto lastPage = new PageRequestLinkDto(pageRequestLinks.get(page.getTotalPages() - 1),
+                !lastPageDisabled, lastPageUrl);
+        pagination.setLastPageLink(lastPage);
 
         return pagination;
     }
 
-    private List<MaxResultsSelectorOption> buildMaxResultsSelectorOptions(int selectedMaxResults, Locale locale) {
+    private List<PageSizeSelectorOptionDto> buildPageSizeSelectorOptions(int selectedPageSize, Locale locale) {
 
-        final int maxResultsSelectorMinValue = getMaxResultsSelectorMinValue();
-        final int maxResultsSelectorMaxValue = getMaxResultsSelectorMaxValue();
-        final int maxResultsSelectorStep = getMaxResultsSelectorStep();
+        final int pageSizeSelectorMinValue = getPageSizeSelectorMinValue();
+        final int pageSizeSelectorMaxValue = getMaxResultsSelectorMaxValue();
+        final int pageSizeSelectorStep = getPageSizeSelectorStep();
 
-        Validate.isTrue(0 < maxResultsSelectorMinValue && maxResultsSelectorMinValue <= maxResultsSelectorMaxValue,
-                "0 < maxResultsSelectorMinValue && maxResultsSelectorMinValue <= maxResultsSelectorMaxValue must be 'true'");
+        Validate.isTrue(0 < pageSizeSelectorMinValue && pageSizeSelectorMinValue <= pageSizeSelectorMaxValue,
+                "0 < pageSizeSelectorMinValue && pageSizeSelectorMinValue <= pageSizeSelectorMaxValue must be 'true'");
 
-        if (maxResultsSelectorMaxValue > maxResultsSelectorMinValue) {
-            Validate.isTrue(maxResultsSelectorStep > 0, "maxResultsSelectorStep > 0 must be 'true'");
+        if (pageSizeSelectorMaxValue > pageSizeSelectorMinValue) {
+            Validate.isTrue(pageSizeSelectorStep > 0, "pageSizeSelectorStep > 0 must be 'true'");
         }
 
-        Validate.isTrue(selectedMaxResults > 0, "selectedMaxResults > 0 must be 'true'");
+        Validate.isTrue(selectedPageSize > 0, "selectedMaxResults > 0 must be 'true'");
 
         if (locale == null) {
             locale = Locale.getDefault();
         }
 
         boolean selctedValueAdded = false;
-        TreeSet<MaxResultsSelectorOption> options = new TreeSet<MaxResultsSelectorOption>();
-        for (int i = maxResultsSelectorMinValue; i <= maxResultsSelectorMaxValue; i = i + maxResultsSelectorStep) {
-            if (i == selectedMaxResults) {
-                options.add(new MaxResultsSelectorOptionDto(i, Integer.valueOf(i).toString(), true));
+        TreeSet<PageSizeSelectorOptionDto> options = new TreeSet<PageSizeSelectorOptionDto>();
+        for (int i = pageSizeSelectorMinValue; i <= pageSizeSelectorMaxValue; i = i + pageSizeSelectorStep) {
+            if (i == selectedPageSize) {
+                options.add(new PageSizeSelectorOptionDto(i, Integer.valueOf(i).toString(), true));
                 selctedValueAdded = true;
             } else {
-                options.add(new MaxResultsSelectorOptionDto(i, Integer.valueOf(i).toString(), false));
+                options.add(new PageSizeSelectorOptionDto(i, Integer.valueOf(i).toString(), false));
             }
         }
 
-        if (isSelectAllResultsAvailable()) {
+        if (isSelectAllEntriesAvailable()) {
 
             ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_BASE_NAME, locale);
             String displayedValue;
-            if (resourceBundle.containsKey("pageBuilderFactory.maxResultsSelector.max")) {
-                displayedValue = resourceBundle.getString("pageBuilderFactory.maxResultsSelector.max");
+            if (resourceBundle.containsKey("pageBuilderFactory.pageSizeSelector.max")) {
+                displayedValue = resourceBundle.getString("pageBuilderFactory.pageSizeSelector.max");
             } else {
                 displayedValue = "Max";
             }
 
-            if (Integer.MAX_VALUE == selectedMaxResults) {
-                options.add(new MaxResultsSelectorOptionDto(Integer.MAX_VALUE, displayedValue, true));
+            if (Integer.MAX_VALUE == selectedPageSize) {
+                options.add(new PageSizeSelectorOptionDto(Integer.MAX_VALUE, displayedValue, true));
                 selctedValueAdded = true;
             } else {
-                options.add(new MaxResultsSelectorOptionDto(Integer.MAX_VALUE, displayedValue, false));
+                options.add(new PageSizeSelectorOptionDto(Integer.MAX_VALUE, displayedValue, false));
             }
         }
         if (!selctedValueAdded) {
-            options.add(new MaxResultsSelectorOptionDto(selectedMaxResults,
-                    Integer.valueOf(selectedMaxResults).toString(), true));
+            options.add(new PageSizeSelectorOptionDto(selectedPageSize, Integer.valueOf(selectedPageSize).toString(),
+                    true));
         }
-        return Collections.unmodifiableList(new ArrayList<MaxResultsSelectorOption>(options));
+        return Collections.unmodifiableList(new ArrayList<PageSizeSelectorOptionDto>(options));
     }
 
 }
