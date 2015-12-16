@@ -16,15 +16,13 @@
 
 package org.bremersee.pagebuilder.example.domain;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Christian Bremer
  */
-public interface PersonRepository {
+@Repository("personRepository")
+public interface PersonRepository extends JpaRepository<Person, Long>, PersonRepositoryCustom {
     
-    List<Person> findAll();
-    
-    List<Person> findByQuery(String query);
-
 }

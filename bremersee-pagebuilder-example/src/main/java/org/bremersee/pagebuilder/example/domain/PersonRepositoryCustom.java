@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package org.bremersee.pagebuilder.example.service;
+package org.bremersee.pagebuilder.example.domain;
 
-import org.bremersee.pagebuilder.model.PageDto;
-import org.bremersee.pagebuilder.model.PageRequestDto;
+import java.util.List;
 
 /**
  * @author Christian Bremer
+ *
  */
-public interface PersonService {
-    
-    PageDto findPersons(PageRequestDto pageRequest);
+public interface PersonRepositoryCustom {
+
+    List<Person> findByQuery(String query);
 
 }

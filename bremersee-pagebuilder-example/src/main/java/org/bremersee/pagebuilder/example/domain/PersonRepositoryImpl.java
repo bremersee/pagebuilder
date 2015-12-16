@@ -16,8 +16,10 @@
 
 package org.bremersee.pagebuilder.example.domain;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Component;
 
@@ -25,55 +27,31 @@ import org.springframework.stereotype.Component;
  * @author Christian Bremer
  */
 @Component
-public class PersonRepositoryImpl implements PersonRepository {
-
-    private final List<Person> userDb = new ArrayList<>();
+public class PersonRepositoryImpl implements PersonRepositoryCustom {
     
-    /**
-     * Default constructor.
-     */
-    public PersonRepositoryImpl() {
-        userDb.add(new Person(1L, "Heinrich", "Heine", new Address(1L, "Rue de Chanson", "Paris", "12345")));
-        userDb.add(new Person(2L, "Virginia", "Woolf", new Address(2L, "Mrs Dalloway Street", "London", "1882")));
-        userDb.add(new Person(3L, "Thomas", "Mann", new Address(3L, "Buddenbrooks Str. 3", "Lübeck", "23552")));
-        userDb.add(new Person(4L, "Malcomlm", "Lowry", new Address(4L, "Under the Popocatépetl", "Quauhnáhuac", "1947")));
-        userDb.add(new Person(5L, "Annete von", "Droste-Hülshoff", new Address(5L, "Im Grase 8", "Gievenbeck", "1848")));
-        userDb.add(new Person(6L, "Wilhelm", "Raabe", new Address(6L, "Sperlingsgasse 33", "Braunschweig", "38102")));
-        userDb.add(new Person(7L, "Klaus", "Mann", new Address(7L, "Mephistopheles Linje 2", "Hamburg", "6789")));
-        userDb.add(new Person(8L, "Guillermo Cabrera", "Infante", new Address(8L, "Nachtigallengasse 18", "Havanna", "1958")));
-        userDb.add(new Person(9L, "James", "Joyce", new Address(9L, "Eccles Street No. 7", "Dublin", "1606")));
-        userDb.add(new Person(10L, "Heinrich", "Mann", new Address(10L, "Unter dem Tan 66", "Lübeck", "23552")));
-    }
-
-    /* (non-Javadoc)
-     * @see org.bremersee.comparator.example.domain.PersonRepository#findAll()
-     */
-    @Override
-    public List<Person> findAll() {
-        List<Person> userDb = new ArrayList<>(this.userDb);
-        return userDb;
-    }
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     /* (non-Javadoc)
      * @see org.bremersee.comparator.example.domain.PersonRepository#findByQuery(java.lang.String)
      */
     @Override
     public List<Person> findByQuery(String query) {
-        if (query == null || query.length() < 3) {
-            return findAll();
-        }
-        String _query = query.toLowerCase();
-        List<Person> userDb = new ArrayList<>();
-        for (Person u : this.userDb) {
-            if (u.getFirstname().toLowerCase().contains(_query) 
-                    || u.getLastname().toLowerCase().contains(_query) 
-                    || u.getAddress().getCity().toLowerCase().contains(_query) 
-                    || u.getAddress().getStreet().toLowerCase().contains(_query) 
-                    || u.getAddress().getPostalCode().toLowerCase().contains(_query)) {
-                userDb.add(u);
-            }
-        }
-        return userDb;
+        //@formatter:off
+        String queryStr = '%' + query.toLowerCase() + '%';
+        String jpaQuery = "select e from Person e "
+                + " where lower(e.firstname) like :query"
+                + " or lower(e.lastname) like :query"
+                + " or lower(e.address.city) like :query"
+                + " or lower(e.address.street) like :query"
+                + " or lower(e.address.postalCode) like :query"
+                ;
+        
+        return entityManager
+                .createQuery(jpaQuery, Person.class)
+                .setParameter("query", queryStr)
+                .getResultList();
+        //@formatter:on
     }
 
 }

@@ -23,12 +23,16 @@ import org.bremersee.pagebuilder.PageBuilder;
 import org.bremersee.pagebuilder.PageBuilderImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * @author Christian Bremer
  */
 @SpringBootApplication
+@EnableJpaRepositories(basePackages = "org.bremersee.pagebuilder.example.domain")
+@EntityScan(basePackages = "org.bremersee.pagebuilder.example.domain")
 public class PageBuilderExampleApplication {
     
     @Bean
