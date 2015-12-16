@@ -101,6 +101,54 @@ public class PageDto implements Serializable {
         setTotalSize(totalSize);
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "PageDto [entries=" + entries + ", pageRequest=" + pageRequest + ", totalSize=" + totalSize + "]";
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((entries == null) ? 0 : entries.hashCode());
+        result = prime * result + ((pageRequest == null) ? 0 : pageRequest.hashCode());
+        result = prime * result + (int) (totalSize ^ (totalSize >>> 32));
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PageDto other = (PageDto) obj;
+        if (entries == null) {
+            if (other.entries != null)
+                return false;
+        } else if (!entries.equals(other.entries))
+            return false;
+        if (pageRequest == null) {
+            if (other.pageRequest != null)
+                return false;
+        } else if (!pageRequest.equals(other.pageRequest))
+            return false;
+        if (totalSize != other.totalSize)
+            return false;
+        return true;
+    }
+
     /**
      * Returns the elements of the page.<br/>
      * If the serialized page was read with the Jackson JSON processor, each
@@ -180,289 +228,4 @@ public class PageDto implements Serializable {
     protected void setTotalPages(int totalPages) {
     }
     
-//    @XmlElement(name = "isFirstPage", required = true)
-//    @JsonProperty(value = "isFirstPage", required = true)
-//    @Override
-//    public boolean isFirstPage() {
-//        return getPageRequest().getPageNumber() == 0;
-//    }
-//
-//    @JsonProperty(value = "isFirstPage", required = false)
-//    protected void setFirstPage(boolean isFirstPage) {
-//    }
-//
-//    @XmlTransient
-//    @JsonIgnore
-//    @Override
-//    public PageRequest getFirstPageRequest() {
-//        //@formatter:off
-//        if (isFirstPage()) {
-//            return getPageRequest();
-//        }
-//        return new PageRequestDto(
-//                0, 
-//                getPageRequest().getPageSize(), 
-//                getPageRequest().getComparatorItem(), 
-//                getPageRequest().getQuery(), 
-//                getPageRequest().getExtension());
-//        //@formatter:on
-//    }
-//    
-//    @XmlElement(name = "firstPageRequest", required = true)
-//    @JsonProperty(value = "firstPageRequest", required = true)
-//    protected PageRequestDto getFirstPageRequestDto() {
-//        return PageRequestDto.toPageRequestDto(getFirstPageRequest());
-//        
-//    }
-//    
-//    @JsonProperty(value = "firstPageRequest", required = false)
-//    protected void setFirstPageRequestDto(PageRequestDto pageRequestDto) {
-//    }
-//    
-//    @XmlElement(name = "isPreviousPageRequestAvailable", required = true)
-//    @JsonProperty(value = "isPreviousPageRequestAvailable", required = true)
-//    @Override
-//    public boolean isPreviousPageRequestAvailable() {
-//        return getPageRequest().getPageNumber() > 0;
-//    }
-//    
-//    @JsonProperty(value = "isPreviousPageRequestAvailable", required = false)
-//    protected void setPreviousPageRequestAvailable(boolean isPreviousPageRequestAvailable) {
-//    }
-//    
-//    @XmlTransient
-//    @JsonIgnore
-//    @Override
-//    public PageRequest getPreviousPageRequest() {
-//        //@formatter:off
-//        if (!isPreviousPageRequestAvailable()) {
-//            return getPageRequest();
-//        }
-//        return new PageRequestDto(
-//                getPageRequest().getPageNumber() - 1, 
-//                getPageRequest().getPageSize(), 
-//                getPageRequest().getComparatorItem(), 
-//                getPageRequest().getQuery(), 
-//                getPageRequest().getExtension());
-//        //@formatter:on
-//    }
-//    
-//    @XmlElement(name = "previousPageRequest", required = true)
-//    @JsonProperty(value = "previousPageRequest", required = true)
-//    protected PageRequestDto getPreviousPageRequestDto() {
-//        return PageRequestDto.toPageRequestDto(getPreviousPageRequest());
-//    }
-//    
-//    @JsonProperty(value = "previousPageRequest", required = false)
-//    protected void setPreviousPageRequestDto(PageRequestDto pageRequestDto) {
-//    }
-//    
-//    @XmlElement(name = "isNextPageRequestAvailable", required = true)
-//    @JsonProperty(value = "isNextPageRequestAvailable", required = true)
-//    @Override
-//    public boolean isNextPageRequestAvailable() {
-//        return getPageRequest().getPageNumber() + 1 < getTotalPages();
-//    }
-//    
-//    @JsonProperty(value = "isNextPageRequestAvailable", required = false)
-//    protected void setNextPageRequestAvailable(boolean isNextPageRequestAvailable) {
-//    }
-//    
-//    @XmlTransient
-//    @JsonIgnore
-//    @Override
-//    public PageRequest getNextPageRequest() {
-//        //@formatter:off
-//        if (!isNextPageRequestAvailable()) {
-//            return getPageRequest();
-//        }
-//        return new PageRequestDto(
-//                getPageRequest().getPageNumber() + 1, 
-//                getPageRequest().getPageSize(), 
-//                getPageRequest().getComparatorItem(), 
-//                getPageRequest().getQuery(), 
-//                getPageRequest().getExtension());
-//        //@formatter:on
-//    }
-//    
-//    @XmlElement(name = "nextPageRequest", required = true)
-//    @JsonProperty(value = "nextPageRequest", required = true)
-//    protected PageRequestDto getNextPageRequestDto() {
-//        return PageRequestDto.toPageRequestDto(getNextPageRequest());
-//    }
-//    
-//    @JsonProperty(value = "nextPageRequest", required = false)
-//    protected void setNextPageRequestDto(PageRequestDto pageRequestDto) {
-//    }
-//    
-//    @XmlElement(name = "isLastPage", required = true)
-//    @JsonProperty(value = "isLastPage", required = true)
-//    @Override
-//    public boolean isLastPage() {
-//        return getPageRequest().getPageNumber() + 1 == getTotalPages();
-//    }
-//    
-//    @JsonProperty(value = "isLastPage", required = false)
-//    protected void setLastPage(boolean isLastPage) {
-//    }
-//    
-//    @XmlTransient
-//    @JsonIgnore
-//    @Override
-//    public PageRequest getLastPageRequest() {
-//        //@formatter:off
-//        if (isLastPage()) {
-//            return getPageRequest();
-//        }
-//        return new PageRequestDto(
-//                getTotalPages() - 1, 
-//                getPageRequest().getPageSize(), 
-//                getPageRequest().getComparatorItem(), 
-//                getPageRequest().getQuery(), 
-//                getPageRequest().getExtension());
-//        //@formatter:on
-//    }
-//    
-//    @XmlElement(name = "lastPageRequest", required = true)
-//    @JsonProperty(value = "lastPageRequest", required = true)
-//    protected PageRequestDto getLastPageRequestDto() {
-//        return PageRequestDto.toPageRequestDto(getLastPageRequest());
-//    }
-//    
-//    @JsonProperty(value = "lastPageRequest", required = false)
-//    protected void setLastPageRequestDto(PageRequestDto pageRequestDto) {
-//    }
-    
-    
-    
-    
-    
-    
-//    /**
-//     * Return the first result number.
-//     * 
-//     * @return the first result number
-//     */
-//    @Override
-//    @XmlElement(name = "firstResult", required = false)
-//    @JsonProperty(value = "firstResult", required = false)
-//    public Integer getFirstResult() {
-//        return firstResult;
-//    }
-//
-//    /**
-//     * Set the first result number.
-//     * 
-//     * @param firstResult
-//     *            the first result number
-//     */
-//    @JsonProperty(value = "firstResult", required = false)
-//    public void setFirstResult(Integer firstResult) {
-//        this.firstResult = firstResult;
-//    }
-//
-//    /**
-//     * Return the maximum number of results.
-//     * 
-//     * @return the maximum number of results
-//     */
-//    @Override
-//    @XmlElement(name = "maxResults", required = false)
-//    @JsonProperty(value = "maxResults", required = false)
-//    public Integer getMaxResults() {
-//        return maxResults;
-//    }
-//
-//    /**
-//     * Set the maximum number of results
-//     * 
-//     * @param maxResults
-//     *            the maximum number of results
-//     */
-//    @JsonProperty(value = "maxResults", required = false)
-//    public void setMaxResults(Integer maxResults) {
-//        this.maxResults = maxResults;
-//    }
-//
-//    /**
-//     * Return the comparator item that is used for sorting.
-//     * 
-//     * @return the comparator item
-//     */
-//    @XmlElement(name = "comparatorItem", required = false)
-//    @JsonProperty(value = "comparatorItem", required = false)
-//    @Override
-//    public ComparatorItem getComparatorItem() {
-//        return comparatorItem;
-//    }
-//
-//    /**
-//     * Set the comparator item that was used for sorting.
-//     * 
-//     * @param comparatorItem
-//     *            the comparator item
-//     */
-//    @JsonProperty(value = "comparatorItem", required = false)
-//    public void setComparatorItem(ComparatorItem comparatorItem) {
-//        this.comparatorItem = comparatorItem;
-//    }
-//
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see org.bremersee.pagebuilder.model.Page#getCurrentPage()
-//     */
-//    @Override
-//    @XmlElement(name = "currentPage", required = false)
-//    @JsonProperty(value = "currentPage", required = false)
-//    public Integer getCurrentPage() {
-//        return ModelUtils.getCurrentPage(this);
-//    }
-//    
-//    @JsonProperty(value = "currentPage", required = false)
-//    protected void setCurrentPage(Integer currentPage) {
-//    }
-//
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see org.bremersee.pagebuilder.model.Page#getPreviousFirstResult()
-//     */
-//    @XmlElement(name = "previousFirstResult", required = false)
-//    @JsonProperty(value = "previousFirstResult", required = false)
-//    @Override
-//    public Integer getPreviousFirstResult() {
-//        return ModelUtils.getPreviousFirstResult(this);
-//    }
-//    
-//    @JsonProperty(value = "previousFirstResult", required = false)
-//    protected void setPreviousFirstResult(Integer previousFirstResult) {
-//    }
-//
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see org.bremersee.pagebuilder.model.Page#getNextFirstResult()
-//     */
-//    @XmlElement(name = "nextFirstResult", required = false)
-//    @JsonProperty(value = "nextFirstResult", required = false)
-//    @Override
-//    public Integer getNextFirstResult() {
-//        return ModelUtils.getNextFirstResult(this);
-//    }
-//    
-//    @JsonProperty(value = "nextFirstResult", required = false)
-//    protected void setNextFirstResult(Integer nextFirstResult) {
-//    }
-//
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see org.bremersee.pagebuilder.model.Page#getPaginationSize(int)
-//     */
-//    @Override
-//    public Integer getPaginationSize(int fieldSize) {
-//        return ModelUtils.getPaginationSize(this, fieldSize);
-//    }
-
 }

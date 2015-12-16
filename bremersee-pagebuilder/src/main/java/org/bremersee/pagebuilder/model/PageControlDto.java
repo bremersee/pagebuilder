@@ -40,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * <p>
- * A {@link PageControl} can be used to display a {@link PageDto} on a web site.
+ * A {@link PageControlDto} can be used to display a {@link PageDto} on a web site.
  * <br/>
  * This page control can be processed by a {@link JAXBContext} and the Jackson
  * JSON processor.
@@ -150,6 +150,100 @@ public class PageControlDto implements Serializable {
         this.comparatorParamValue = comparatorParamValue;
         this.querySupported = querySupported;
         this.queryParamName = queryParamName;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "PageControlDto [page=" + page + ", pageRequestLinks=" + pageRequestLinks + ", pageSizeSelectorOptions="
+                + pageSizeSelectorOptions + ", pagination=" + pagination + ", querySupported=" + querySupported
+                + ", queryParamName=" + queryParamName + ", pageNumberParamName=" + pageNumberParamName
+                + ", pageSizeParamName=" + pageSizeParamName + ", comparatorParamName=" + comparatorParamName
+                + ", comparatorParamValue=" + comparatorParamValue + "]";
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((comparatorParamName == null) ? 0 : comparatorParamName.hashCode());
+        result = prime * result + ((comparatorParamValue == null) ? 0 : comparatorParamValue.hashCode());
+        result = prime * result + ((page == null) ? 0 : page.hashCode());
+        result = prime * result + ((pageNumberParamName == null) ? 0 : pageNumberParamName.hashCode());
+        result = prime * result + ((pageRequestLinks == null) ? 0 : pageRequestLinks.hashCode());
+        result = prime * result + ((pageSizeParamName == null) ? 0 : pageSizeParamName.hashCode());
+        result = prime * result + ((pageSizeSelectorOptions == null) ? 0 : pageSizeSelectorOptions.hashCode());
+        result = prime * result + ((pagination == null) ? 0 : pagination.hashCode());
+        result = prime * result + ((queryParamName == null) ? 0 : queryParamName.hashCode());
+        result = prime * result + (querySupported ? 1231 : 1237);
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PageControlDto other = (PageControlDto) obj;
+        if (comparatorParamName == null) {
+            if (other.comparatorParamName != null)
+                return false;
+        } else if (!comparatorParamName.equals(other.comparatorParamName))
+            return false;
+        if (comparatorParamValue == null) {
+            if (other.comparatorParamValue != null)
+                return false;
+        } else if (!comparatorParamValue.equals(other.comparatorParamValue))
+            return false;
+        if (page == null) {
+            if (other.page != null)
+                return false;
+        } else if (!page.equals(other.page))
+            return false;
+        if (pageNumberParamName == null) {
+            if (other.pageNumberParamName != null)
+                return false;
+        } else if (!pageNumberParamName.equals(other.pageNumberParamName))
+            return false;
+        if (pageRequestLinks == null) {
+            if (other.pageRequestLinks != null)
+                return false;
+        } else if (!pageRequestLinks.equals(other.pageRequestLinks))
+            return false;
+        if (pageSizeParamName == null) {
+            if (other.pageSizeParamName != null)
+                return false;
+        } else if (!pageSizeParamName.equals(other.pageSizeParamName))
+            return false;
+        if (pageSizeSelectorOptions == null) {
+            if (other.pageSizeSelectorOptions != null)
+                return false;
+        } else if (!pageSizeSelectorOptions.equals(other.pageSizeSelectorOptions))
+            return false;
+        if (pagination == null) {
+            if (other.pagination != null)
+                return false;
+        } else if (!pagination.equals(other.pagination))
+            return false;
+        if (queryParamName == null) {
+            if (other.queryParamName != null)
+                return false;
+        } else if (!queryParamName.equals(other.queryParamName))
+            return false;
+        if (querySupported != other.querySupported)
+            return false;
+        return true;
     }
 
     /**

@@ -34,7 +34,7 @@ public abstract class PageBuilderSpringUtils {
         if (pageRequest == null) {
             return null;
         }
-        return new SpringPageRequest(pageRequest.getPageNumber(), pageRequest.getPageSize(),
+        return new SpringPageRequestImpl(pageRequest.getPageNumber(), pageRequest.getPageSize(),
                 ComparatorSpringUtils.toSort(pageRequest.getComparatorItem()), pageRequest.getQuery(),
                 pageRequest.getExtension());
     }
@@ -47,15 +47,15 @@ public abstract class PageBuilderSpringUtils {
         pageRequest.setComparatorItem(ComparatorSpringUtils.fromSort(pageable.getSort()));
         pageRequest.setPageNumber(pageable.getPageNumber());
         pageRequest.setPageSize(pageable.getPageSize());
-        if (pageable instanceof SpringPageRequest) {
-            SpringPageRequest spr = (SpringPageRequest) pageable;
+        if (pageable instanceof SpringPageRequestImpl) {
+            SpringPageRequestImpl spr = (SpringPageRequestImpl) pageable;
             pageRequest.setExtension(spr.getExtension());
             pageRequest.setQuery(spr.getQuery());
         }
         return pageRequest;
     }
 
-    public static PageImpl<Object> toStringPage(PageDto page) {
+    public static PageImpl<Object> toSpringPage(PageDto page) {
         if (page == null) {
             return null;
         }

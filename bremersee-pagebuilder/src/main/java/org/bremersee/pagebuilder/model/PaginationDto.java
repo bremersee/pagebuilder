@@ -102,6 +102,74 @@ public class PaginationDto implements Serializable {
     public PaginationDto() {
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "PaginationDto [maxPaginationLinks=" + maxPaginationLinks + ", firstPageLink=" + firstPageLink
+                + ", previousPageLink=" + previousPageLink + ", links=" + links + ", nextPageLink=" + nextPageLink
+                + ", lastPageLink=" + lastPageLink + "]";
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((firstPageLink == null) ? 0 : firstPageLink.hashCode());
+        result = prime * result + ((lastPageLink == null) ? 0 : lastPageLink.hashCode());
+        result = prime * result + ((links == null) ? 0 : links.hashCode());
+        result = prime * result + maxPaginationLinks;
+        result = prime * result + ((nextPageLink == null) ? 0 : nextPageLink.hashCode());
+        result = prime * result + ((previousPageLink == null) ? 0 : previousPageLink.hashCode());
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PaginationDto other = (PaginationDto) obj;
+        if (firstPageLink == null) {
+            if (other.firstPageLink != null)
+                return false;
+        } else if (!firstPageLink.equals(other.firstPageLink))
+            return false;
+        if (lastPageLink == null) {
+            if (other.lastPageLink != null)
+                return false;
+        } else if (!lastPageLink.equals(other.lastPageLink))
+            return false;
+        if (links == null) {
+            if (other.links != null)
+                return false;
+        } else if (!links.equals(other.links))
+            return false;
+        if (maxPaginationLinks != other.maxPaginationLinks)
+            return false;
+        if (nextPageLink == null) {
+            if (other.nextPageLink != null)
+                return false;
+        } else if (!nextPageLink.equals(other.nextPageLink))
+            return false;
+        if (previousPageLink == null) {
+            if (other.previousPageLink != null)
+                return false;
+        } else if (!previousPageLink.equals(other.previousPageLink))
+            return false;
+        return true;
+    }
+
     /**
      * Returns the maximum number of pagination links.
      */

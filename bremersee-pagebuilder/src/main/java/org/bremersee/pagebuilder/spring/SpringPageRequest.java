@@ -16,39 +16,27 @@
 
 package org.bremersee.pagebuilder.spring;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.bremersee.pagebuilder.model.PageRequestDto;
+import org.springframework.data.domain.Pageable;
 
 /**
+ * <p>
+ * A composition of {@link Pageable} and the addition attributes of a
+ * {@link PageRequestDto}.
+ * </p>
+ * 
  * @author Christian Bremer
- *
  */
-public class SpringPageRequest extends PageRequest {
+public interface SpringPageRequest extends Pageable {
 
-    private static final long serialVersionUID = 1L;
-    
-    protected String query;
-    
-    protected Object extension;
+    /**
+     * Returns the search query (may be {@code null}).
+     */
+    String getQuery();
 
-    public SpringPageRequest(int page, int size, String query, Object extension) {
-        super(page, size);
-        this.query = query;
-        this.extension = extension;
-    }
-
-    public SpringPageRequest(int page, int size, Sort sort, String query, Object extension) {
-        super(page, size, sort);
-        this.query = query;
-        this.extension = extension;
-    }
-
-    public String getQuery() {
-        return query;
-    }
-
-    public Object getExtension() {
-        return extension;
-    }
+    /**
+     * Returns a custom extension (may be {@code null}).
+     */
+    Object getExtension();
 
 }

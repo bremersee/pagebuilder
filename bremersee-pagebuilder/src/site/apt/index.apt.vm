@@ -1,13 +1,75 @@
 Bremersee Page Builder
 
-  This project contains classes for building a page / pagination.
+  This project contains classes for building a page.
   
-  A page is a subset of all available items that should be displayed on a web site.
-  It has a beginning number (first result) and a maximum number of entries (maximum results).
-  It knows the size of all available items, the number of pages and the current page number.
-  The first result number of the previous and the next page can be calculated. 
+  A page is a sublist of a list of elements. It can be obtained with a page request:
   
-* Usage
++-----------------------------------------------------------------------------+
+List<Object> allElements = new ArrayList<>();
+// add elements
 
-  Generating a page depends on the list of items present.
+PageRequestDto pageRequest = new PageRequestDto();
+pageRequest.setPageNumber(2);
+pageRequest.setPageSize(25);
+pageRequest.setComparatorItem(new ComparatorItem("name", true));
+
+PageBuilder pageBuilder = new PageBuilderImpl();
+
+PageDto page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
++-----------------------------------------------------------------------------+
+
+  To display the page with a pagination you can create a PageControlDto:
+
++-----------------------------------------------------------------------------+
+PageDto page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
+
+PageControlDto pageControl = PageControlFactory.newInstance()
+        .newPageControl(page, "mypage.html", Locale.GERMANY);
++-----------------------------------------------------------------------------+
+
+  The PageControlDto has all information for building a web site like this:
   
+[./images/pagebuilder.png] Screenshot
+
+
+* XML Schema
+
+  The XML schema of the model is available {{{http://bremersee.github.io/xmlschemas/bremersee-pagebuilder-v1.xsd}here}}.
+
+
+* Spring Framework Support
+
+  The Spring Common Data project contains also a functionality to build a page. 
+  The class PageBuilderSpringUtils contains methods to transform a page request  
+  or a page of this library into the objects of the spring framework and vice versa. 
+
++-----------------------------------------------------------------------+
+List<Object> allElements = new ArrayList<>();
+// add elements
+
+PageRequestDto pageRequest = new PageRequestDto();
+pageRequest.setPageNumber(2);
+pageRequest.setPageSize(25);
+pageRequest.setComparatorItem(new ComparatorItem("name", true));
+
+PageBuilder pageBuilder = new PageBuilderImpl();
+
+PageDto page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
+
+Pageable pageable = PageBuilderSpringUtils.toSpringPageRequest(pageRequest);
+pageRequest = PageBuilderSpringUtils.fromSpringPageRequest(pageable);
+
+Page<?> springPage = PageBuilderSpringUtils.toSpringPage(page);
+page = PageBuilderSpringUtils.fromSpringPage(springPage);
++-----------------------------------------------------------------------+
+
+  To use the Spring Framework Support you have to add the following 
+  dependency to your project:
+
++-----------------------------------------------------------------------+
+<dependency>
+    <groupId>org.springframework.data</groupId>
+    <artifactId>spring-data-commons</artifactId>
+    <version>1.9.4.RELEASE</version>
+</dependency>
++-----------------------------------------------------------------------+

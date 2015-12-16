@@ -24,12 +24,37 @@
 
   <xs:element name="pageRequest" type="tns:pageRequestType"/>
 
+  <xs:element name="pageRequestLink" type="tns:pageRequestLinkType"/>
+
+  <xs:element name="pageSizeSelectorOption" type="tns:pageSizeSelectorOptionType"/>
+
+  <xs:element name="pagination" type="tns:paginationType"/>
+
+  <xs:complexType name="pageRequestType">
+    <xs:sequence>
+      <xs:element name="pageNumber" type="xs:int"/>
+      <xs:element name="pageSize" type="xs:int"/>
+      <xs:element name="firstResult" type="xs:int"/>
+      <xs:element name="comparatorItem" type="ns1:comparatorItemType" minOccurs="0"/>
+      <xs:element name="query" type="xs:string" minOccurs="0"/>
+      <xs:any processContents="lax" namespace="##other"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="pageRequestLinkType">
+    <xs:complexContent>
+      <xs:extension base="tns:pageRequestType">
+        <xs:sequence>
+          <xs:element name="displayedPageNumber" type="xs:string"/>
+          <xs:element name="active" type="xs:boolean"/>
+          <xs:element name="url" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="pageType">
     <xs:sequence>
-      <xs:element name="totalSize" type="xs:int" minOccurs="0"/>
-      <xs:element name="firstResult" type="xs:int" minOccurs="0"/>
-      <xs:element name="maxResults" type="xs:int" minOccurs="0"/>
-      <xs:element name="comparatorItem" type="ns1:comparatorItemType" minOccurs="0"/>
       <xs:element name="entries" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
@@ -37,82 +62,61 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="pageSize" type="xs:int" minOccurs="0"/>
-      <xs:element name="currentPage" type="xs:int" minOccurs="0"/>
-      <xs:element name="previousFirstResult" type="xs:int" minOccurs="0"/>
-      <xs:element name="nextFirstResult" type="xs:int" minOccurs="0"/>
+      <xs:element ref="tns:pageRequest"/>
+      <xs:element name="totalSize" type="xs:long"/>
+      <xs:element name="totalPages" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="paginationType">
+    <xs:sequence>
+      <xs:element name="maxPaginationLinks" type="xs:int" default="7"/>
+      <xs:element name="firstPageLink" type="tns:pageRequestLinkType" minOccurs="0"/>
+      <xs:element name="previousPageLink" type="tns:pageRequestLinkType" minOccurs="0"/>
+      <xs:element name="links" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="link" type="tns:pageRequestLinkType" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="nextPageLink" type="tns:pageRequestLinkType" minOccurs="0"/>
+      <xs:element name="lastPageLink" type="tns:pageRequestLinkType" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="pageControlType">
     <xs:sequence>
       <xs:element ref="tns:page"/>
-      <xs:element name="pagination" type="tns:paginationType" minOccurs="0"/>
-      <xs:element name="pageNumberParamName" type="xs:string" default="p" minOccurs="0"/>
-      <xs:element name="maxResultsParamName" type="xs:string" default="max" minOccurs="0"/>
-      <xs:element name="maxResultsSelectorOptions" minOccurs="0">
+      <xs:element name="pageRequestLinks" minOccurs="0">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="maxResultsSelectorOption" type="tns:maxResultsSelectorOptionType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="tns:pageRequestLink" minOccurs="0" maxOccurs="unbounded"/>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="comparatorParamName" type="xs:string" default="c" minOccurs="0"/>
-      <xs:element name="comparatorParamValue" type="xs:string" minOccurs="0"/>
+      <xs:element name="pageSizeSelectorOptions" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="tns:pageSizeSelectorOption" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element ref="tns:pagination" minOccurs="0"/>
       <xs:element name="querySupported" type="xs:boolean" default="true"/>
       <xs:element name="queryParamName" type="xs:string" default="q" minOccurs="0"/>
-      <xs:element name="query" type="xs:string" minOccurs="0"/>
+      <xs:element name="pageNumberParamName" type="xs:string" default="p" minOccurs="0"/>
+      <xs:element name="pageSizeParamName" type="xs:string" default="s" minOccurs="0"/>
+      <xs:element name="comparatorParamName" type="xs:string" default="c" minOccurs="0"/>
+      <xs:element name="comparatorParamValue" type="xs:string" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="paginationType">
-    <xs:sequence>
-      <xs:element name="allButtons" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="paginationButton" type="tns:paginationButtonType" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="maxPaginationButtons" type="xs:int" default="7"/>
-      <xs:element name="firstPageButton" type="tns:paginationButtonType" minOccurs="0"/>
-      <xs:element name="previousPageButton" type="tns:paginationButtonType" minOccurs="0"/>
-      <xs:element name="paginationButtons" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="paginationButton" type="tns:paginationButtonType" minOccurs="0" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="nextPageButton" type="tns:paginationButtonType" minOccurs="0"/>
-      <xs:element name="lastPageButton" type="tns:paginationButtonType" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="paginationButtonType">
-    <xs:sequence>
-      <xs:element name="pageNumber" type="xs:int"/>
-      <xs:element name="displayedPageNumber" type="xs:string"/>
-      <xs:element name="active" type="xs:boolean"/>
-      <xs:element name="url" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="maxResultsSelectorOptionType">
+  <xs:complexType name="pageSizeSelectorOptionType">
     <xs:sequence>
       <xs:element name="value" type="xs:int"/>
       <xs:element name="displayedValue" type="xs:string" minOccurs="0"/>
       <xs:element name="selected" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="pageRequestType">
-    <xs:sequence>
-      <xs:element name="firstResult" type="xs:int" minOccurs="0"/>
-      <xs:element name="maxResults" type="xs:int" minOccurs="0"/>
-      <xs:element name="comparatorItem" type="ns1:comparatorItemType" minOccurs="0"/>
-      <xs:element name="query" type="xs:string" minOccurs="0"/>
-      <xs:any processContents="lax" namespace="##other"/>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>
