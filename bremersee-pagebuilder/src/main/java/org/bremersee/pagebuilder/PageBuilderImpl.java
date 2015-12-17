@@ -33,7 +33,7 @@ import org.bremersee.pagebuilder.model.PageRequestDto;
  * @author Christian Bremer
  */
 public class PageBuilderImpl implements PageBuilder {
-    
+
     private ObjectComparatorFactory objectComparatorFactory = ObjectComparatorFactory.newInstance();
 
     /**
@@ -42,7 +42,7 @@ public class PageBuilderImpl implements PageBuilder {
     private PageBuilderFilter pageBuilderFilter;
 
     /**
-     * Returns the object comparator factory. 
+     * Returns the object comparator factory.
      */
     protected ObjectComparatorFactory getObjectComparatorFactory() {
         return objectComparatorFactory;
@@ -72,7 +72,9 @@ public class PageBuilderImpl implements PageBuilder {
         this.pageBuilderFilter = pageBuilderFilter;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -80,21 +82,31 @@ public class PageBuilderImpl implements PageBuilder {
         return "PageBuilderImpl [pageBuilderFilter=" + pageBuilderFilter + "]";
     }
 
-    /* (non-Javadoc)
-     * @see org.bremersee.pagebuilder.PageBuilder#buildPage(java.util.Collection, org.bremersee.pagebuilder.model.PageRequestDto, long)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bremersee.pagebuilder.PageBuilder#buildPage(java.util.Collection,
+     * org.bremersee.pagebuilder.model.PageRequestDto, long)
      */
     @Override
     public PageDto buildPage(Collection<? extends Object> pageEntries, PageRequestDto pageRequest, long totalSize) {
         return new PageDto(pageEntries, pageRequest, totalSize);
     }
 
-    /* (non-Javadoc)
-     * @see org.bremersee.pagebuilder.PageBuilder#buildFilteredPage(java.util.Collection, org.bremersee.pagebuilder.model.PageRequestDto, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bremersee.pagebuilder.PageBuilder#buildFilteredPage(java.util.
+     * Collection, org.bremersee.pagebuilder.model.PageRequestDto,
+     * java.lang.Object)
      */
     @Override
-    public PageDto buildFilteredPage(Collection<? extends Object> allAvailableEntries, PageRequestDto pageRequest, Object filterCriteria) {
+    public PageDto buildFilteredPage(Collection<? extends Object> allAvailableEntries, PageRequestDto pageRequest,
+            Object filterCriteria) {
+        
         if (allAvailableEntries == null) {
-            return new PageDto(allAvailableEntries, pageRequest, 0L);
+            allAvailableEntries = new ArrayList<>();
         }
         if (pageRequest == null) {
             pageRequest = new PageRequestDto();
@@ -123,13 +135,8 @@ public class PageBuilderImpl implements PageBuilder {
                 }
             }
         }
-        
-        PageDto page = new PageDto();
-        page.setEntries(pageEntries);
-        page.setPageRequest(pageRequest);
-        page.setTotalSize(filteredEntries.size());
 
-        return page;
+        return new PageDto(pageEntries, pageRequest, filteredEntries.size());
     }
-    
+
 }

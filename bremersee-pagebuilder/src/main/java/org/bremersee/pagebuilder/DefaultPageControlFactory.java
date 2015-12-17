@@ -55,6 +55,11 @@ class DefaultPageControlFactory extends PageControlFactory {
             locale = Locale.getDefault();
         }
 
+        if (page.getEntries().size() == 0 && page.getPageRequest().getPageNumber() > 0) {
+            throw new IllegalArgumentException(
+                    "Building page control failed, because there are no entries and page number is greater than 0.");
+        }
+
         PageControlDto pageControl = new PageControlDto();
 
         pageControl.setPage(page);
@@ -128,11 +133,13 @@ class DefaultPageControlFactory extends PageControlFactory {
         }
         for (int pageNumber = pageNumberOfFirstButton; pageNumber < pageNumberOfFirstButton + maxPaginationLinks
                 && pageNumber < page.getTotalPages(); pageNumber++) {
+
             pagination.getLinks().add(pageRequestLinks.get(pageNumber));
         }
 
         while (page.getTotalPages() >= maxPaginationLinks && pageNumberOfFirstButton - 1 >= 0
                 && pagination.getLinks().size() < maxPaginationLinks) {
+
             pageNumberOfFirstButton = pageNumberOfFirstButton - 1;
             pagination.getLinks().add(0, pageRequestLinks.get(pageNumberOfFirstButton));
         }
@@ -181,7 +188,8 @@ class DefaultPageControlFactory extends PageControlFactory {
         final int pageSizeSelectorStep = getPageSizeSelectorStep();
 
         Validate.isTrue(0 < pageSizeSelectorMinValue && pageSizeSelectorMinValue <= pageSizeSelectorMaxValue,
-                "0 < pageSizeSelectorMinValue && pageSizeSelectorMinValue <= pageSizeSelectorMaxValue must be 'true'");
+                "0 < pageSizeSelectorMinValue && pageSizeSelectorMinValue "
+                        + "<= pageSizeSelectorMaxValue must be 'true'");
 
         if (pageSizeSelectorMaxValue > pageSizeSelectorMinValue) {
             Validate.isTrue(pageSizeSelectorStep > 0, "pageSizeSelectorStep > 0 must be 'true'");
@@ -194,7 +202,7 @@ class DefaultPageControlFactory extends PageControlFactory {
         }
 
         boolean selctedValueAdded = false;
-        TreeSet<PageSizeSelectorOptionDto> options = new TreeSet<PageSizeSelectorOptionDto>();
+        TreeSet<PageSizeSelectorOptionDto> options = new TreeSet<>();
         for (int i = pageSizeSelectorMinValue; i <= pageSizeSelectorMaxValue; i = i + pageSizeSelectorStep) {
             if (i == selectedPageSize) {
                 options.add(new PageSizeSelectorOptionDto(i, Integer.valueOf(i).toString(), true));

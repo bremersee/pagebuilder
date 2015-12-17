@@ -225,7 +225,12 @@ public class PageRequestDto implements Serializable, Comparable<PageRequestDto> 
     @XmlElement(name = "firstResult", required = false)
     @JsonProperty(value = "firstResult", required = false)
     public int getFirstResult() {
-        return getPageNumber() * getPageSize();
+        // make sure that first result (= offset) is not bigger than Integer.MAX_VALUE
+        long firstResult = (long)getPageNumber() * (long)getPageSize();
+        if (firstResult < (long)Integer.MAX_VALUE) {
+            return Long.valueOf(firstResult).intValue();
+        }
+        return Integer.MAX_VALUE;
     }
 
     /**

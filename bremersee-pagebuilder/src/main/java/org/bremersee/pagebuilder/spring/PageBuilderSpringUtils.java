@@ -34,7 +34,17 @@ public abstract class PageBuilderSpringUtils {
         if (pageRequest == null) {
             return null;
         }
-        return new SpringPageRequestImpl(pageRequest.getPageNumber(), pageRequest.getPageSize(),
+
+        // make sure that first result (= offset) is not bigger than
+        // Integer.MAX_VALUE
+        int pageNumber = pageRequest.getPageNumber();
+        int pageSize = pageRequest.getPageSize();
+        long firstResult = (long) pageNumber * (long) pageSize;
+        if (firstResult > (long) Integer.MAX_VALUE) {
+            pageNumber = 0;
+        }
+
+        return new SpringPageRequestImpl(pageNumber, pageSize,
                 ComparatorSpringUtils.toSort(pageRequest.getComparatorItem()), pageRequest.getQuery(),
                 pageRequest.getExtension());
     }
