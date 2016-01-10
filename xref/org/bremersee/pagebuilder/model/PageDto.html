@@ -76,7 +76,7 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          <span class="jxr_string">"totalPages"</span>
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  })
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_comment">//@formatter:on</em>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/bremersee/pagebuilder/model/PageDto.html">PageDto</a> <strong class="jxr_keyword">implements</strong> Serializable {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/bremersee/pagebuilder/model/PageDto.html">PageDto</a> <strong class="jxr_keyword">implements</strong> Serializable, Page&lt;Object&gt; {
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> serialVersionUID = 1L;
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>      
@@ -210,7 +210,7 @@
 <a class="jxr_linenumber" name="L202" href="#L202">202</a>     }
 <a class="jxr_linenumber" name="L203" href="#L203">203</a> 
 <a class="jxr_linenumber" name="L204" href="#L204">204</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     * Set the size of all available elements.</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">     * Sets the size of all available elements.</em>
 <a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>     @JsonProperty(value = <span class="jxr_string">"totalSize"</span>, required = false)
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setTotalSize(<strong class="jxr_keyword">long</strong> totalSize) {
@@ -239,6 +239,6 @@
 <a class="jxr_linenumber" name="L231" href="#L231">231</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2015 <a href="http://bremersee.org">bremersee.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2016 <a href="http://bremersee.org">bremersee.org</a>. All rights reserved.</div>
 </body>
 </html>

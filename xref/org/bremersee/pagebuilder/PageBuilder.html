@@ -26,12 +26,12 @@
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>  
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.bremersee.pagebuilder.model.PageDto;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.bremersee.pagebuilder.model.PageRequestDto;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.bremersee.pagebuilder.model.Page;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> org.bremersee.pagebuilder.model.PageRequest;
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * A page builder creates a {@link PageDto} form a list of elements.</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment"> * A page builder creates a {@link Page} form a list of elements.</em>
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <em class="jxr_javadoccomment"> * &lt;/p&gt;</em>
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <em class="jxr_javadoccomment"> * &lt;p&gt;</em>
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <em class="jxr_javadoccomment"> * There are two ways to create a page:</em>
@@ -39,11 +39,11 @@
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * &lt;li&gt;The list of elements that build the page is pre-filtered.&lt;br/&gt;</em>
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * The list of elements is the result of a SQL query for example.&lt;br/&gt;</em>
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> * Than the page must build with</em>
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> * {@link PageBuilder#buildPage(Collection, PageRequestDto, long)} .&lt;/li&gt;</em>
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <em class="jxr_javadoccomment"> * {@link PageBuilder#buildPage(Collection, PageRequest, long)} .&lt;/li&gt;</em>
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * &lt;li&gt;The list of items that build the page is not filtered and contains all</em>
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * available elements.&lt;br/&gt;</em>
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> * Than the page must build with</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * {@link PageBuilder#buildFilteredPage(Collection, PageRequestDto, Object)} .</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * {@link PageBuilder#buildFilteredPage(Collection, PageRequest, Object)} .</em>
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * &lt;/li&gt;</em>
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * &lt;/ul&gt;</em>
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> * &lt;/p&gt;</em>
@@ -53,14 +53,14 @@
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../org/bremersee/pagebuilder/PageBuilder.html">PageBuilder</a> {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>  
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <a href="../../../org/bremersee/pagebuilder/model/PageDto.html">PageDto</a> buildPage(Collection&lt;? <strong class="jxr_keyword">extends</strong> Object&gt; pagElements, <a href="../../../org/bremersee/pagebuilder/model/PageRequestDto.html">PageRequestDto</a> pageRequest, <strong class="jxr_keyword">long</strong> totalSize);
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      &lt;E&gt; Page&lt;E&gt; buildPage(Collection&lt;? <strong class="jxr_keyword">extends</strong> E&gt; pagElements, <a href="../../../org/bremersee/pagebuilder/model/PageRequest.html">PageRequest</a> pageRequest, <strong class="jxr_keyword">long</strong> totalSize);
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <a href="../../../org/bremersee/pagebuilder/model/PageDto.html">PageDto</a> buildFilteredPage(Collection&lt;? <strong class="jxr_keyword">extends</strong> Object&gt; allAvailableElements, <a href="../../../org/bremersee/pagebuilder/model/PageRequestDto.html">PageRequestDto</a> pageRequest,
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      &lt;E&gt; Page&lt;E&gt; buildFilteredPage(Collection&lt;? <strong class="jxr_keyword">extends</strong> E&gt; allAvailableElements, <a href="../../../org/bremersee/pagebuilder/model/PageRequest.html">PageRequest</a> pageRequest,
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>              Object filterCriteria);
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2015 <a href="http://bremersee.org">bremersee.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2016 <a href="http://bremersee.org">bremersee.org</a>. All rights reserved.</div>
 </body>
 </html>
