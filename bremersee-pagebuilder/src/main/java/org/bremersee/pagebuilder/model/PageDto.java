@@ -68,7 +68,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "totalPages"
 })
 //@formatter:on
-public class PageDto implements Serializable {
+public class PageDto implements Serializable, Page<Object> {
 
     private static final long serialVersionUID = 1L;
     
@@ -202,7 +202,7 @@ public class PageDto implements Serializable {
     }
 
     /**
-     * Set the size of all available elements.
+     * Sets the size of all available elements.
      */
     @JsonProperty(value = "totalSize", required = false)
     public void setTotalSize(long totalSize) {

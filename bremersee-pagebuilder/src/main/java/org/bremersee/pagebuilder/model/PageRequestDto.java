@@ -85,7 +85,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @Type(value = PageRequestLinkDto.class, name = "PageRequestLinkDto")
 })
 //@formatter:on
-public class PageRequestDto implements Serializable, Comparable<PageRequestDto> {
+public class PageRequestDto implements Serializable, PageRequest, Comparable<PageRequest> {
 
     private static final long serialVersionUID = 1L;
     
@@ -103,6 +103,17 @@ public class PageRequestDto implements Serializable, Comparable<PageRequestDto> 
      * Default constructor.
      */
     public PageRequestDto() {
+    }
+
+    public PageRequestDto(PageRequest pageRequest) {
+        if (pageRequest != null) {
+            setComparatorItem(pageRequest.getComparatorItem());
+            setExtension(pageRequest.getExtension());
+            //setFirstResult(pageRequest.getFirstResult());
+            setPageNumber(pageRequest.getPageNumber());
+            setPageSize(pageRequest.getPageSize());
+            setExtension(pageRequest.getExtension());
+        }
     }
 
     public PageRequestDto(int pageNumber, int pageSize) {
@@ -126,12 +137,18 @@ public class PageRequestDto implements Serializable, Comparable<PageRequestDto> 
         setExtension(extension);
     }
     
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return "PageRequestDto [pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", comparatorItem="
                 + comparatorItem + ", query=" + query + ", extension=" + extension + "]";
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -144,6 +161,9 @@ public class PageRequestDto implements Serializable, Comparable<PageRequestDto> 
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -175,8 +195,11 @@ public class PageRequestDto implements Serializable, Comparable<PageRequestDto> 
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
     @Override
-    public int compareTo(PageRequestDto pageRequest) {
+    public int compareTo(PageRequest pageRequest) {
         if (pageRequest == null) {
             return -1;
         }
