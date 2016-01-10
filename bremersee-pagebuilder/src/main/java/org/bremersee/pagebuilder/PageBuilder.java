@@ -18,12 +18,12 @@ package org.bremersee.pagebuilder;
 
 import java.util.Collection;
 
-import org.bremersee.pagebuilder.model.PageDto;
-import org.bremersee.pagebuilder.model.PageRequestDto;
+import org.bremersee.pagebuilder.model.Page;
+import org.bremersee.pagebuilder.model.PageRequest;
 
 /**
  * <p>
- * A page builder creates a {@link PageDto} form a list of elements.
+ * A page builder creates a {@link Page} form a list of elements.
  * </p>
  * <p>
  * There are two ways to create a page:
@@ -31,11 +31,11 @@ import org.bremersee.pagebuilder.model.PageRequestDto;
  * <li>The list of elements that build the page is pre-filtered.<br/>
  * The list of elements is the result of a SQL query for example.<br/>
  * Than the page must build with
- * {@link PageBuilder#buildPage(Collection, PageRequestDto, long)} .</li>
+ * {@link PageBuilder#buildPage(Collection, PageRequest, long)} .</li>
  * <li>The list of items that build the page is not filtered and contains all
  * available elements.<br/>
  * Than the page must build with
- * {@link PageBuilder#buildFilteredPage(Collection, PageRequestDto, Object)} .
+ * {@link PageBuilder#buildFilteredPage(Collection, PageRequest, Object)} .
  * </li>
  * </ul>
  * </p>
@@ -45,9 +45,9 @@ import org.bremersee.pagebuilder.model.PageRequestDto;
  */
 public interface PageBuilder {
 
-    PageDto buildPage(Collection<? extends Object> pagElements, PageRequestDto pageRequest, long totalSize);
+    <E> Page<E> buildPage(Collection<? extends E> pagElements, PageRequest pageRequest, long totalSize);
 
-    PageDto buildFilteredPage(Collection<? extends Object> allAvailableElements, PageRequestDto pageRequest,
+    <E> Page<E> buildFilteredPage(Collection<? extends E> allAvailableElements, PageRequest pageRequest,
             Object filterCriteria);
 
 }

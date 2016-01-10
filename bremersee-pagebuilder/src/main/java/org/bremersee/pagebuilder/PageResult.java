@@ -23,7 +23,6 @@ import java.util.List;
 import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageDto;
 import org.bremersee.pagebuilder.model.PageRequest;
-import org.bremersee.pagebuilder.model.PageRequestDto;
 
 /**
  * @author Christian Bremer
@@ -33,11 +32,11 @@ public class PageResult<E> implements Page<E> {
     private List<E> entries = new ArrayList<E>();
 
     private PageRequest pageRequest;
-    
+
     private long totalSize;
 
     /**
-     * Default constructor. 
+     * Default constructor.
      */
     public PageResult() {
     }
@@ -50,7 +49,7 @@ public class PageResult<E> implements Page<E> {
         this(entries, null, totalSize);
     }
 
-    public PageResult(Collection<? extends E> entries, PageRequestDto pageRequest, long totalSize) {
+    public PageResult(Collection<? extends E> entries, PageRequest pageRequest, long totalSize) {
         super();
         if (entries != null) {
             this.entries.addAll(entries);
@@ -59,7 +58,9 @@ public class PageResult<E> implements Page<E> {
         setTotalSize(totalSize);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bremersee.pagebuilder.model.Page#getEntries()
      */
     public List<E> getEntries() {
@@ -76,7 +77,9 @@ public class PageResult<E> implements Page<E> {
         this.entries = entries;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bremersee.pagebuilder.model.Page#getPageRequest()
      */
     public PageRequest getPageRequest() {
@@ -90,7 +93,9 @@ public class PageResult<E> implements Page<E> {
         this.pageRequest = pageRequest;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bremersee.pagebuilder.model.Page#getTotalSize()
      */
     public long getTotalSize() {
@@ -104,7 +109,9 @@ public class PageResult<E> implements Page<E> {
         this.totalSize = totalSize;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.bremersee.pagebuilder.model.Page#getTotalPages()
      */
     @Override
@@ -114,29 +121,17 @@ public class PageResult<E> implements Page<E> {
         }
         return (int) Math.ceil((double) getTotalSize() / (double) getPageRequest().getPageSize());
     }
-    
+
     /**
      * Creates a page with data transfer objects of this page.
-     * @param transformer the transformer to transform this entries into the data transfer objects.
+     * 
+     * @param transformer
+     *            the transformer to transform this entries into the data
+     *            transfer objects.
      * @return the page DTO
      */
     public <T> PageDto toPageDto(PageEntryTransformer<T, E> transformer) {
-        PageRequestDto pageRequestDto;
-        if (getPageRequest() == null) {
-            pageRequestDto = null;
-        } else if (getPageRequest() instanceof PageRequestDto) {
-            pageRequestDto = (PageRequestDto)getPageRequest();
-        } else {
-            pageRequestDto = new PageRequestDto(getPageRequest());
-        }
-        if (transformer == null) {
-            return new PageDto(getEntries(), pageRequestDto, getTotalSize());
-        }
-        List<T> targetEntries = new ArrayList<>(getEntries().size());
-        for (E source : getEntries()) {
-            targetEntries.add(transformer.transform(source));
-        }
-        return new PageDto(targetEntries, pageRequestDto, getTotalSize());
+        return PageBuilderUtils.createPageDto(this, transformer);
     }
 
 }

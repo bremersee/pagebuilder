@@ -17,9 +17,15 @@
 package org.bremersee.pagebuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
+import org.bremersee.pagebuilder.model.Page;
+import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.model.PageRequest;
+import org.bremersee.pagebuilder.model.PageRequestDto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,6 +41,53 @@ public abstract class PageBuilderUtils {
     private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
     private PageBuilderUtils() {
+    }
+
+    /**
+     * Transforms a page into a page DTO.
+     * 
+     * @param page
+     *            the page
+     * @param transformer
+     *            the transformer (may be {@code null} - than all entries of the
+     *            page will be added to the DTO without transforming)
+     * @return the page DTO
+     */
+    public static <E, T> PageDto createPageDto(Page<E> page, PageEntryTransformer<T, E> transformer) {
+        if (page == null) {
+            return null;
+        }
+        if (page instanceof PageDto && transformer == null) {
+            return (PageDto) page;
+        }
+        final PageRequestDto pageRequestDto = createPageRequestDto(page.getPageRequest());
+        if (transformer == null) {
+            return new PageDto(page.getEntries(), pageRequestDto, page.getTotalSize());
+        }
+        List<T> entries = new ArrayList<>();
+        for (E e : page.getEntries()) {
+            entries.add(transformer.transform(e));
+        }
+        return new PageDto(entries, pageRequestDto, page.getTotalSize());
+    }
+
+    /**
+     * Transforms a page request into a page request DTO.
+     * 
+     * @param pageRequest
+     *            the page request (can be {@code null})
+     * @return the page request DTO (can be {@code null})
+     */
+    public static PageRequestDto createPageRequestDto(PageRequest pageRequest) {
+        PageRequestDto pageRequestDto;
+        if (pageRequest == null) {
+            pageRequestDto = null;
+        } else if (pageRequest instanceof PageRequestDto) {
+            pageRequestDto = (PageRequestDto) pageRequest;
+        } else {
+            pageRequestDto = new PageRequestDto(pageRequest);
+        }
+        return pageRequestDto;
     }
 
     /**

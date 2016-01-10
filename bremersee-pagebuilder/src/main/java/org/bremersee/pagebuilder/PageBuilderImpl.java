@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bremersee.comparator.ObjectComparatorFactory;
-import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.model.PageRequest;
 import org.bremersee.pagebuilder.model.PageRequestDto;
 
 /**
@@ -82,27 +82,13 @@ public class PageBuilderImpl implements PageBuilder {
         return "PageBuilderImpl [pageBuilderFilter=" + pageBuilderFilter + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bremersee.pagebuilder.PageBuilder#buildPage(java.util.Collection,
-     * org.bremersee.pagebuilder.model.PageRequestDto, long)
-     */
     @Override
-    public PageDto buildPage(Collection<? extends Object> pageEntries, PageRequestDto pageRequest, long totalSize) {
-        return new PageDto(pageEntries, pageRequest, totalSize);
+    public <E> PageResult<E> buildPage(Collection<? extends E> pageEntries, PageRequest pageRequest, long totalSize) {
+        return new PageResult<E>(pageEntries, pageRequest, totalSize);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.PageBuilder#buildFilteredPage(java.util.
-     * Collection, org.bremersee.pagebuilder.model.PageRequestDto,
-     * java.lang.Object)
-     */
     @Override
-    public PageDto buildFilteredPage(Collection<? extends Object> allAvailableEntries, PageRequestDto pageRequest,
+    public <E> PageResult<E> buildFilteredPage(Collection<? extends E> allAvailableEntries, PageRequest pageRequest,
             Object filterCriteria) {
         
         if (allAvailableEntries == null) {
@@ -111,22 +97,22 @@ public class PageBuilderImpl implements PageBuilder {
         if (pageRequest == null) {
             pageRequest = new PageRequestDto();
         }
-        List<Object> allEntries = new ArrayList<>(allAvailableEntries);
+        List<E> allEntries = new ArrayList<>(allAvailableEntries);
         if (pageRequest.getComparatorItem() != null) {
             Collections.sort(allEntries, objectComparatorFactory.newObjectComparator(pageRequest.getComparatorItem()));
         }
-        List<Object> filteredEntries;
+        List<E> filteredEntries;
         if (getPageBuilderFilter() == null) {
             filteredEntries = allEntries;
         } else {
-            filteredEntries = new ArrayList<Object>(allAvailableEntries.size());
-            for (Object entry : allEntries) {
+            filteredEntries = new ArrayList<E>(allAvailableEntries.size());
+            for (E entry : allEntries) {
                 if (getPageBuilderFilter().accept(entry, filterCriteria)) {
                     filteredEntries.add(entry);
                 }
             }
         }
-        List<Object> pageEntries = new ArrayList<>(filteredEntries.size());
+        List<E> pageEntries = new ArrayList<>(filteredEntries.size());
         if (pageRequest.getFirstResult() < filteredEntries.size()) {
             int lastResult = pageRequest.getFirstResult() + pageRequest.getPageSize();
             for (int i = pageRequest.getFirstResult(); i < lastResult; i++) {
@@ -136,7 +122,7 @@ public class PageBuilderImpl implements PageBuilder {
             }
         }
 
-        return new PageDto(pageEntries, pageRequest, filteredEntries.size());
+        return new PageResult<E>(pageEntries, pageRequest, filteredEntries.size());
     }
 
 }

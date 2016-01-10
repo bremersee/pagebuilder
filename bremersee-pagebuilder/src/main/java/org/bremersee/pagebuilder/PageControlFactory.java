@@ -21,15 +21,16 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.bremersee.comparator.ComparatorItemTransformer;
 import org.bremersee.comparator.ComparatorItemTransformerImpl;
+import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageControlDto;
-import org.bremersee.pagebuilder.model.PageDto;
 
 /**
  * <p>
  * Factory to create {@link PageControlDto}s.
  * </p>
  * <p>
- * A {@link PageControlDto} can be used to display a {@link PageDto} on a web site.
+ * A {@link PageControlDto} can be used to display a {@link Page} on a web
+ * site.
  * </p>
  * 
  * @author Christian Bremer
@@ -252,8 +253,8 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Gets the minimum value, that the page size selector can
-     * have. Default is '10'.
+     * Gets the minimum value, that the page size selector can have. Default is
+     * '10'.
      * 
      * @return the minimum value
      */
@@ -262,8 +263,8 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Sets the minimum value, that the page size selector can
-     * have. Default is '10'.
+     * Sets the minimum value, that the page size selector can have. Default is
+     * '10'.
      * 
      * @param pageSizeSelectorMinValue
      *            the minimum value
@@ -275,8 +276,8 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Gets the maximum value, that the page size selector can
-     * have. Default is '100'.
+     * Gets the maximum value, that the page size selector can have. Default is
+     * '100'.
      * 
      * @return the maximum value
      */
@@ -285,8 +286,8 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Sets the maximum value, that the page size selector can
-     * have. Default is '100'.
+     * Sets the maximum value, that the page size selector can have. Default is
+     * '100'.
      * 
      * @param pageSizeSelectorMaxValue
      *            the maximum value
@@ -298,8 +299,7 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Gets the step size of the page size selector. Default is
-     * '10'.
+     * Gets the step size of the page size selector. Default is '10'.
      * 
      * @return the step size of the page size selector
      */
@@ -308,8 +308,7 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Sets the step size of the page size selector. Default is
-     * '10'.
+     * Sets the step size of the page size selector. Default is '10'.
      * 
      * @param pageSizeSelectorStep
      *            the step size of the page size selector
@@ -321,9 +320,8 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Returns {@code true} if the page size selector has an item
-     * to choose all available entries, otherwise {@code false}. Default is
-     * 'true'.
+     * Returns {@code true} if the page size selector has an item to choose all
+     * available entries, otherwise {@code false}. Default is 'true'.
      */
     public boolean isSelectAllEntriesAvailable() {
         return selectAllEntriesAvailable;
@@ -396,12 +394,33 @@ public abstract class PageControlFactory {
      * 
      * @param page
      *            the page
+     * @param transformer
+     *            the page entry transformer (may be {@code null})
      * @param pageUrl
      *            the plain page URL
      * @param locale
      *            the locale
      * @return the created page control
      */
-    public abstract PageControlDto newPageControl(PageDto page, String pageUrl, Locale locale);
+    public <E, T> PageControlDto newPageControl(Page<E> page, PageEntryTransformer<T, E> transformer, String pageUrl,
+            Locale locale) {
+        return newPageControl(PageBuilderUtils.createPageDto(page, transformer), pageUrl, locale);
+    }
+
+    /**
+     * Creates a new {@link PageControlDto} from the given page.<br/>
+     * The page URL must be the plain URL (with no page control query
+     * parameters), e. g.: http://example.org/myapp/mypage.html<br/>
+     * If the locale is not present, the default locale will be used.
+     * 
+     * @param page
+     *            the page
+     * @param pageUrl
+     *            the plain page URL
+     * @param locale
+     *            the locale
+     * @return the created page control
+     */
+    public abstract <E> PageControlDto newPageControl(Page<E> page, String pageUrl, Locale locale);
 
 }

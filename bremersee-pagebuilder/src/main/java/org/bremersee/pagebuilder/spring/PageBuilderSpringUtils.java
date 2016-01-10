@@ -17,7 +17,9 @@
 package org.bremersee.pagebuilder.spring;
 
 import org.bremersee.comparator.spring.ComparatorSpringUtils;
-import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.PageResult;
+import org.bremersee.pagebuilder.model.Page;
+import org.bremersee.pagebuilder.model.PageRequest;
 import org.bremersee.pagebuilder.model.PageRequestDto;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +32,7 @@ public abstract class PageBuilderSpringUtils {
     private PageBuilderSpringUtils() {
     }
 
-    public static SpringPageRequest toSpringPageRequest(PageRequestDto pageRequest) {
+    public static SpringPageRequest toSpringPageRequest(PageRequest pageRequest) {
         if (pageRequest == null) {
             return null;
         }
@@ -65,24 +67,24 @@ public abstract class PageBuilderSpringUtils {
         return pageRequest;
     }
 
-    public static PageImpl<Object> toSpringPage(PageDto page) {
+    public static <E> PageImpl<E> toSpringPage(Page<E> page) {
         if (page == null) {
             return null;
         }
         //@formatter:off
-        return new SpringPageImpl<Object>(
+        return new SpringPageImpl<E>(
                 page.getEntries(), 
                 toSpringPageRequest(page.getPageRequest()), 
                 page.getTotalSize());
         //@formatter:on
     }
 
-    public static PageDto fromSpringPage(org.springframework.data.domain.Page<?> springPage) {
+    public static <E> PageResult<E> fromSpringPage(org.springframework.data.domain.Page<E> springPage) {
         if (springPage == null) {
             return null;
         }
         PageRequestDto pageRequest = getPageRequest(springPage);
-        return new PageDto(springPage.getContent(), pageRequest, springPage.getTotalElements());
+        return new PageResult<E>(springPage.getContent(), pageRequest, springPage.getTotalElements());
     }
 
     private static PageRequestDto getPageRequest(org.springframework.data.domain.Page<?> springPage) {

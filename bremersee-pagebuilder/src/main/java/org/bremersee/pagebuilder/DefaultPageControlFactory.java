@@ -26,8 +26,8 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.bremersee.comparator.model.ComparatorItem;
+import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageControlDto;
-import org.bremersee.pagebuilder.model.PageDto;
 import org.bremersee.pagebuilder.model.PageRequestLinkDto;
 import org.bremersee.pagebuilder.model.PageSizeSelectorOptionDto;
 import org.bremersee.pagebuilder.model.PaginationDto;
@@ -43,7 +43,7 @@ import org.bremersee.utils.WebUtils;
 class DefaultPageControlFactory extends PageControlFactory {
 
     @Override
-    public PageControlDto newPageControl(PageDto page, String pageUrl, Locale locale) {
+    public <E> PageControlDto newPageControl(Page<E> page, String pageUrl, Locale locale) {
 
         Validate.notNull(page, "page must not be null");
 
@@ -62,7 +62,7 @@ class DefaultPageControlFactory extends PageControlFactory {
 
         PageControlDto pageControl = new PageControlDto();
 
-        pageControl.setPage(page);
+        pageControl.setPage(PageBuilderUtils.createPageDto(page, null));
 
         pageControl.setPageNumberParamName(getPageNumberParamName());
         pageControl.setPageSizeParamName(getPageSizeParamName());
@@ -105,7 +105,7 @@ class DefaultPageControlFactory extends PageControlFactory {
         return newUrl;
     }
 
-    private PaginationDto buildPagination(PageDto page, List<PageRequestLinkDto> pageRequestLinks, String pageUrl) {
+    private <E> PaginationDto buildPagination(Page<E> page, List<PageRequestLinkDto> pageRequestLinks, String pageUrl) {
 
         Validate.notEmpty(pageUrl, "pageUrl must not be empty");
 
