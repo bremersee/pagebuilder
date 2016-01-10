@@ -22,6 +22,8 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bremersee.pagebuilder.PageBuilder;
+import org.bremersee.pagebuilder.PageBuilderUtils;
+import org.bremersee.pagebuilder.PageResult;
 import org.bremersee.pagebuilder.example.domain.Address;
 import org.bremersee.pagebuilder.example.domain.Person;
 import org.bremersee.pagebuilder.example.domain.PersonRepository;
@@ -83,13 +85,13 @@ public class PersonServiceImpl implements PersonService {
         if (StringUtils.isBlank(pageRequest.getQuery())) {
             Pageable pageable = PageBuilderSpringUtils.toSpringPageRequest(pageRequest);
             Page<Person> springPage = personRepository.findAll(pageable);
-            PageDto page = PageBuilderSpringUtils.fromSpringPage(springPage);
-            return page;
+            PageResult<Person> page = PageBuilderSpringUtils.fromSpringPage(springPage);
+            return PageBuilderUtils.createPageDto(page, null);
         }
         
         List<Person> persons = personRepository.findByQuery(pageRequest.getQuery());
-        PageDto page = pageBuilder.buildFilteredPage(persons, pageRequest, null);
-        return page;
+        org.bremersee.pagebuilder.model.Page<Person> page = pageBuilder.buildFilteredPage(persons, pageRequest, null);
+        return PageBuilderUtils.createPageDto(page, null);
     }
     
 }
