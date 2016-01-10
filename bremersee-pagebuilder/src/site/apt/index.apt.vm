@@ -15,13 +15,13 @@ pageRequest.setComparatorItem(new ComparatorItem("name", true));
 
 PageBuilder pageBuilder = new PageBuilderImpl();
 
-PageDto page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
+Page<Object> page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
 +-----------------------------------------------------------------------------+
 
   To display the page with a pagination you can create a PageControlDto:
 
 +-----------------------------------------------------------------------------+
-PageDto page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
+Page<Object> page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
 
 PageControlDto pageControl = PageControlFactory.newInstance()
         .newPageControl(page, "mypage.html", Locale.GERMANY);
@@ -54,12 +54,12 @@ pageRequest.setComparatorItem(new ComparatorItem("name", true));
 
 PageBuilder pageBuilder = new PageBuilderImpl();
 
-PageDto page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
+Page<Object> page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
 
 Pageable pageable = PageBuilderSpringUtils.toSpringPageRequest(pageRequest);
 pageRequest = PageBuilderSpringUtils.fromSpringPageRequest(pageable);
 
-Page<?> springPage = PageBuilderSpringUtils.toSpringPage(page);
+Page<Object> springPage = PageBuilderSpringUtils.toSpringPage(page);
 page = PageBuilderSpringUtils.fromSpringPage(springPage);
 +-----------------------------------------------------------------------+
 
