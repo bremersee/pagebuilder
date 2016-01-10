@@ -14,12 +14,12 @@ pageRequest.setComparatorItem(new ComparatorItem("name", true));
 
 PageBuilder pageBuilder = new PageBuilderImpl();
 
-PageDto page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
+Page<Object> page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
 ```
 
 To display the page with a pagination you can create a PageControlDto:
 ```
-PageDto page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
+Page<Object> page = pageBuilder.buildFilteredPage(allElements, pageRequest, null);
 
 PageControlDto pageControl = PageControlFactory.newInstance()
         .newPageControl(page, "mypage.html", Locale.GERMANY);
@@ -27,15 +27,15 @@ PageControlDto pageControl = PageControlFactory.newInstance()
 
 The generated maven site is committed to the [gh-pages branch](https://github.com/bremersee/pagebuilder/tree/gh-pages) and visible [here](http://bremersee.github.io/pagebuilder/).
 
-## Release 1.0.3
-Release 1.0.3 is build with Java 7.
+## Release 1.1.0
+Release 1.1.0 is build with Java 7.
 
 It is available at Maven Central:
 ```xml
 <dependency>
     <groupId>org.bremersee</groupId>
     <artifactId>bremersee-pagebuilder</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -51,6 +51,6 @@ or
 ```
 $ cd pagebuilder/bremersee-pagebuilder-example
 $ mvn clean package
-$ java -jar target/bremersee-pagebuilder-example-1.0.3.jar
+$ java -jar target/bremersee-pagebuilder-example-1.1.0.jar
 ```
 After the application is started you can open [http://localhost:8080/restful.html](http://localhost:8080/restful.html) in your favorite browser and have a look at the demonstration.
