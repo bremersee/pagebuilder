@@ -16,7 +16,6 @@
 
 package org.bremersee.pagebuilder.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -68,7 +67,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "totalPages"
 })
 //@formatter:on
-public class PageDto implements Serializable, Page<Object> {
+public class PageDto implements Page<Object> {
 
     private static final long serialVersionUID = 1L;
     

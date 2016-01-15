@@ -16,7 +16,6 @@
 
 package org.bremersee.pagebuilder;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +27,7 @@ import org.bremersee.pagebuilder.model.PageRequest;
 /**
  * @author Christian Bremer
  */
-public class PageResult<E> implements Page<E>, Serializable {
+public class PageResult<E> implements Page<E> {
 
     private static final long serialVersionUID = 1L;
 

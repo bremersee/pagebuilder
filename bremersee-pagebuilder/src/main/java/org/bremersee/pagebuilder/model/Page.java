@@ -16,6 +16,7 @@
 
 package org.bremersee.pagebuilder.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ import java.util.List;
  * 
  * @author Christian Bremer
  */
-public interface Page<E> {
+public interface Page<E> extends Serializable {
 
     /**
      * Returns the elements of the page.

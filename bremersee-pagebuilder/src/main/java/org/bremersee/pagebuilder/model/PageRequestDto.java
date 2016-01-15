@@ -16,8 +16,6 @@
 
 package org.bremersee.pagebuilder.model;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
@@ -85,7 +83,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @Type(value = PageRequestLinkDto.class, name = "PageRequestLinkDto")
 })
 //@formatter:on
-public class PageRequestDto implements Serializable, PageRequest, Comparable<PageRequest> {
+public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     private static final long serialVersionUID = 1L;
     

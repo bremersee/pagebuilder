@@ -16,12 +16,14 @@
 
 package org.bremersee.pagebuilder.model;
 
+import java.io.Serializable;
+
 import org.bremersee.comparator.model.ComparatorItem;
 
 /**
  * @author Christian Bremer
  */
-public interface PageRequest {
+public interface PageRequest extends Serializable {
     
     /**
      * Returns the requested page number (starting with 0).
