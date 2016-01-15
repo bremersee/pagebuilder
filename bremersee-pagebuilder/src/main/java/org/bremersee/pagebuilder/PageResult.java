@@ -65,6 +65,46 @@ public class PageResult<E> implements Page<E> {
         return "PageResult [entries=" + entries + ", pageRequest=" + pageRequest + ", totalSize=" + totalSize + "]";
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((entries == null) ? 0 : entries.hashCode());
+        result = prime * result + ((pageRequest == null) ? 0 : pageRequest.hashCode());
+        result = prime * result + (int) (totalSize ^ (totalSize >>> 32));
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Page))
+            return false;
+        Page<?> other = (Page<?>) obj;
+        if (getEntries() == null) {
+            if (other.getEntries() != null)
+                return false;
+        } else if (!getEntries().equals(other.getEntries()))
+            return false;
+        if (getPageRequest() == null) {
+            if (other.getPageRequest() != null)
+                return false;
+        } else if (!getPageRequest().equals(other.getPageRequest()))
+            return false;
+        if (getTotalSize() != other.getTotalSize())
+            return false;
+        return true;
+    }
+
     /*
      * (non-Javadoc)
      * 

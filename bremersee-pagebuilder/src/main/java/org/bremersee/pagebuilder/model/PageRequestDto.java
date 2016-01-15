@@ -168,27 +168,27 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (!(obj instanceof PageRequest))
             return false;
-        PageRequestDto other = (PageRequestDto) obj;
-        if (comparatorItem == null) {
-            if (other.comparatorItem != null)
+        PageRequest other = (PageRequest) obj;
+        if (getComparatorItem() == null) {
+            if (other.getComparatorItem() != null)
                 return false;
-        } else if (!comparatorItem.equals(other.comparatorItem))
+        } else if (!getComparatorItem().equals(other.getComparatorItem()))
             return false;
-        if (extension == null) {
-            if (other.extension != null)
+        if (getExtension() == null) {
+            if (other.getExtension() != null)
                 return false;
-        } else if (!extension.equals(other.extension))
+        } else if (!getExtension().equals(other.getExtension()))
             return false;
-        if (pageNumber != other.pageNumber)
+        if (getPageNumber() != other.getPageNumber())
             return false;
-        if (pageSize != other.pageSize)
+        if (getPageSize() != other.getPageSize())
             return false;
-        if (query == null) {
-            if (other.query != null)
+        if (getQuery() == null) {
+            if (other.getQuery() != null)
                 return false;
-        } else if (!query.equals(other.query))
+        } else if (!getQuery().equals(other.getQuery()))
             return false;
         return true;
     }

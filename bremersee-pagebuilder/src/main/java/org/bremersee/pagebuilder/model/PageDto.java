@@ -130,20 +130,20 @@ public class PageDto implements Page<Object> {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (!(obj instanceof Page))
             return false;
-        PageDto other = (PageDto) obj;
-        if (entries == null) {
-            if (other.entries != null)
+        Page<?> other = (Page<?>) obj;
+        if (getEntries() == null) {
+            if (other.getEntries() != null)
                 return false;
-        } else if (!entries.equals(other.entries))
+        } else if (!getEntries().equals(other.getEntries()))
             return false;
-        if (pageRequest == null) {
-            if (other.pageRequest != null)
+        if (getPageRequest() == null) {
+            if (other.getPageRequest() != null)
                 return false;
-        } else if (!pageRequest.equals(other.pageRequest))
+        } else if (!getPageRequest().equals(other.getPageRequest()))
             return false;
-        if (totalSize != other.totalSize)
+        if (getTotalSize() != other.getTotalSize())
             return false;
         return true;
     }
