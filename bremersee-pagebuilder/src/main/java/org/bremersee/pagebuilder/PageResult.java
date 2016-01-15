@@ -16,6 +16,7 @@
 
 package org.bremersee.pagebuilder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +28,9 @@ import org.bremersee.pagebuilder.model.PageRequest;
 /**
  * @author Christian Bremer
  */
-public class PageResult<E> implements Page<E> {
+public class PageResult<E> implements Page<E>, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private List<E> entries = new ArrayList<E>();
 
@@ -58,11 +61,17 @@ public class PageResult<E> implements Page<E> {
         setTotalSize(totalSize);
     }
 
+    @Override
+    public String toString() {
+        return "PageResult [entries=" + entries + ", pageRequest=" + pageRequest + ", totalSize=" + totalSize + "]";
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see org.bremersee.pagebuilder.model.Page#getEntries()
      */
+    @Override
     public List<E> getEntries() {
         return entries;
     }
@@ -82,6 +91,7 @@ public class PageResult<E> implements Page<E> {
      * 
      * @see org.bremersee.pagebuilder.model.Page#getPageRequest()
      */
+    @Override
     public PageRequest getPageRequest() {
         return pageRequest;
     }
@@ -98,6 +108,7 @@ public class PageResult<E> implements Page<E> {
      * 
      * @see org.bremersee.pagebuilder.model.Page#getTotalSize()
      */
+    @Override
     public long getTotalSize() {
         return totalSize;
     }

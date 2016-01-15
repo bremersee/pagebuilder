@@ -42,6 +42,14 @@ public abstract class PageBuilderUtils {
 
     private PageBuilderUtils() {
     }
+    
+    /**
+     * Casts a page.
+     */
+    @SuppressWarnings("unchecked")
+    public static <E> Page<E> cast(Page<?> page) {
+        return (Page<E>)page;
+    }
 
     /**
      * Transforms a page into a page DTO.
