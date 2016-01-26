@@ -42,13 +42,68 @@ public abstract class PageBuilderUtils {
 
     private PageBuilderUtils() {
     }
-    
+
     /**
      * Casts a page.
      */
     @SuppressWarnings("unchecked")
     public static <E> Page<E> cast(Page<?> page) {
-        return (Page<E>)page;
+        return (Page<E>) page;
+    }
+
+    /**
+     * Creates a page.
+     * 
+     * @param entries
+     *            the page entries
+     * @param pageRequest
+     *            the page request
+     * @param totalSize
+     *            the total size
+     * @param transformer
+     *            the entry transformer (may be {@code null} - than all entries
+     *            will be added to the page without transforming)
+     * @return the page
+     */
+    @SuppressWarnings("unchecked")
+    public static <E, T> PageResult<T> createPage(Iterable<? extends E> entries, PageRequest pageRequest, long totalSize,
+            PageEntryTransformer<T, E> transformer) {
+        
+        PageResult<T> page = new PageResult<>();
+        page.setPageRequest(pageRequest);
+        page.setTotalSize(totalSize);
+        if (entries != null) {
+            for (E entry : entries) {
+                if (transformer == null) {
+                    page.getEntries().add((T) entry);
+                } else {
+                    T targetEntry = transformer.transform(entry);
+                    page.getEntries().add(targetEntry);
+                }
+            }
+        }
+        return page;
+    }
+
+    /**
+     * Transforms a page into another page.
+     * 
+     * @param sourcePage
+     *            the source page
+     * @param transformer
+     *            the entry transformer (may be {@code null} - than all entries
+     *            of the source page will be added to the target page without
+     *            transforming)
+     * @return the target page
+     */
+    public static <E, T> Page<T> createPage(Page<? extends E> sourcePage, PageEntryTransformer<T, E> transformer) {
+        if (sourcePage == null) {
+            return null;
+        }
+        if (transformer == null) {
+            return cast(sourcePage);
+        }
+        return createPage(sourcePage.getEntries(), sourcePage.getPageRequest(), sourcePage.getTotalSize(), transformer);
     }
 
     /**
@@ -57,11 +112,11 @@ public abstract class PageBuilderUtils {
      * @param page
      *            the page
      * @param transformer
-     *            the transformer (may be {@code null} - than all entries of the
-     *            page will be added to the DTO without transforming)
+     *            the entry transformer (may be {@code null} - than all entries
+     *            of the page will be added to the DTO without transforming)
      * @return the page DTO
      */
-    public static <E, T> PageDto createPageDto(Page<E> page, PageEntryTransformer<T, E> transformer) {
+    public static <E, T> PageDto createPageDto(Page<? extends E> page, PageEntryTransformer<T, E> transformer) {
         if (page == null) {
             return null;
         }

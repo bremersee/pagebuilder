@@ -83,13 +83,26 @@ public class PageBuilderImpl implements PageBuilder {
     }
 
     @Override
-    public <E> PageResult<E> buildPage(Collection<? extends E> pageEntries, PageRequest pageRequest, long totalSize) {
-        return new PageResult<E>(pageEntries, pageRequest, totalSize);
+    public <E> PageResult<E> buildPage(Iterable<? extends E> pageEntries, PageRequest pageRequest, long totalSize) {
+        return buildPage(pageEntries, pageRequest, totalSize);
+    }
+    
+    @Override
+    public <T, E> PageResult<T> buildPage(Iterable<? extends E> pageEntries, PageRequest pageRequest, long totalSize,
+            PageEntryTransformer<T, E> transformer) {
+        return PageBuilderUtils.createPage(pageEntries, pageRequest, totalSize, transformer);
     }
 
     @Override
     public <E> PageResult<E> buildFilteredPage(Collection<? extends E> allAvailableEntries, PageRequest pageRequest,
             Object filterCriteria) {
+        return buildFilteredPage(allAvailableEntries, pageRequest, filterCriteria, null);
+    }
+        
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T, E> PageResult<T> buildFilteredPage(Collection<? extends E> allAvailableEntries, PageRequest pageRequest,
+            Object filterCriteria, PageEntryTransformer<T, E> transformer) {
         
         if (allAvailableEntries == null) {
             allAvailableEntries = new ArrayList<>();
@@ -112,17 +125,21 @@ public class PageBuilderImpl implements PageBuilder {
                 }
             }
         }
-        List<E> pageEntries = new ArrayList<>(filteredEntries.size());
+        List<T> pageEntries = new ArrayList<>(filteredEntries.size());
         if (pageRequest.getFirstResult() < filteredEntries.size()) {
             int lastResult = pageRequest.getFirstResult() + pageRequest.getPageSize();
             for (int i = pageRequest.getFirstResult(); i < lastResult; i++) {
                 if (i < filteredEntries.size()) {
-                    pageEntries.add(filteredEntries.get(i));
+                    if (transformer == null) {
+                        pageEntries.add((T)filteredEntries.get(i));
+                    } else {
+                        pageEntries.add(transformer.transform(filteredEntries.get(i)));
+                    }
                 }
             }
         }
 
-        return new PageResult<E>(pageEntries, pageRequest, filteredEntries.size());
+        return new PageResult<T>(pageEntries, pageRequest, filteredEntries.size());
     }
 
 }

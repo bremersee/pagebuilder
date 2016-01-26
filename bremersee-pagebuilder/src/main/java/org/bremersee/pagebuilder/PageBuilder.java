@@ -31,12 +31,11 @@ import org.bremersee.pagebuilder.model.PageRequest;
  * <li>The list of elements that build the page is pre-filtered.<br/>
  * The list of elements is the result of a SQL query for example.<br/>
  * Than the page must build with
- * {@link PageBuilder#buildPage(Collection, PageRequest, long)} .</li>
+ * {@link PageBuilder#buildPage(Iterable, PageRequest, long)} .</li>
  * <li>The list of items that build the page is not filtered and contains all
  * available elements.<br/>
  * Than the page must build with
- * {@link PageBuilder#buildFilteredPage(Collection, PageRequest, Object)} .
- * </li>
+ * {@link PageBuilder#buildFilteredPage(Collection, PageRequest, Object)} .</li>
  * </ul>
  * </p>
  * 
@@ -45,9 +44,15 @@ import org.bremersee.pagebuilder.model.PageRequest;
  */
 public interface PageBuilder {
 
-    <E> Page<E> buildPage(Collection<? extends E> pagElements, PageRequest pageRequest, long totalSize);
+    <E> Page<E> buildPage(Iterable<? extends E> pageElements, PageRequest pageRequest, long totalSize);
+
+    <T, E> Page<T> buildPage(Iterable<? extends E> pageElements, PageRequest pageRequest, long totalSize,
+            PageEntryTransformer<T, E> transformer);
 
     <E> Page<E> buildFilteredPage(Collection<? extends E> allAvailableElements, PageRequest pageRequest,
             Object filterCriteria);
+
+    <T, E> Page<T> buildFilteredPage(Collection<? extends E> allAvailableEntries, PageRequest pageRequest,
+            Object filterCriteria, PageEntryTransformer<T, E> transformer);
 
 }

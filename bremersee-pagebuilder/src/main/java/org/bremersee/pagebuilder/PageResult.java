@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bremersee.pagebuilder.model.Page;
-import org.bremersee.pagebuilder.model.PageDto;
 import org.bremersee.pagebuilder.model.PageRequest;
 
 /**
@@ -170,18 +169,6 @@ public class PageResult<E> implements Page<E> {
             return 1;
         }
         return (int) Math.ceil((double) getTotalSize() / (double) getPageRequest().getPageSize());
-    }
-
-    /**
-     * Creates a page with data transfer objects of this page.
-     * 
-     * @param transformer
-     *            the transformer to transform this entries into the data
-     *            transfer objects.
-     * @return the page DTO
-     */
-    public <T> PageDto toPageDto(PageEntryTransformer<T, E> transformer) {
-        return PageBuilderUtils.createPageDto(this, transformer);
     }
 
 }
