@@ -20,12 +20,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.Validate;
 import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageDto;
 import org.bremersee.pagebuilder.model.PageRequest;
 import org.bremersee.pagebuilder.model.PageRequestDto;
+import org.bremersee.utils.CastUtils;
+import org.w3c.dom.Node;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,9 +44,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public abstract class PageBuilderUtils {
 
+    private PageBuilderUtils() {
+    }
+
     private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
-    private PageBuilderUtils() {
+    private static final Map<java.lang.reflect.AnnotatedElement, JAXBContext> JAXB_CONTEXTS = new ConcurrentHashMap<>();
+
+    private static JAXBContext getJaxbContext(Class<?> valueType) throws JAXBException {
+        JAXBContext jaxbContext = JAXB_CONTEXTS.get(valueType.getPackage());
+        if (jaxbContext == null) {
+            jaxbContext = JAXB_CONTEXTS.get(valueType);
+        }
+        if (jaxbContext == null) {
+            try {
+                jaxbContext = JAXBContext.newInstance(valueType.getPackage().getName());
+            } catch (JAXBException e) {
+                jaxbContext = JAXBContext.newInstance(valueType);
+                JAXB_CONTEXTS.put(valueType, jaxbContext);
+            }
+        }
+        return jaxbContext;
     }
 
     /**
@@ -131,7 +155,11 @@ public abstract class PageBuilderUtils {
         for (E e : page.getEntries()) {
             entries.add(transformer.transform(e));
         }
-        return new PageDto(entries, pageRequestDto, page.getTotalSize());
+        PageDto pageDto = new PageDto();
+        pageDto.setEntries(CastUtils.cast(entries));
+        pageDto.setPageRequest(pageRequestDto);
+        pageDto.setTotalSize(page.getTotalSize());
+        return pageDto;
     }
 
     /**
@@ -151,6 +179,75 @@ public abstract class PageBuilderUtils {
             pageRequestDto = new PageRequestDto(pageRequest);
         }
         return pageRequestDto;
+    }
+
+    /**
+     * Transforms a XML node or a JSON map into an object.
+     * 
+     * @param xmlNodeOrJsonMap
+     *            the XML node or JSON map
+     * @param valueType
+     *            the class of the target object
+     * @param jaxbContextOrObjectMapper
+     *            a {@link JAXBContext} or a {@link ObjectMapper} (can be null)
+     * @return the target object
+     * @throws Exception
+     *             if transformation fails
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T transform(Object xmlNodeOrJsonMap, Class<T> valueType, Object jaxbContextOrObjectMapper)
+            throws Exception {
+        if (xmlNodeOrJsonMap == null) {
+            return null;
+        }
+        Validate.notNull(valueType, "valueType must not be null");
+        if (valueType.isAssignableFrom(xmlNodeOrJsonMap.getClass())) {
+            return valueType.cast(xmlNodeOrJsonMap);
+        }
+        if (xmlNodeOrJsonMap instanceof Node) {
+            JAXBContext jaxbContext;
+            if (jaxbContextOrObjectMapper != null && jaxbContextOrObjectMapper instanceof JAXBContext) {
+                jaxbContext = (JAXBContext) jaxbContextOrObjectMapper;
+            } else {
+                jaxbContext = null;
+            }
+            return xmlNodeToObject((Node) xmlNodeOrJsonMap, valueType, jaxbContext);
+        }
+        if (xmlNodeOrJsonMap instanceof Map) {
+            ObjectMapper objectMapper;
+            if (jaxbContextOrObjectMapper != null && jaxbContextOrObjectMapper instanceof ObjectMapper) {
+                objectMapper = (ObjectMapper) jaxbContextOrObjectMapper;
+            } else {
+                objectMapper = null;
+            }
+            return jsonMapToObject((Map<String, Object>) xmlNodeOrJsonMap, valueType, objectMapper);
+        }
+        throw new IllegalArgumentException(
+                "xmlNodeOrJsonMap must be of type " + Node.class.getName() + " or of type " + Map.class.getName());
+    }
+
+    /**
+     * Transforms a XML node into an object.
+     * 
+     * @param node
+     *            the XML node
+     * @param valueType
+     *            the class of the target object
+     * @param jaxbContext
+     *            the {@link JAXBContext} (can be null)
+     * @return the target object
+     * @throws JAXBException
+     *             if transformation fails
+     */
+    public static <T> T xmlNodeToObject(Node node, Class<T> valueType, JAXBContext jaxbContext) throws JAXBException {
+        if (node == null) {
+            return null;
+        }
+        Validate.notNull(valueType, "valueType must not be null");
+        if (jaxbContext == null) {
+            jaxbContext = getJaxbContext(valueType);
+        }
+        return valueType.cast(jaxbContext.createUnmarshaller().unmarshal(node));
     }
 
     /**
