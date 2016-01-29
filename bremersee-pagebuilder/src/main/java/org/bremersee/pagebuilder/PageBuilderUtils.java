@@ -188,14 +188,16 @@ public abstract class PageBuilderUtils {
      *            the XML node or JSON map
      * @param valueType
      *            the class of the target object
-     * @param jaxbContextOrObjectMapper
-     *            a {@link JAXBContext} or a {@link ObjectMapper} (can be null)
+     * @param jaxbContext
+     *            the {@link JAXBContext} (can be null)
+     * @param objectMapper
+     *            the JSON object mapper (optional)
      * @return the target object
      * @throws Exception
      *             if transformation fails
      */
     @SuppressWarnings("unchecked")
-    public static <T> T transform(Object xmlNodeOrJsonMap, Class<T> valueType, Object jaxbContextOrObjectMapper)
+    public static <T> T transform(Object xmlNodeOrJsonMap, Class<T> valueType, JAXBContext jaxbContext, ObjectMapper objectMapper)
             throws Exception {
         if (xmlNodeOrJsonMap == null) {
             return null;
@@ -205,25 +207,13 @@ public abstract class PageBuilderUtils {
             return valueType.cast(xmlNodeOrJsonMap);
         }
         if (xmlNodeOrJsonMap instanceof Node) {
-            JAXBContext jaxbContext;
-            if (jaxbContextOrObjectMapper != null && jaxbContextOrObjectMapper instanceof JAXBContext) {
-                jaxbContext = (JAXBContext) jaxbContextOrObjectMapper;
-            } else {
-                jaxbContext = null;
-            }
             return xmlNodeToObject((Node) xmlNodeOrJsonMap, valueType, jaxbContext);
         }
         if (xmlNodeOrJsonMap instanceof Map) {
-            ObjectMapper objectMapper;
-            if (jaxbContextOrObjectMapper != null && jaxbContextOrObjectMapper instanceof ObjectMapper) {
-                objectMapper = (ObjectMapper) jaxbContextOrObjectMapper;
-            } else {
-                objectMapper = null;
-            }
             return jsonMapToObject((Map<String, Object>) xmlNodeOrJsonMap, valueType, objectMapper);
         }
         throw new IllegalArgumentException(
-                "xmlNodeOrJsonMap must be of type " + Node.class.getName() + " or of type " + Map.class.getName());
+                "xmlNodeOrJsonMap must be of type " + valueType + ", " + Node.class.getName() + " or of type " + Map.class.getName());
     }
 
     /**
