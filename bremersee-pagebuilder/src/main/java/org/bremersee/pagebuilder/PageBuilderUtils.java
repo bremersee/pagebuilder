@@ -90,9 +90,9 @@ public abstract class PageBuilderUtils {
      * @return the page
      */
     @SuppressWarnings("unchecked")
-    public static <E, T> PageResult<T> createPage(Iterable<? extends E> entries, PageRequest pageRequest, long totalSize,
-            PageEntryTransformer<T, E> transformer) {
-        
+    public static <E, T> PageResult<T> createPage(Iterable<? extends E> entries, PageRequest pageRequest,
+            long totalSize, PageEntryTransformer<T, E> transformer) {
+
         PageResult<T> page = new PageResult<>();
         page.setPageRequest(pageRequest);
         page.setTotalSize(totalSize);
@@ -188,6 +188,8 @@ public abstract class PageBuilderUtils {
      *            the XML node or JSON map
      * @param valueType
      *            the class of the target object
+     * @param defaultObject
+     *            a default object (optional)
      * @param jaxbContext
      *            the {@link JAXBContext} (can be null)
      * @param objectMapper
@@ -197,10 +199,11 @@ public abstract class PageBuilderUtils {
      *             if transformation fails
      */
     @SuppressWarnings("unchecked")
-    public static <T> T transform(Object xmlNodeOrJsonMap, Class<T> valueType, JAXBContext jaxbContext, ObjectMapper objectMapper)
-            throws Exception {
+    public static <T, S extends T> T transform(Object xmlNodeOrJsonMap, Class<T> valueType, S defaultObject,
+            JAXBContext jaxbContext, ObjectMapper objectMapper) throws Exception {
+
         if (xmlNodeOrJsonMap == null) {
-            return null;
+            return defaultObject;
         }
         Validate.notNull(valueType, "valueType must not be null");
         if (valueType.isAssignableFrom(xmlNodeOrJsonMap.getClass())) {
@@ -212,8 +215,8 @@ public abstract class PageBuilderUtils {
         if (xmlNodeOrJsonMap instanceof Map) {
             return jsonMapToObject((Map<String, Object>) xmlNodeOrJsonMap, valueType, objectMapper);
         }
-        throw new IllegalArgumentException(
-                "xmlNodeOrJsonMap must be of type " + valueType + ", " + Node.class.getName() + " or of type " + Map.class.getName());
+        throw new IllegalArgumentException("xmlNodeOrJsonMap must be of type " + valueType + ", " + Node.class.getName()
+                + " or of type " + Map.class.getName());
     }
 
     /**
