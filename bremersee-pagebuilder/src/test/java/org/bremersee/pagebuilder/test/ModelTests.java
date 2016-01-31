@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,9 @@ public class ModelTests {
         comparatorItem.next("bar", false);
         Address addr0 = new Address("Here");
         Person p0 = new Person("Rumpel", "Stielzchen", addr0);
-        return new PageRequestDto(22, 100, comparatorItem, "foo bar", p0);
+        LinkedHashMap<String, Object> extensions = new LinkedHashMap<>();
+        extensions.put("person0", p0);
+        return new PageRequestDto(22, 100, comparatorItem, "foo bar", extensions);
     }
 
     @Test

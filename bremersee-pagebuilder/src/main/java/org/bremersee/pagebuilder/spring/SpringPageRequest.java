@@ -16,6 +16,8 @@
 
 package org.bremersee.pagebuilder.spring;
 
+import java.util.Map;
+
 import org.bremersee.pagebuilder.model.PageRequestDto;
 import org.springframework.data.domain.Pageable;
 
@@ -35,8 +37,8 @@ public interface SpringPageRequest extends Pageable {
     String getQuery();
 
     /**
-     * Returns a custom extension (may be {@code null}).
+     * Returns custom extensions (may be {@code null}).
      */
-    Object getExtension();
+    Map<String, Object> getExtensions();
 
 }

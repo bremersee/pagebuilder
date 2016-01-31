@@ -73,13 +73,13 @@ public class PageRequestExtensionExtractorImpl implements PageRequestExtensionEx
     }
     
     @Override
-    public <T, S extends T> T getPageRequestExtension(PageRequest pageRequest, Class<T> extensionType, S defaultObject) {
+    public <T, S extends T> T getPageRequestExtension(PageRequest pageRequest, String key, Class<T> extensionType, S defaultObject) {
         
-        if (pageRequest == null) {
+        if (pageRequest == null || key == null) {
             return defaultObject;
         }
         try {
-            return PageBuilderUtils.transform(pageRequest.getExtension(), extensionType, defaultObject, getJaxbContext(), getObjectMapper());
+            return PageBuilderUtils.transform(pageRequest.getExtensions().get(key), extensionType, defaultObject, getJaxbContext(), getObjectMapper());
             
         } catch (Exception e) {
             if (e instanceof RuntimeException) {

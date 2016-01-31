@@ -48,7 +48,7 @@ public abstract class PageBuilderSpringUtils {
 
         return new SpringPageRequestImpl(pageNumber, pageSize,
                 ComparatorSpringUtils.toSort(pageRequest.getComparatorItem()), pageRequest.getQuery(),
-                pageRequest.getExtension());
+                pageRequest.getExtensions());
     }
 
     public static PageRequestDto fromSpringPageRequest(Pageable pageable) {
@@ -61,7 +61,7 @@ public abstract class PageBuilderSpringUtils {
         pageRequest.setPageSize(pageable.getPageSize());
         if (pageable instanceof SpringPageRequestImpl) {
             SpringPageRequestImpl spr = (SpringPageRequestImpl) pageable;
-            pageRequest.setExtension(spr.getExtension());
+            pageRequest.setExtensions(spr.getExtensions());
             pageRequest.setQuery(spr.getQuery());
         }
         return pageRequest;

@@ -16,9 +16,11 @@
 
 package org.bremersee.pagebuilder.model;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -50,7 +52,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 		"firstResult", 
 		"comparatorItem", 
 		"query", 
-		"extension" 
+		"extensions" 
 })
 @XmlSeeAlso({
     PageRequestLinkDto.class
@@ -69,7 +71,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         "firstResult", 
         "comparatorItem", 
         "query", 
-        "extension" 
+        "extensions" 
 })
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -95,7 +97,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     private String query;
 
-    private Object extension;
+    private Map<String, Object> extensions = new LinkedHashMap<>();
 
     /**
      * Default constructor.
@@ -106,11 +108,11 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     public PageRequestDto(PageRequest pageRequest) {
         if (pageRequest != null) {
             setComparatorItem(pageRequest.getComparatorItem());
-            setExtension(pageRequest.getExtension());
+            setExtensions(pageRequest.getExtensions());
             //setFirstResult(pageRequest.getFirstResult());
             setPageNumber(pageRequest.getPageNumber());
             setPageSize(pageRequest.getPageSize());
-            setExtension(pageRequest.getExtension());
+            setExtensions(pageRequest.getExtensions());
         }
     }
 
@@ -126,13 +128,13 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
         this(pageNumber, pageSize, comparatorItem, query, null);
     }
 
-    public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query, Object extension) {
+    public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query, Map<String, Object> extensions) {
         super();
         setPageNumber(pageNumber);
         setPageSize(pageSize);
         setComparatorItem(comparatorItem);
         setQuery(query);
-        setExtension(extension);
+        setExtensions(extensions);
     }
     
     /* (non-Javadoc)
@@ -141,7 +143,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     @Override
     public String toString() {
         return "PageRequestDto [pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", comparatorItem="
-                + comparatorItem + ", query=" + query + ", extension=" + extension + "]";
+                + comparatorItem + ", query=" + query + ", extensions=" + extensions + "]";
     }
 
     /* (non-Javadoc)
@@ -152,7 +154,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((comparatorItem == null) ? 0 : comparatorItem.hashCode());
-        result = prime * result + ((extension == null) ? 0 : extension.hashCode());
+        result = prime * result + ((extensions == null) ? 0 : extensions.hashCode());
         result = prime * result + pageNumber;
         result = prime * result + pageSize;
         result = prime * result + ((query == null) ? 0 : query.hashCode());
@@ -176,10 +178,10 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
                 return false;
         } else if (!getComparatorItem().equals(other.getComparatorItem()))
             return false;
-        if (getExtension() == null) {
-            if (other.getExtension() != null)
+        if (getExtensions() == null) {
+            if (other.getExtensions() != null)
                 return false;
-        } else if (!getExtension().equals(other.getExtension()))
+        } else if (!getExtensions().equals(other.getExtensions()))
             return false;
         if (getPageNumber() != other.getPageNumber())
             return false;
@@ -298,18 +300,25 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     /**
      * Returns a custom extension (may be {@code null}).
      */
-    @XmlAnyElement(lax = true)
-    @JsonProperty(value = "extension", required = false)
-    public Object getExtension() {
-        return extension;
+    @JsonProperty(value = "extensions", required = false)
+    public Map<String, Object> getExtensions() {
+        return extensions;
     }
 
     /**
      * Sets a custom extension (may be {@code null}).
      */
-    @JsonProperty(value = "extension", required = false)
-    public void setExtension(Object extension) {
-        this.extension = extension;
+    @JsonProperty(value = "extensions", required = false)
+    public void setExtensions(Map<String, Object> extensions) {
+        if (extensions == null) {
+            this.extensions.clear();
+        } else if (extensions instanceof LinkedHashMap) {
+            this.extensions = extensions;
+        } else {
+            this.extensions.clear();;
+            this.extensions.putAll(extensions);
+            
+        }
     }
 
 }

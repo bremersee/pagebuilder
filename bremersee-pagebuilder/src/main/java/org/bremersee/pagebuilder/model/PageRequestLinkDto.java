@@ -16,6 +16,8 @@
 
 package org.bremersee.pagebuilder.model;
 
+import java.util.Map;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -25,8 +27,8 @@ import javax.xml.bind.annotation.XmlType;
 import org.bremersee.comparator.model.ComparatorItem;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -77,7 +79,7 @@ public class PageRequestLinkDto extends PageRequestDto {
     public PageRequestLinkDto(PageRequestDto pageRequest, boolean active, String url) {
         if (pageRequest != null) {
             setComparatorItem(pageRequest.getComparatorItem());
-            setExtension(pageRequest.getExtension());
+            setExtensions(pageRequest.getExtensions());
             setPageNumber(pageRequest.getPageNumber());
             setPageSize(pageRequest.getPageSize());
             setQuery(pageRequest.getQuery());
@@ -87,8 +89,8 @@ public class PageRequestLinkDto extends PageRequestDto {
     }
     
     public PageRequestLinkDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query,
-            Object extension, boolean active, String url) {
-        super(pageNumber, pageSize, comparatorItem, query, extension);
+            Map<String, Object> extensions, boolean active, String url) {
+        super(pageNumber, pageSize, comparatorItem, query, extensions);
         this.active = active;
         this.url = url;
     }

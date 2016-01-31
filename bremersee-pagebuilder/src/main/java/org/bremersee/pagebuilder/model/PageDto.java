@@ -23,7 +23,6 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -155,8 +154,8 @@ public class PageDto implements Page<Object> {
      * 
      * @return the elements of the page
      */
-    @XmlElementWrapper(name = "entries", required = false)
-    @XmlAnyElement(lax = true)
+    @XmlElementWrapper(name = "entries")
+    @XmlElement(name = "entry", nillable = true, type = Object.class)
     public List<Object> getEntries() {
         return entries;
     }

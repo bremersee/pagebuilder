@@ -17,6 +17,7 @@
 package org.bremersee.pagebuilder.model;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.bremersee.comparator.model.ComparatorItem;
 
@@ -51,8 +52,8 @@ public interface PageRequest extends Serializable {
     String getQuery();
     
     /**
-     * Returns a custom extension (may be {@code null}).
+     * Returns custom extensions (may be {@code null}).
      */
-    Object getExtension();
+    Map<String, Object> getExtensions();
 
 }

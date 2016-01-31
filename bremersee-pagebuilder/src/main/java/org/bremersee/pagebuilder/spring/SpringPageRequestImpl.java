@@ -16,6 +16,9 @@
 
 package org.bremersee.pagebuilder.spring;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.bremersee.pagebuilder.model.PageRequestDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,7 +32,7 @@ public class SpringPageRequestImpl extends PageRequest implements SpringPageRequ
 
     protected String query;
 
-    protected Object extension;
+    protected final Map<String, Object> extensions = new LinkedHashMap<>();
 
     /**
      * Creates a {@link PageRequest} with the additional attributes of a
@@ -41,13 +44,15 @@ public class SpringPageRequestImpl extends PageRequest implements SpringPageRequ
      *            the page size
      * @param query
      *            the query
-     * @param extension
-     *            the extension
+     * @param extensions
+     *            the extensions
      */
-    public SpringPageRequestImpl(int pageNumber, int pageSize, String query, Object extension) {
+    public SpringPageRequestImpl(int pageNumber, int pageSize, String query, Map<String, Object> extensions) {
         super(pageNumber, pageSize);
         this.query = query;
-        this.extension = extension;
+        if (extensions != null) {
+            this.extensions.putAll(extensions);
+        }
     }
 
     /**
@@ -62,13 +67,15 @@ public class SpringPageRequestImpl extends PageRequest implements SpringPageRequ
      *            the sort (can be {@code null})
      * @param query
      *            the query
-     * @param extension
-     *            the extension
+     * @param extensions
+     *            the extensions
      */
-    public SpringPageRequestImpl(int pageNumber, int pageSize, Sort sort, String query, Object extension) {
+    public SpringPageRequestImpl(int pageNumber, int pageSize, Sort sort, String query, Map<String, Object> extensions) {
         super(pageNumber, pageSize, sort);
         this.query = query;
-        this.extension = extension;
+        if (extensions != null) {
+            this.extensions.putAll(extensions);
+        }
     }
 
     /*
@@ -84,11 +91,11 @@ public class SpringPageRequestImpl extends PageRequest implements SpringPageRequ
     /*
      * (non-Javadoc)
      * 
-     * @see org.bremersee.pagebuilder.spring.SpringPageRequest#getExtension()
+     * @see org.bremersee.pagebuilder.spring.SpringPageRequest#getExtensions()
      */
     @Override
-    public Object getExtension() {
-        return extension;
+    public Map<String, Object> getExtensions() {
+        return extensions;
     }
 
 }
