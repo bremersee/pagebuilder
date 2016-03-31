@@ -16,7 +16,12 @@
 
 package org.bremersee.pagebuilder.spring;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bremersee.comparator.spring.ComparatorSpringUtils;
+import org.bremersee.pagebuilder.PageBuilderUtils;
+import org.bremersee.pagebuilder.PageEntryTransformer;
 import org.bremersee.pagebuilder.PageResult;
 import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageRequest;
@@ -79,12 +84,56 @@ public abstract class PageBuilderSpringUtils {
         //@formatter:on
     }
 
+    public static <E, T> PageImpl<T> toSpringPage(Page<E> page, PageEntryTransformer<T, E> transformer) {
+        if (page == null) {
+            return null;
+        }
+        if (transformer == null) {
+            transformer = new PageEntryTransformer<T, E>() {
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public T transform(E source) {
+                    return (T)source;
+                }
+            };
+        }
+        List<T> transformedEntries = new ArrayList<>(page.getEntries().size());
+        for (E entry : page.getEntries()) {
+            transformedEntries.add(transformer.transform(entry));
+        }
+        //@formatter:off
+        return new SpringPageImpl<T>(
+                transformedEntries, 
+                toSpringPageRequest(page.getPageRequest()), 
+                page.getTotalSize());
+        //@formatter:on
+    }
+
     public static <E> PageResult<E> fromSpringPage(org.springframework.data.domain.Page<E> springPage) {
         if (springPage == null) {
             return null;
         }
         PageRequestDto pageRequest = getPageRequest(springPage);
         return new PageResult<E>(springPage.getContent(), pageRequest, springPage.getTotalElements());
+    }
+
+    public static <E, T> PageResult<T> fromSpringPage(org.springframework.data.domain.Page<E> springPage, PageEntryTransformer<T, E> transformer) {
+        if (springPage == null) {
+            return null;
+        }
+        if (transformer == null) {
+            transformer = new PageEntryTransformer<T, E>() {
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public T transform(E source) {
+                    return (T)source;
+                }
+            };
+        }
+        PageRequestDto pageRequest = getPageRequest(springPage);
+        return PageBuilderUtils.createPage(springPage.getContent(), pageRequest, springPage.getTotalElements(), transformer);
     }
 
     private static PageRequestDto getPageRequest(org.springframework.data.domain.Page<?> springPage) {
