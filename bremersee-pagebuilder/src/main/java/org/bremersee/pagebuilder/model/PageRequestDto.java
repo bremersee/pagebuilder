@@ -38,9 +38,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
+ * <p>
+ * A page request defines which page is requested (by it's page number), how
+ * many elements the page may have and how the elements are sorted. Furthermore
+ * a query value can be specified and custom extensions, which may be handled by
+ * the business logic.
+ * </p>
+ * 
  * @author Christian Bremer
  */
 //@formatter:off
@@ -84,11 +95,19 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @Type(value = PageRequestDto.class, name = "PageRequestDto"),
     @Type(value = PageRequestLinkDto.class, name = "PageRequestLinkDto")
 })
+@ApiModel(
+        value = "PageRequest", 
+        description = "A page request defines which page is requested (by it's page number), "
+                + "how many elements the page may have, and how the elements are sorted. "
+                + "Furthermore a query value can be specified "
+                + "and custom extensions, which may be handled by the business logic.",
+        discriminator = "_type_",
+        subTypes = { PageRequestLinkDto.class })
 //@formatter:on
 public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     private static final long serialVersionUID = 1L;
-    
+
     private int pageNumber = 0;
 
     private int pageSize = Integer.MAX_VALUE;
@@ -105,30 +124,61 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     public PageRequestDto() {
     }
 
+    /**
+     * Creates a page request by another page request.
+     * @param pageRequest the other page request (may by {@code null})
+     */
     public PageRequestDto(PageRequest pageRequest) {
         if (pageRequest != null) {
             setComparatorItem(pageRequest.getComparatorItem());
             setExtensions(pageRequest.getExtensions());
-            //setFirstResult(pageRequest.getFirstResult());
+            // setFirstResult(pageRequest.getFirstResult());
             setPageNumber(pageRequest.getPageNumber());
             setPageSize(pageRequest.getPageSize());
             setExtensions(pageRequest.getExtensions());
         }
     }
 
+    /**
+     * Creates a page request by the page number and size.
+     * @param pageNumber the page number
+     * @param pageSize the page size
+     */
     public PageRequestDto(int pageNumber, int pageSize) {
         this(pageNumber, pageSize, null, null, null);
     }
 
+    /**
+     * Creates a page request by the page number, size and comparator item.
+     * @param pageNumber the page number
+     * @param pageSize the page size
+     * @param comparatorItem the comparator item (may be {@code null})
+     */
     public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem) {
         this(pageNumber, pageSize, comparatorItem, null, null);
     }
 
+    /**
+     * Creates a page request by the page number, size, comparator item and a query value.
+     * @param pageNumber the page number
+     * @param pageSize the page size
+     * @param comparatorItem the comparator item (may be {@code null})
+     * @param query the query value
+     */
     public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query) {
         this(pageNumber, pageSize, comparatorItem, query, null);
     }
 
-    public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query, Map<String, Object> extensions) {
+    /**
+     * Creates a page request by the page number, size, comparator item, a query value and custom extensions.
+     * @param pageNumber the page number
+     * @param pageSize the page size
+     * @param comparatorItem the comparator item (may be {@code null})
+     * @param query the query value
+     * @param extensions the custom extensions
+     */
+    public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query,
+            Map<String, Object> extensions) {
         super();
         setPageNumber(pageNumber);
         setPageSize(pageSize);
@@ -136,8 +186,10 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
         setQuery(query);
         setExtensions(extensions);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -146,7 +198,9 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
                 + comparatorItem + ", query=" + query + ", extensions=" + extensions + "]";
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -161,7 +215,9 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -195,7 +251,9 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -211,6 +269,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
      */
     @XmlElement(name = "pageNumber", required = true)
     @JsonProperty(value = "pageNumber", required = true)
+    @ApiModelProperty(value = "The page number.", position = 0, required = true)
     public int getPageNumber() {
         return pageNumber;
     }
@@ -225,10 +284,12 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     }
 
     /**
-     * Returns the maximum number of elements on the page (is always greater than 0).
+     * Returns the maximum number of elements on the page (is always greater
+     * than 0).
      */
     @XmlElement(name = "pageSize", required = true)
     @JsonProperty(value = "pageSize", required = true)
+    @ApiModelProperty(value = "The maximum number of elements on the page.", position = 1, required = true)
     public int getPageSize() {
         return pageSize;
     }
@@ -247,10 +308,12 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
      */
     @XmlElement(name = "firstResult", required = false)
     @JsonProperty(value = "firstResult", required = false)
+    @ApiModelProperty(value = "The first result (offset).", position = 2, required = false, readOnly = true)
     public int getFirstResult() {
-        // make sure that first result (= offset) is not bigger than Integer.MAX_VALUE
-        long firstResult = (long)getPageNumber() * (long)getPageSize();
-        if (firstResult < (long)Integer.MAX_VALUE) {
+        // make sure that first result (= offset) is not bigger than
+        // Integer.MAX_VALUE
+        long firstResult = (long) getPageNumber() * (long) getPageSize();
+        if (firstResult < (long) Integer.MAX_VALUE) {
             return Long.valueOf(firstResult).intValue();
         }
         return Integer.MAX_VALUE;
@@ -268,6 +331,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
      */
     @XmlElement(name = "comparatorItem", required = false)
     @JsonProperty(value = "comparatorItem", required = false)
+    @ApiModelProperty(value = "The comparator item.", position = 3, required = false)
     public ComparatorItem getComparatorItem() {
         return comparatorItem;
     }
@@ -285,6 +349,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
      */
     @XmlElement(name = "query", required = false)
     @JsonProperty(value = "query", required = false)
+    @ApiModelProperty(value = "A query value.", position = 4, required = false)
     public String getQuery() {
         return query;
     }
@@ -301,6 +366,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
      * Returns a custom extension (may be {@code null}).
      */
     @JsonProperty(value = "extensions", required = false)
+    @ApiModelProperty(value = "Custom extensions.", position = 4, required = false)
     public Map<String, Object> getExtensions() {
         return extensions;
     }
@@ -315,9 +381,10 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
         } else if (extensions instanceof LinkedHashMap) {
             this.extensions = extensions;
         } else {
-            this.extensions.clear();;
+            this.extensions.clear();
+            ;
             this.extensions.putAll(extensions);
-            
+
         }
     }
 

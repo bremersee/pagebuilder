@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -38,12 +37,17 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * <p>
- * A {@link PageControlDto} can be used to display a {@link PageDto} on a web site.
- * <br/>
- * This page control can be processed by a {@link JAXBContext} and the Jackson
- * JSON processor.
+ * A {@link PageControlDto} can be used to display a {@link PageDto} on a web
+ * site. <br/>
+ * It contains a list of links to the other pages, a page size selector, the
+ * pagination, a flag whether the business logic supports a query value or not,
+ * the URL parameter names of the page request and a serialized comparator item
+ * (as URL paremeter value).
  * </p>
  * 
  * @author Christian Bremer
@@ -83,13 +87,21 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "comparatorParamName",
         "comparatorParamValue"
 })
+@ApiModel(
+        value = "PageControl", 
+        description = "A page control can be used to display a page on a web site. "
+                + "It contains a list of links to the other pages, "
+                + "a page size selector, the pagination, "
+                + "a flag whether the business logic supports a query value or not, "
+                + "the URL parameter names of the page request "
+                + "and a serialized comparator item (as URL paremeter value).")
 //@formatter:on
 public class PageControlDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private PageDto page;
-    
+
     private List<PageRequestLinkDto> pageRequestLinks = new ArrayList<PageRequestLinkDto>();
 
     private List<PageSizeSelectorOptionDto> pageSizeSelectorOptions = new ArrayList<PageSizeSelectorOptionDto>();
@@ -152,7 +164,9 @@ public class PageControlDto implements Serializable {
         this.queryParamName = queryParamName;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -164,7 +178,9 @@ public class PageControlDto implements Serializable {
                 + ", comparatorParamValue=" + comparatorParamValue + "]";
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -184,7 +200,9 @@ public class PageControlDto implements Serializable {
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -251,6 +269,7 @@ public class PageControlDto implements Serializable {
      */
     @XmlElement(name = "page", required = true)
     @JsonProperty(value = "page", required = true)
+    @ApiModelProperty(value = "The page.", position = 0, required = true)
     public PageDto getPage() {
         return page;
     }
@@ -266,6 +285,7 @@ public class PageControlDto implements Serializable {
     @XmlElementWrapper(name = "pageRequestLinks", required = false)
     @XmlElement(name = "pageRequestLink")
     @JsonProperty(value = "pageRequestLinks", required = false)
+    @ApiModelProperty(value = "The links to the other pages.", position = 1, required = false)
     public List<PageRequestLinkDto> getPageRequestLinks() {
         return pageRequestLinks;
     }
@@ -283,6 +303,7 @@ public class PageControlDto implements Serializable {
      */
     @XmlElement(name = "pagination", required = false)
     @JsonProperty(value = "pagination", required = false)
+    @ApiModelProperty(value = "The pagination information.", position = 3, required = false)
     public PaginationDto getPagination() {
         return pagination;
     }
@@ -300,6 +321,7 @@ public class PageControlDto implements Serializable {
      */
     @XmlElement(name = "pageNumberParamName", defaultValue = "p")
     @JsonProperty(value = "pageNumberParamName", required = true)
+    @ApiModelProperty(value = "The parameter name of the page number.", position = 6, required = true, example = "p")
     public String getPageNumberParamName() {
         return pageNumberParamName;
     }
@@ -319,6 +341,7 @@ public class PageControlDto implements Serializable {
      */
     @XmlElement(name = "pageSizeParamName", defaultValue = "s")
     @JsonProperty(value = "pageSizeParamName", required = true)
+    @ApiModelProperty(value = "The parameter name of the page size.", position = 7, required = true, example = "s")
     public String getPageSizeParamName() {
         return pageSizeParamName;
     }
@@ -339,6 +362,7 @@ public class PageControlDto implements Serializable {
     @XmlElementWrapper(name = "pageSizeSelectorOptions", required = false)
     @XmlElement(name = "pageSizeSelectorOption")
     @JsonProperty(value = "pageSizeSelectorOptions", required = false)
+    @ApiModelProperty(value = "A list with page size selector options.", position = 2, required = false)
     public List<PageSizeSelectorOptionDto> getPageSizeSelectorOptions() {
         return pageSizeSelectorOptions;
     }
@@ -359,6 +383,7 @@ public class PageControlDto implements Serializable {
      */
     @XmlElement(name = "comparatorParamName", defaultValue = "c")
     @JsonProperty(value = "comparatorParamName", required = true)
+    @ApiModelProperty(value = "The parameter name of the comparator item.", position = 8, required = true, example = "c")
     public String getComparatorParamName() {
         return comparatorParamName;
     }
@@ -378,6 +403,7 @@ public class PageControlDto implements Serializable {
      */
     @XmlElement(name = "comparatorParamValue", required = false)
     @JsonProperty(value = "comparatorParamValue", required = false)
+    @ApiModelProperty(value = "The serialized value of the comparator item.", position = 9, required = false)
     public String getComparatorParamValue() {
         return comparatorParamValue;
     }
@@ -396,6 +422,7 @@ public class PageControlDto implements Serializable {
      */
     @XmlElement(name = "querySupported", defaultValue = "true")
     @JsonProperty(value = "querySupported", required = true)
+    @ApiModelProperty(value = "Is a query value supported?", position = 4, required = true)
     public boolean isQuerySupported() {
         return querySupported;
     }
@@ -413,6 +440,7 @@ public class PageControlDto implements Serializable {
      */
     @XmlElement(name = "queryParamName", defaultValue = "q")
     @JsonProperty(value = "queryParamName", required = true)
+    @ApiModelProperty(value = "The parameter name of the query value.", position = 5, required = true, example = "q")
     public String getQueryParamName() {
         return queryParamName;
     }

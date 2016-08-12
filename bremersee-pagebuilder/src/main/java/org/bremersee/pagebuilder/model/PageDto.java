@@ -33,6 +33,10 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -65,6 +69,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "totalSize",
         "totalPages"
 })
+@ApiModel(
+        value = "Page", 
+        description = "A page is a sublist of a list of elements.")
 //@formatter:on
 public class PageDto implements Page<Object> {
 
@@ -156,6 +163,8 @@ public class PageDto implements Page<Object> {
      */
     @XmlElementWrapper(name = "entries")
     @XmlElement(name = "entry", nillable = true, type = Object.class)
+    @JsonProperty(value = "entries", required = false)
+    @ApiModelProperty(value = "The elements of the page.", position = 0, required = false)
     public List<Object> getEntries() {
         return entries;
     }
@@ -163,6 +172,7 @@ public class PageDto implements Page<Object> {
     /**
      * Sets the elements of the page.
      */
+    @JsonProperty(value = "entries", required = false)
     public void setEntries(List<Object> entries) {
         if (entries == null) {
             entries = new ArrayList<Object>();
@@ -175,6 +185,7 @@ public class PageDto implements Page<Object> {
      */
     @XmlElement(name = "pageRequest", required = true)
     @JsonProperty(value = "pageRequest", required = true)
+    @ApiModelProperty(value = "The page request.", position = 1, required = true)
     public PageRequestDto getPageRequest() {
         if (pageRequest == null) {
             pageRequest = new PageRequestDto();
@@ -195,6 +206,7 @@ public class PageDto implements Page<Object> {
      */
     @XmlElement(name = "totalSize", required = true)
     @JsonProperty(value = "totalSize", required = true)
+    @ApiModelProperty(value = "The total size of available elements.", position = 2, required = true)
     public long getTotalSize() {
         return totalSize;
     }
@@ -212,6 +224,7 @@ public class PageDto implements Page<Object> {
      */
     @XmlElement(name = "totalPages", required = true)
     @JsonProperty(value = "totalPages", required = true)
+    @ApiModelProperty(value = "The total size of available pages.", position = 3, required = true, readOnly = true)
     public int getTotalPages() {
         if (getTotalSize() <= 0L) {
             return 1;

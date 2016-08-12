@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bremersee</groupId>
     <artifactId>bremersee-pagebuilder</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0</version>
     <name>Bremersee Page Builder</name>
     <description>Page builder project</description>
     <url>http://bremersee.github.io/pagebuilder/</url>
@@ -13,12 +13,13 @@
         <java.version>1.7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <product.vendor>bremersee.org</product.vendor>
-        <bremersee-comparator.version>1.1.0</bremersee-comparator.version>
-        <bremersee-utils.version>1.0.2</bremersee-utils.version>
+        <bremersee-comparator.version>1.2.0</bremersee-comparator.version>
+        <bremersee-utils.version>1.0.3</bremersee-utils.version>
         <commons-lang3.version>3.4</commons-lang3.version>
-        <jackson2.version>2.4.6</jackson2.version>
+        <jackson2.version>2.6.6</jackson2.version>
         <junit.version>4.12</junit.version>
-        <spring-data-commons.version>1.9.4.RELEASE</spring-data-commons.version>
+        <spring-data-commons.version>1.11.4.RELEASE</spring-data-commons.version>
+        <swagger.version>1.5.9</swagger.version>
     </properties>
 
     <developers>
@@ -95,6 +96,11 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
             <version>${spring-data-commons.version}</version>
@@ -110,7 +116,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
-            <version>2.4.6</version>
+            <version>2.6.6</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>

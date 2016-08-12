@@ -31,6 +31,10 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -61,6 +65,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "active",
         "url"
 })
+@ApiModel(
+        value = "PageRequestLink", 
+        description = "A page request link contains beside the page request information "
+                + "a link (to another page) and a flag whether this page request is the "
+                + "current one.", 
+        parent = PageRequestDto.class)
 //@formatter:on
 public class PageRequestLinkDto extends PageRequestDto {
 
@@ -130,6 +140,7 @@ public class PageRequestLinkDto extends PageRequestDto {
 
     @XmlElement(name = "displayedPageNumber", required = true)
     @JsonProperty(value = "displayedPageNumber", required = true)
+    @ApiModelProperty(value = "The page number for displaying (page number + 1).", position = 0, required = true, readOnly = true)
     public String getDisplayedPageNumber() {
         return Integer.valueOf(getPageNumber() + 1).toString();
     }
@@ -140,6 +151,7 @@ public class PageRequestLinkDto extends PageRequestDto {
 
     @XmlElement(name = "active", required = true)
     @JsonProperty(value = "active", required = true)
+    @ApiModelProperty(value = "Is this page the current one?", position = 1, required = true)
     public boolean isActive() {
         return active;
     }
@@ -154,6 +166,7 @@ public class PageRequestLinkDto extends PageRequestDto {
 
     @XmlElement(name = "url", required = false)
     @JsonProperty(value = "url", required = false)
+    @ApiModelProperty(value = "An URL to another page.", position = 2, required = false)
     public String getUrl() {
         return url;
     }

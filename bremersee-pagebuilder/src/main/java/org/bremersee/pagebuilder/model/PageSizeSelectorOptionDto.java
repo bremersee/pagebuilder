@@ -18,7 +18,6 @@ package org.bremersee.pagebuilder.model;
 
 import java.io.Serializable;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -35,10 +34,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * <p>
- * An option of page size selector that can be processed by a
- * {@link JAXBContext} and the Jackson JSON processor.
+ * An option of page size selector.
  * </p>
  * 
  * @author Christian Bremer
@@ -63,6 +64,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "displayedValue",
         "selected"
 })
+@ApiModel(
+        value = "PageSizeSelectorOption", 
+        description = "An option of page size selector.")
 //@formatter:on
 public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageSizeSelectorOptionDto> {
 
@@ -153,6 +157,7 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
      */
     @XmlElement(name = "value", required = true)
     @JsonProperty(value = "value", required = true)
+    @ApiModelProperty(value = "The value (the page size) of this option.", position = 0, required = true)
     public int getValue() {
         return value;
     }
@@ -170,6 +175,7 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
      */
     @XmlElement(name = "displayedValue", required = false)
     @JsonProperty(value = "displayedValue", required = false)
+    @ApiModelProperty(value = "The displayed value (normally the page size plus one).", position = 1, required = false)
     public String getDisplayedValue() {
         if (StringUtils.isBlank(displayedValue)) {
             return Integer.toString(value + 1);
@@ -190,6 +196,7 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
      */
     @XmlElement(name = "selected", required = true)
     @JsonProperty(value = "selected", required = true)
+    @ApiModelProperty(value = "Is this option selected?.", position = 2, required = true)
     public boolean isSelected() {
         return selected;
     }
