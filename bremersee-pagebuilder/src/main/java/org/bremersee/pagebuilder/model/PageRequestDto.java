@@ -38,11 +38,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * <p>
@@ -84,16 +84,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         "query", 
         "extensions" 
 })
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME,
-    include = JsonTypeInfo.As.PROPERTY,  
-    property = "_type_",
-    visible = true,
-    defaultImpl = PageRequestDto.class
-)
-@JsonSubTypes({
+@JsonTypeInfo(use = Id.NAME, property = "type")
+@JsonSubTypes({ 
     @Type(value = PageRequestDto.class, name = "PageRequestDto"),
-    @Type(value = PageRequestLinkDto.class, name = "PageRequestLinkDto")
+    @Type(value = PageRequestLinkDto.class, name = "PageRequestLinkDto") 
 })
 @ApiModel(
         value = "PageRequest", 
@@ -102,7 +96,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
                 + "Furthermore a query value can be specified "
                 + "and custom extensions, which may be handled by the business logic.",
         discriminator = "_type_",
-        subTypes = { PageRequestLinkDto.class })
+        subTypes = { PageRequestLinkDto.class }
+)
 //@formatter:on
 public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 

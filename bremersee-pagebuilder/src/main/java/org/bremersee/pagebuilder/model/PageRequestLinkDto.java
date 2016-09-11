@@ -31,12 +31,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * <p>
@@ -70,7 +69,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         description = "A page request link contains beside the page request information "
                 + "a link (to another page) and a flag whether this page request is the "
                 + "current one.", 
-        parent = PageRequestDto.class)
+        parent = PageRequestDto.class
+)
 //@formatter:on
 public class PageRequestLinkDto extends PageRequestDto {
 
