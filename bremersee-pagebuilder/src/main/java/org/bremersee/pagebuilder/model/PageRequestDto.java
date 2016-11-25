@@ -95,7 +95,7 @@ import io.swagger.annotations.ApiModelProperty;
                 + "how many elements the page may have, and how the elements are sorted. "
                 + "Furthermore a query value can be specified "
                 + "and custom extensions, which may be handled by the business logic.",
-        discriminator = "_type_",
+        discriminator = "type",
         subTypes = { PageRequestLinkDto.class }
 )
 //@formatter:on

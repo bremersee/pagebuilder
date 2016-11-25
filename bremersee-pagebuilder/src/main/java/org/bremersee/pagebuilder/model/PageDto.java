@@ -236,7 +236,7 @@ public class PageDto implements Page<Object> {
      * Sets the number of all pages.
      */
     @JsonProperty(value = "totalPages", required = false)
-    protected void setTotalPages(int totalPages) {
+    public void setTotalPages(int totalPages) {
     }
     
 }

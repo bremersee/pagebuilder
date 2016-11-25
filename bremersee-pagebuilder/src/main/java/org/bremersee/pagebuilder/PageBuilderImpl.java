@@ -84,7 +84,7 @@ public class PageBuilderImpl implements PageBuilder {
 
     @Override
     public <E> PageResult<E> buildPage(Iterable<? extends E> pageEntries, PageRequest pageRequest, long totalSize) {
-        return buildPage(pageEntries, pageRequest, totalSize);
+        return buildPage(pageEntries, pageRequest, totalSize, null);
     }
     
     @Override
