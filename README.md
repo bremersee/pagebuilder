@@ -51,6 +51,6 @@ or
 ```
 $ cd pagebuilder/bremersee-pagebuilder-example
 $ mvn clean package
-$ java -jar target/bremersee-pagebuilder-example-1.2.1.jar
+$ java -jar target/bremersee-pagebuilder-example-1.2.2.jar
 ```
 After the application is started you can open [http://localhost:8080/restful.html](http://localhost:8080/restful.html) in your favorite browser and have a look at the demonstration.
