@@ -27,15 +27,15 @@ PageControlDto pageControl = PageControlFactory.newInstance()
 
 The generated maven site is committed to the [gh-pages branch](https://github.com/bremersee/pagebuilder/tree/gh-pages) and visible [here](http://bremersee.github.io/pagebuilder/).
 
-## Release 1.2.1
-Release 1.2.1 is build with Java 7.
+## Release 1.2.2
+Release 1.2.2 is build with Java 7.
 
 It is available at Maven Central:
 ```xml
 <dependency>
     <groupId>org.bremersee</groupId>
     <artifactId>bremersee-pagebuilder</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
 </dependency>
 ```
 
