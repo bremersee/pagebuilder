@@ -16,10 +16,6 @@
 
 package org.bremersee.pagebuilder;
 
-import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.bremersee.comparator.ComparatorItemTransformer;
 import org.bremersee.comparator.ComparatorItemTransformerImpl;
@@ -29,10 +25,14 @@ import org.bremersee.pagebuilder.model.PageRequestDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+
 /**
  * @author Christian Bremer
- *
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class PageRequestBuilderImpl implements PageRequestBuilder {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -47,20 +47,21 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
      * Default constructor.
      */
     public PageRequestBuilderImpl() {
+        super();
     }
 
-    public PageRequestBuilderImpl(ComparatorItemTransformer comparatorItemTransformer) {
+    public PageRequestBuilderImpl(final ComparatorItemTransformer comparatorItemTransformer) {
         setComparatorItemTransformer(comparatorItemTransformer);
     }
 
-    public PageRequestBuilderImpl(ComparatorItemTransformer comparatorItemTransformer, boolean urlEncoded,
-            String charset) {
+    public PageRequestBuilderImpl(final ComparatorItemTransformer comparatorItemTransformer, final boolean urlEncoded,
+                                  final String charset) {
         setComparatorItemTransformer(comparatorItemTransformer);
         setUrlEncoded(urlEncoded);
         setCharset(charset);
     }
 
-    public void setComparatorItemTransformer(ComparatorItemTransformer comparatorItemTransformer) {
+    public void setComparatorItemTransformer(final ComparatorItemTransformer comparatorItemTransformer) {
         if (comparatorItemTransformer != null) {
             this.comparatorItemTransformer = comparatorItemTransformer;
         }
@@ -70,7 +71,7 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
         this.urlEncoded = urlEncoded;
     }
 
-    public void setCharset(String charset) {
+    public void setCharset(final String charset) {
         if (StringUtils.isNotBlank(charset)) {
             this.charset = charset;
         }
@@ -85,20 +86,21 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
      * java.io.Serializable, java.util.Map)
      */
     @Override
-    public PageRequest buildPageRequest(Serializable pageNumber, Serializable pageSize, Serializable comparatorItem,
-            Serializable query, Map<String, Object> extensions) {
+    public PageRequest buildPageRequest(final Serializable pageNumber, final Serializable pageSize,
+                                        final Serializable comparatorItem, final Serializable query,
+                                        final Map<String, Object> extensions) {
 
         //@formatter:off
         return new PageRequestDto(
-                getPageNumber(pageNumber), 
-                getPageSize(pageSize), 
+                getPageNumber(pageNumber),
+                getPageSize(pageSize),
                 getComparatorItem(comparatorItem),
-                getQuery(query), 
+                getQuery(query),
                 extensions);
         //@formatter:on
     }
 
-    protected int getPageNumber(Serializable pageNumber) {
+    protected int getPageNumber(final Serializable pageNumber) {
         int value = 0;
         if (pageNumber != null) {
             if (pageNumber instanceof Number) {
@@ -106,7 +108,7 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
             } else {
                 try {
                     value = Integer.valueOf(pageNumber.toString());
-                } catch (Throwable t) {
+                } catch (Throwable t) { // NOSONAR
                     value = 0;
                     log.warn("Getting page number from value [" + pageNumber + "] failed. Returning " + value + ".");
                 }
@@ -115,7 +117,7 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
         return value >= 0 ? value : 0;
     }
 
-    protected int getPageSize(Serializable pageSize) {
+    protected int getPageSize(final Serializable pageSize) {
         int value = Integer.MAX_VALUE;
         if (pageSize != null) {
             if (pageSize instanceof Number) {
@@ -123,7 +125,7 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
             } else {
                 try {
                     value = Integer.valueOf(pageSize.toString());
-                } catch (Throwable t) {
+                } catch (Throwable t) { // NOSONAR
                     value = Integer.MAX_VALUE;
                     log.warn("Getting page size from value [" + pageSize + "] failed. Returning " + value + ".");
                 }
@@ -132,7 +134,7 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
         return value > 0 ? value : Integer.MAX_VALUE;
     }
 
-    protected ComparatorItem getComparatorItem(Serializable comparatorItem) {
+    protected ComparatorItem getComparatorItem(final Serializable comparatorItem) {
         ComparatorItem value = null;
         if (comparatorItem != null) {
             if (comparatorItem instanceof ComparatorItem) {
@@ -140,7 +142,7 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
             } else {
                 try {
                     value = comparatorItemTransformer.fromString(comparatorItem.toString(), urlEncoded, charset);
-                } catch (Throwable t) {
+                } catch (Throwable t) { // NOSONAR
                     value = null;
                     log.warn("Getting comparator item from value [" + comparatorItem + "] failed. Returning null.");
                 }
@@ -149,7 +151,7 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
         return value;
     }
 
-    protected String getQuery(Serializable query) {
+    protected String getQuery(final Serializable query) {
         return query == null ? null : query.toString();
     }
 

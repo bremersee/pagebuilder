@@ -16,19 +16,19 @@
 
 package org.bremersee.pagebuilder.example.domain;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.springframework.stereotype.Component;
+import java.util.List;
 
 /**
  * @author Christian Bremer
  */
+@SuppressWarnings({"JpaQlInspection", "WeakerAccess"})
 @Component
 public class PersonRepositoryImpl implements PersonRepositoryCustom {
-    
+
     @PersistenceContext
     protected EntityManager entityManager;
 
@@ -44,9 +44,8 @@ public class PersonRepositoryImpl implements PersonRepositoryCustom {
                 + " or lower(e.lastname) like :query"
                 + " or lower(e.address.city) like :query"
                 + " or lower(e.address.street) like :query"
-                + " or lower(e.address.postalCode) like :query"
-                ;
-        
+                + " or lower(e.address.postalCode) like :query";
+
         return entityManager
                 .createQuery(jpaQuery, Person.class)
                 .setParameter("query", queryStr)

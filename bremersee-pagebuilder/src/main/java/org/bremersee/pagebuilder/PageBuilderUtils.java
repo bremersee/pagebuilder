@@ -16,15 +16,7 @@
 
 package org.bremersee.pagebuilder;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.Validate;
 import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageDto;
@@ -33,25 +25,33 @@ import org.bremersee.pagebuilder.model.PageRequestDto;
 import org.bremersee.utils.CastUtils;
 import org.w3c.dom.Node;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
  * Utility methods.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class PageBuilderUtils {
-
-    private PageBuilderUtils() {
-    }
 
     private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
     private static final Map<java.lang.reflect.AnnotatedElement, JAXBContext> JAXB_CONTEXTS = new ConcurrentHashMap<>();
 
-    private static JAXBContext getJaxbContext(Class<?> valueType) throws JAXBException {
+    private PageBuilderUtils() {
+        super();
+    }
+
+    private static JAXBContext getJaxbContext(final Class<?> valueType) throws JAXBException {
         JAXBContext jaxbContext = JAXB_CONTEXTS.get(valueType.getPackage());
         if (jaxbContext == null) {
             jaxbContext = JAXB_CONTEXTS.get(valueType);
@@ -59,7 +59,7 @@ public abstract class PageBuilderUtils {
         if (jaxbContext == null) {
             try {
                 jaxbContext = JAXBContext.newInstance(valueType.getPackage().getName());
-            } catch (JAXBException e) {
+            } catch (JAXBException e) { // NOSONAR
                 jaxbContext = JAXBContext.newInstance(valueType);
                 JAXB_CONTEXTS.put(valueType, jaxbContext);
             }
@@ -71,30 +71,26 @@ public abstract class PageBuilderUtils {
      * Casts a page.
      */
     @SuppressWarnings("unchecked")
-    public static <E> Page<E> cast(Page<?> page) {
+    public static <E> Page<E> cast(final Page<?> page) {
         return (Page<E>) page;
     }
 
     /**
      * Creates a page.
-     * 
-     * @param entries
-     *            the page entries
-     * @param pageRequest
-     *            the page request
-     * @param totalSize
-     *            the total size
-     * @param transformer
-     *            the entry transformer (may be {@code null} - than all entries
-     *            will be added to the page without transforming)
+     *
+     * @param entries     the page entries
+     * @param pageRequest the page request
+     * @param totalSize   the total size
+     * @param transformer the entry transformer (may be {@code null} - than all entries
+     *                    will be added to the page without transforming)
      * @return the page
      */
     @SuppressWarnings("unchecked")
-    public static <E, T> PageResult<T> createPage(Iterable<? extends E> entries, PageRequest pageRequest,
-            long totalSize, PageEntryTransformer<T, E> transformer) {
+    public static <E, T> PageResult<T> createPage(final Iterable<? extends E> entries, final PageRequest pageRequest,
+                                                  final long totalSize, final PageEntryTransformer<T, E> transformer) {
 
-        PageResult<T> page = new PageResult<>();
-        page.setPageRequest(pageRequest);
+        final PageResult<T> page = new PageResult<>();
+        page.setPageRequest(pageRequest == null ? new PageRequestDto() : pageRequest);
         page.setTotalSize(totalSize);
         if (entries != null) {
             for (E entry : entries) {
@@ -111,16 +107,15 @@ public abstract class PageBuilderUtils {
 
     /**
      * Transforms a page into another page.
-     * 
-     * @param sourcePage
-     *            the source page
-     * @param transformer
-     *            the entry transformer (may be {@code null} - than all entries
-     *            of the source page will be added to the target page without
-     *            transforming)
+     *
+     * @param sourcePage  the source page
+     * @param transformer the entry transformer (may be {@code null} - than all entries
+     *                    of the source page will be added to the target page without
+     *                    transforming)
      * @return the target page
      */
-    public static <E, T> Page<T> createPage(Page<? extends E> sourcePage, PageEntryTransformer<T, E> transformer) {
+    public static <E, T> Page<T> createPage(final Page<? extends E> sourcePage,
+                                            final PageEntryTransformer<T, E> transformer) {
         if (sourcePage == null) {
             return null;
         }
@@ -132,15 +127,14 @@ public abstract class PageBuilderUtils {
 
     /**
      * Transforms a page into a page DTO.
-     * 
-     * @param page
-     *            the page
-     * @param transformer
-     *            the entry transformer (may be {@code null} - than all entries
-     *            of the page will be added to the DTO without transforming)
+     *
+     * @param page        the page
+     * @param transformer the entry transformer (may be {@code null} - than all entries
+     *                    of the page will be added to the DTO without transforming)
      * @return the page DTO
      */
-    public static <E, T> PageDto createPageDto(Page<? extends E> page, PageEntryTransformer<T, E> transformer) {
+    public static <E, T> PageDto createPageDto(final Page<? extends E> page,
+                                               final PageEntryTransformer<T, E> transformer) {
         if (page == null) {
             return null;
         }
@@ -151,11 +145,11 @@ public abstract class PageBuilderUtils {
         if (transformer == null) {
             return new PageDto(page.getEntries(), pageRequestDto, page.getTotalSize());
         }
-        List<T> entries = new ArrayList<>();
+        final List<T> entries = new ArrayList<>();
         for (E e : page.getEntries()) {
             entries.add(transformer.transform(e));
         }
-        PageDto pageDto = new PageDto();
+        final PageDto pageDto = new PageDto();
         pageDto.setEntries(CastUtils.cast(entries));
         pageDto.setPageRequest(pageRequestDto);
         pageDto.setTotalSize(page.getTotalSize());
@@ -164,13 +158,12 @@ public abstract class PageBuilderUtils {
 
     /**
      * Transforms a page request into a page request DTO.
-     * 
-     * @param pageRequest
-     *            the page request (can be {@code null})
+     *
+     * @param pageRequest the page request (can be {@code null})
      * @return the page request DTO (can be {@code null})
      */
-    public static PageRequestDto createPageRequestDto(PageRequest pageRequest) {
-        PageRequestDto pageRequestDto;
+    public static PageRequestDto createPageRequestDto(final PageRequest pageRequest) {
+        final PageRequestDto pageRequestDto;
         if (pageRequest == null) {
             pageRequestDto = null;
         } else if (pageRequest instanceof PageRequestDto) {
@@ -183,29 +176,24 @@ public abstract class PageBuilderUtils {
 
     /**
      * Transforms a XML node or a JSON map into an object.
-     * 
-     * @param xmlNodeOrJsonMap
-     *            the XML node or JSON map
-     * @param valueType
-     *            the class of the target object
-     * @param defaultObject
-     *            a default object (optional)
-     * @param jaxbContext
-     *            the {@link JAXBContext} (can be null)
-     * @param objectMapper
-     *            the JSON object mapper (optional)
+     *
+     * @param xmlNodeOrJsonMap the XML node or JSON map
+     * @param valueType        the class of the target object
+     * @param defaultObject    a default object (optional)
+     * @param jaxbContext      the {@link JAXBContext} (can be null)
+     * @param objectMapper     the JSON object mapper (optional)
      * @return the target object
-     * @throws Exception
-     *             if transformation fails
+     * @throws Exception if transformation fails
      */
     @SuppressWarnings("unchecked")
-    public static <T, S extends T> T transform(Object xmlNodeOrJsonMap, Class<T> valueType, S defaultObject,
-            JAXBContext jaxbContext, ObjectMapper objectMapper) throws Exception {
+    public static <T, S extends T> T transform(final Object xmlNodeOrJsonMap, final Class<T> valueType,
+                                               final S defaultObject, final JAXBContext jaxbContext,
+                                               final ObjectMapper objectMapper) throws Exception { // NOSONAR
 
         if (xmlNodeOrJsonMap == null) {
             return defaultObject;
         }
-        Validate.notNull(valueType, "valueType must not be null");
+        Validate.notNull(valueType, "valueType must not be null"); // NOSONAR
         if (valueType.isAssignableFrom(xmlNodeOrJsonMap.getClass())) {
             return valueType.cast(xmlNodeOrJsonMap);
         }
@@ -221,49 +209,42 @@ public abstract class PageBuilderUtils {
 
     /**
      * Transforms a XML node into an object.
-     * 
-     * @param node
-     *            the XML node
-     * @param valueType
-     *            the class of the target object
-     * @param jaxbContext
-     *            the {@link JAXBContext} (can be null)
+     *
+     * @param node        the XML node
+     * @param valueType   the class of the target object
+     * @param jaxbContext the {@link JAXBContext} (can be null)
      * @return the target object
-     * @throws JAXBException
-     *             if transformation fails
+     * @throws JAXBException if transformation fails
      */
-    public static <T> T xmlNodeToObject(Node node, Class<T> valueType, JAXBContext jaxbContext) throws JAXBException {
+    public static <T> T xmlNodeToObject(final Node node, final Class<T> valueType,
+                                        final JAXBContext jaxbContext) throws JAXBException {
         if (node == null) {
             return null;
         }
         Validate.notNull(valueType, "valueType must not be null");
         if (jaxbContext == null) {
-            jaxbContext = getJaxbContext(valueType);
+            return valueType.cast(getJaxbContext(valueType).createUnmarshaller().unmarshal(node));
         }
         return valueType.cast(jaxbContext.createUnmarshaller().unmarshal(node));
     }
 
     /**
      * Transforms a JSON map to an object.
-     * 
-     * @param map
-     *            the JSON map
-     * @param valueType
-     *            the class of the target object
-     * @param objectMapper
-     *            the JSON object mapper (optional)
+     *
+     * @param map          the JSON map
+     * @param valueType    the class of the target object
+     * @param objectMapper the JSON object mapper (optional)
      * @return the target object
-     * @throws IOException
-     *             if transformation fails
+     * @throws IOException if transformation fails
      */
-    public static <T> T jsonMapToObject(Map<String, Object> map, Class<T> valueType, ObjectMapper objectMapper)
-            throws IOException {
+    public static <T> T jsonMapToObject(final Map<String, Object> map, final Class<T> valueType,
+                                        final ObjectMapper objectMapper) throws IOException {
         if (map == null) {
             return null;
         }
         Validate.notNull(valueType, "valueType must not be null");
         if (objectMapper == null) {
-            objectMapper = DEFAULT_OBJECT_MAPPER;
+            return DEFAULT_OBJECT_MAPPER.readValue(DEFAULT_OBJECT_MAPPER.writeValueAsBytes(map), valueType);
         }
         return objectMapper.readValue(objectMapper.writeValueAsBytes(map), valueType);
     }

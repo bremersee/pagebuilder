@@ -20,7 +20,6 @@ import java.util.List;
 
 /**
  * @author Christian Bremer
- *
  */
 public interface PersonRepositoryCustom {
 

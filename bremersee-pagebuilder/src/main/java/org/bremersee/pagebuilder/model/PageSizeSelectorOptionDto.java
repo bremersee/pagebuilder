@@ -16,56 +16,46 @@
 
 package org.bremersee.pagebuilder.model;
 
-import java.io.Serializable;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.xml.bind.annotation.*;
+import java.io.Serializable;
 
 /**
  * <p>
  * An option of page size selector.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
 //@formatter:off
+@SuppressWarnings({"WeakerAccess", "unused"})
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlRootElement(name = "pageSizeSelectorOption")
-@XmlType(name = "pageSizeSelectorOptionType", propOrder = { 
-        "value", 
-        "displayedValue", 
-        "selected" })
+@XmlType(name = "pageSizeSelectorOptionType", propOrder = {
+        "value",
+        "displayedValue",
+        "selected"})
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.ALWAYS)
-@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
-    getterVisibility = Visibility.PUBLIC_ONLY, 
-    creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.PUBLIC_ONLY, 
-    setterVisibility = Visibility.PUBLIC_ONLY)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE,
+        getterVisibility = Visibility.PUBLIC_ONLY,
+        creatorVisibility = Visibility.NONE,
+        isGetterVisibility = Visibility.PUBLIC_ONLY,
+        setterVisibility = Visibility.PUBLIC_ONLY)
 @JsonPropertyOrder(value = {
         "value",
         "displayedValue",
         "selected"
 })
 @ApiModel(
-        value = "PageSizeSelectorOption", 
+        value = "PageSizeSelectorOption",
         description = "An option of page size selector.")
 //@formatter:on
 public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageSizeSelectorOptionDto> {
@@ -82,18 +72,16 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
      * Default constructor.
      */
     public PageSizeSelectorOptionDto() {
+        super();
     }
 
     /**
      * Creates a {@link PageSizeSelectorOptionDto} with the given parameters.
-     * 
-     * @param value
-     *            the value
-     * @param displayedValue
-     *            the display value
-     * @param selected
-     *            {@code true} if the option is selected, otherwise
-     *            {@code false}
+     *
+     * @param value          the value
+     * @param displayedValue the display value
+     * @param selected       {@code true} if the option is selected, otherwise
+     *                       {@code false}
      */
     public PageSizeSelectorOptionDto(int value, String displayedValue, boolean selected) {
         this.value = value;
@@ -130,6 +118,7 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -157,7 +146,7 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
      */
     @XmlElement(name = "value", required = true)
     @JsonProperty(value = "value", required = true)
-    @ApiModelProperty(value = "The value (the page size) of this option.", position = 0, required = true)
+    @ApiModelProperty(value = "The value (the page size) of this option.", required = true)
     public int getValue() {
         return value;
     }
@@ -173,9 +162,9 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
     /**
      * Returns the displayed value (normally the page size plus one).
      */
-    @XmlElement(name = "displayedValue", required = false)
-    @JsonProperty(value = "displayedValue", required = false)
-    @ApiModelProperty(value = "The displayed value (normally the page size plus one).", position = 1, required = false)
+    @XmlElement(name = "displayedValue")
+    @JsonProperty(value = "displayedValue")
+    @ApiModelProperty(value = "The displayed value (normally the page size plus one).", position = 1)
     public String getDisplayedValue() {
         if (StringUtils.isBlank(displayedValue)) {
             return Integer.toString(value + 1);
@@ -186,7 +175,7 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
     /**
      * Sets the displayed value of this option.
      */
-    @JsonProperty(value = "displayedValue", required = false)
+    @JsonProperty(value = "displayedValue")
     public void setDisplayedValue(String displayedValue) {
         this.displayedValue = displayedValue;
     }
@@ -204,7 +193,7 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
     /**
      * Sets whether this option is selected or not.
      */
-    @JsonProperty(value = "selected", required = false)
+    @JsonProperty(value = "selected")
     public void setSelected(boolean selected) {
         this.selected = selected;
     }

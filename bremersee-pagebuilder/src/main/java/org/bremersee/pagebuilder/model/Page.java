@@ -23,14 +23,14 @@ import java.util.List;
  * <p>
  * A page is a sublist of a list of elements.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
 public interface Page<E> extends Serializable {
 
     /**
      * Returns the elements of the page.
-     * 
+     *
      * @return the elements of the page
      */
     List<E> getEntries();

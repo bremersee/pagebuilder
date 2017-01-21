@@ -16,41 +16,37 @@
 
 package org.bremersee.pagebuilder.example.domain;
 
+import org.springframework.data.domain.Persistable;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.springframework.data.domain.Persistable;
 
 /**
  * @author Christian Bremer
  */
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "ADDRESS")
 public class Address implements Persistable<Long> {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     private String street;
-    
+
     private String city;
-    
+
     private String postalCode;
-    
+
     @OneToMany(mappedBy = "address")
     private List<Person> persons = new ArrayList<>();
-    
+
     public Address() {
+        super();
     }
 
     public Address(String street, String city, String postalCode) {

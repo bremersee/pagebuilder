@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlRegistry;
 /**
  * @author Christian Bremer
  */
+@SuppressWarnings("unused")
 @XmlRegistry
 public class ObjectFactory {
 
@@ -39,11 +40,11 @@ public class ObjectFactory {
     public PageRequestLinkDto createPageRequestLinkDto() {
         return new PageRequestLinkDto();
     }
-    
+
     public PageSizeSelectorOptionDto createPageSizeSelectorOptionDto() {
         return new PageSizeSelectorOptionDto();
     }
-    
+
     public PaginationDto createPaginationDto() {
         return new PaginationDto();
     }

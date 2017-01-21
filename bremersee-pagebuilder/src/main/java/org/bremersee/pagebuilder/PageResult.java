@@ -16,21 +16,22 @@
 
 package org.bremersee.pagebuilder;
 
+import org.bremersee.pagebuilder.model.Page;
+import org.bremersee.pagebuilder.model.PageRequest;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.bremersee.pagebuilder.model.Page;
-import org.bremersee.pagebuilder.model.PageRequest;
-
 /**
  * @author Christian Bremer
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class PageResult<E> implements Page<E> {
 
     private static final long serialVersionUID = 1L;
 
-    private List<E> entries = new ArrayList<E>();
+    private List<E> entries = new ArrayList<>(); // NOSONAR
 
     private PageRequest pageRequest;
 
@@ -40,6 +41,7 @@ public class PageResult<E> implements Page<E> {
      * Default constructor.
      */
     public PageResult() {
+        super();
     }
 
     public PageResult(Collection<? extends E> entries) {
@@ -80,6 +82,7 @@ public class PageResult<E> implements Page<E> {
     /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -119,9 +122,10 @@ public class PageResult<E> implements Page<E> {
      */
     public void setEntries(List<E> entries) {
         if (entries == null) {
-            entries = new ArrayList<E>();
+            this.entries = new ArrayList<>();
+        } else {
+            this.entries = entries;
         }
-        this.entries = entries;
     }
 
     /*

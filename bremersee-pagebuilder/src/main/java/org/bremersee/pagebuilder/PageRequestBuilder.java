@@ -16,17 +16,18 @@
 
 package org.bremersee.pagebuilder;
 
+import org.bremersee.pagebuilder.model.PageRequest;
+
 import java.io.Serializable;
 import java.util.Map;
 
-import org.bremersee.pagebuilder.model.PageRequest;
-
 /**
  * @author Christian Bremer
- *
  */
+@SuppressWarnings("unused")
 public interface PageRequestBuilder {
-    
-    PageRequest buildPageRequest(Serializable pageNumber, Serializable pageSize, Serializable comparatorItem, Serializable query, Map<String, Object> extensions);
+
+    PageRequest buildPageRequest(Serializable pageNumber, Serializable pageSize, Serializable comparatorItem,
+                                 Serializable query, Map<String, Object> extensions);
 
 }

@@ -16,54 +16,54 @@
 
 package org.bremersee.pagebuilder;
 
-import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXBContext;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bremersee.pagebuilder.model.PageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.annotation.PostConstruct;
+import javax.xml.bind.JAXBContext;
 
 /**
  * @author Christian Bremer
- *
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class PageRequestExtensionExtractorImpl implements PageRequestExtensionExtractor {
-    
+
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     protected JAXBContext jaxbContext;
-    
+
     protected ObjectMapper objectMapper;
-    
+
     /**
-     * Default constructor. 
+     * Default constructor.
      */
     public PageRequestExtensionExtractorImpl() {
+        super();
     }
 
     public PageRequestExtensionExtractorImpl(JAXBContext jaxbContext, ObjectMapper objectMapper) {
         setJaxbContext(jaxbContext);
         setObjectMapper(objectMapper);
     }
-    
+
     protected JAXBContext getJaxbContext() {
         return null;
     }
-    
+
     public void setJaxbContext(JAXBContext jaxbContext) {
         this.jaxbContext = jaxbContext;
     }
-    
+
     protected ObjectMapper getObjectMapper() {
         return null;
     }
-    
+
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
-    
+
     @PostConstruct
     public void init() {
         log.info("Initializing " + getClass().getSimpleName() + " ...");
@@ -71,20 +71,21 @@ public class PageRequestExtensionExtractorImpl implements PageRequestExtensionEx
         log.info("objectMapper = " + getObjectMapper());
         log.info(getClass().getSimpleName() + " successfully initialized.");
     }
-    
+
     @Override
-    public <T, S extends T> T getPageRequestExtension(PageRequest pageRequest, String key, Class<T> extensionType, S defaultObject) {
-        
+    public <T, S extends T> T getPageRequestExtension(final PageRequest pageRequest, final String key,
+                                                      final Class<T> extensionType, final S defaultObject) {
+
         if (pageRequest == null || key == null) {
             return defaultObject;
         }
         try {
             return PageBuilderUtils.transform(pageRequest.getExtensions().get(key), extensionType, defaultObject, getJaxbContext(), getObjectMapper());
-            
+
         } catch (Exception e) {
-            if (e instanceof RuntimeException) {
+            if (e instanceof RuntimeException) { // NOSONAR
                 log.error("Getting page request extension from page request [" + pageRequest + "] failed.", e);
-                throw (RuntimeException)e;
+                throw (RuntimeException) e;
             } else {
                 log.warn("Getting page request extension from page request [" + pageRequest + "] failed. Returning default value [" + defaultObject + "].", e);
                 return defaultObject;

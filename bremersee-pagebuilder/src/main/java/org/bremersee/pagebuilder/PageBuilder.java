@@ -16,10 +16,10 @@
 
 package org.bremersee.pagebuilder;
 
-import java.util.Collection;
-
 import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageRequest;
+
+import java.util.Collection;
 
 /**
  * <p>
@@ -38,21 +38,21 @@ import org.bremersee.pagebuilder.model.PageRequest;
  * {@link PageBuilder#buildFilteredPage(Collection, PageRequest, Object)} .</li>
  * </ul>
  * </p>
- * 
+ *
  * @author Christian Bremer
- * 
  */
+@SuppressWarnings({"SameParameterValue", "unused"})
 public interface PageBuilder {
 
     <E> Page<E> buildPage(Iterable<? extends E> pageElements, PageRequest pageRequest, long totalSize);
 
     <T, E> Page<T> buildPage(Iterable<? extends E> pageElements, PageRequest pageRequest, long totalSize,
-            PageEntryTransformer<T, E> transformer);
+                             PageEntryTransformer<T, E> transformer);
 
     <E> Page<E> buildFilteredPage(Collection<? extends E> allAvailableElements, PageRequest pageRequest,
-            Object filterCriteria);
+                                  Object filterCriteria);
 
     <T, E> Page<T> buildFilteredPage(Collection<? extends E> allAvailableEntries, PageRequest pageRequest,
-            Object filterCriteria, PageEntryTransformer<T, E> transformer);
+                                     Object filterCriteria, PageEntryTransformer<T, E> transformer);
 
 }

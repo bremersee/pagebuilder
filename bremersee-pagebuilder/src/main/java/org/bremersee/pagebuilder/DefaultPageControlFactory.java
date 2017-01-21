@@ -16,51 +16,36 @@
 
 package org.bremersee.pagebuilder;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.TreeSet;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.bremersee.comparator.model.ComparatorItem;
-import org.bremersee.pagebuilder.model.Page;
-import org.bremersee.pagebuilder.model.PageControlDto;
-import org.bremersee.pagebuilder.model.PageRequestLinkDto;
-import org.bremersee.pagebuilder.model.PageSizeSelectorOptionDto;
-import org.bremersee.pagebuilder.model.PaginationDto;
+import org.bremersee.pagebuilder.model.*;
 import org.bremersee.utils.WebUtils;
+
+import java.util.*;
 
 /**
  * <p>
  * The default page control factory.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
 class DefaultPageControlFactory extends PageControlFactory {
 
     @Override
-    public <E> PageControlDto newPageControl(Page<E> page, String pageUrl, Locale locale) {
+    public <E> PageControlDto newPageControl(final Page<E> page, final String pageUrl, final Locale locale) {
 
         Validate.notNull(page, "page must not be null");
 
-        if (pageUrl == null) {
-            pageUrl = "";
-        }
+        final String pUrl = StringUtils.isBlank(pageUrl) ? "" : pageUrl;
 
-        if (locale == null) {
-            locale = Locale.getDefault();
-        }
-
-        if (page.getEntries().size() == 0 && page.getPageRequest().getPageNumber() > 0) {
+        if (page.getEntries().isEmpty() && page.getPageRequest().getPageNumber() > 0) {
             throw new IllegalArgumentException(
                     "Building page control failed, because there are no entries and page number is greater than 0.");
         }
 
-        PageControlDto pageControl = new PageControlDto();
+        final PageControlDto pageControl = new PageControlDto();
 
         pageControl.setPage(PageBuilderUtils.createPageDto(page, null));
 
@@ -68,8 +53,8 @@ class DefaultPageControlFactory extends PageControlFactory {
         pageControl.setPageSizeParamName(getPageSizeParamName());
 
         pageControl.setComparatorParamName(getComparatorParamName());
-        pageControl.setComparatorParamValue(
-                getComparatorItemTransformer().toString(page.getPageRequest().getComparatorItem(), false, null));
+        pageControl.setComparatorParamValue(getComparatorItemTransformer().toString(
+                page.getPageRequest().getComparatorItem(), false, null));
 
         pageControl.setQueryParamName(getQueryParamName());
         pageControl.setQuerySupported(isQuerySupported());
@@ -78,24 +63,26 @@ class DefaultPageControlFactory extends PageControlFactory {
             PageRequestLinkDto pageRequestLink = new PageRequestLinkDto();
             pageRequestLink.setActive(pageNumber == page.getPageRequest().getPageNumber());
             pageRequestLink.setPageNumber(pageNumber);
-            pageRequestLink.setUrl(buildUrl(pageUrl, pageNumber, page.getPageRequest().getPageSize(),
+            pageRequestLink.setUrl(buildUrl(pUrl, pageNumber, page.getPageRequest().getPageSize(),
                     page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery()));
             pageControl.getPageRequestLinks().add(pageRequestLink);
         }
 
-        pageControl
-                .setPageSizeSelectorOptions(buildPageSizeSelectorOptions(page.getPageRequest().getPageSize(), locale));
+        pageControl.setPageSizeSelectorOptions(buildPageSizeSelectorOptions(
+                page.getPageRequest().getPageSize(), locale == null ? Locale.getDefault() : locale));
 
-        pageControl.setPagination(buildPagination(page, pageControl.getPageRequestLinks(), pageUrl));
+        pageControl.setPagination(buildPagination(page, pageControl.getPageRequestLinks(), pUrl));
 
         return pageControl;
     }
 
-    private String buildUrl(String url, int pageNo, int pageSize, ComparatorItem comparatorItem, String query) {
+    private String buildUrl(final String url, final int pageNo, final int pageSize,
+                            final ComparatorItem comparatorItem, final String query) {
 
         String newUrl = WebUtils.addUrlParameter(url, getPageNumberParamName(), Integer.toString(pageNo));
         newUrl = WebUtils.addUrlParameter(newUrl, getPageSizeParamName(), Integer.toString(pageSize));
-        String comparatorParamValue = getComparatorItemTransformer().toString(comparatorItem, false, null);
+        final String comparatorParamValue = getComparatorItemTransformer().toString(
+                comparatorItem, false, null);
         if (StringUtils.isNotBlank(comparatorParamValue)) {
             newUrl = WebUtils.addUrlParameter(newUrl, getComparatorParamName(), comparatorParamValue);
         }
@@ -105,7 +92,9 @@ class DefaultPageControlFactory extends PageControlFactory {
         return newUrl;
     }
 
-    private <E> PaginationDto buildPagination(Page<E> page, List<PageRequestLinkDto> pageRequestLinks, String pageUrl) {
+    private <E> PaginationDto buildPagination(final Page<E> page, // NOSONAR
+                                              final List<PageRequestLinkDto> pageRequestLinks,
+                                              final String pageUrl) {
 
         Validate.notEmpty(pageUrl, "pageUrl must not be empty");
 
@@ -118,14 +107,14 @@ class DefaultPageControlFactory extends PageControlFactory {
             maxPaginationLinks = page.getTotalPages();
         }
 
-        PaginationDto pagination = new PaginationDto();
+        final PaginationDto pagination = new PaginationDto();
         pagination.setMaxPaginationLinks(maxPaginationLinks);
 
         int pageNumberOfFirstButton;
         if (maxPaginationLinks % 2 == 0) {
             pageNumberOfFirstButton = page.getPageRequest().getPageNumber() - maxPaginationLinks / 2 + 1;
         } else {
-            int middle = Double.valueOf(Math.floor(maxPaginationLinks / 2.)).intValue();
+            int middle = (int) Math.floor(maxPaginationLinks / 2.);
             pageNumberOfFirstButton = page.getPageRequest().getPageNumber() - middle;
         }
         if (pageNumberOfFirstButton < 0) {
@@ -144,44 +133,45 @@ class DefaultPageControlFactory extends PageControlFactory {
             pagination.getLinks().add(0, pageRequestLinks.get(pageNumberOfFirstButton));
         }
 
-        boolean firstPageDisabled = page.getPageRequest().getPageNumber() == 0;
-        String firstPageUrl = firstPageDisabled ? "#"
+        final boolean firstPageDisabled = page.getPageRequest().getPageNumber() == 0;
+        final String firstPageUrl = firstPageDisabled ? "#"
                 : buildUrl(pageUrl, 0, page.getPageRequest().getPageSize(), page.getPageRequest().getComparatorItem(),
-                        page.getPageRequest().getQuery());
-        PageRequestLinkDto firstPage = new PageRequestLinkDto(pageRequestLinks.get(0), !firstPageDisabled,
+                page.getPageRequest().getQuery());
+        final PageRequestLinkDto firstPage = new PageRequestLinkDto(pageRequestLinks.get(0), !firstPageDisabled,
                 firstPageUrl);
         pagination.setFirstPageLink(firstPage);
 
-        boolean previousPageDisabled = page.getPageRequest().getPageNumber() == 0;
-        String previousPageUrl = previousPageDisabled ? "#"
+        final boolean previousPageDisabled = page.getPageRequest().getPageNumber() == 0;
+        final String previousPageUrl = previousPageDisabled ? "#"
                 : buildUrl(pageUrl, page.getPageRequest().getPageNumber() - 1, page.getPageRequest().getPageSize(),
-                        page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery());
-        int previousPageNumber = previousPageDisabled ? 0 : page.getPageRequest().getPageNumber() - 1;
-        PageRequestLinkDto previousPage = new PageRequestLinkDto(pageRequestLinks.get(previousPageNumber),
+                page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery());
+        final int previousPageNumber = previousPageDisabled ? 0 : page.getPageRequest().getPageNumber() - 1;
+        final PageRequestLinkDto previousPage = new PageRequestLinkDto(pageRequestLinks.get(previousPageNumber),
                 !previousPageDisabled, previousPageUrl);
         pagination.setPreviousPageLink(previousPage);
 
-        boolean nextPageDisabled = page.getPageRequest().getPageNumber() == page.getTotalPages() - 1;
-        String nextPageUrl = nextPageDisabled ? "#"
+        final boolean nextPageDisabled = page.getPageRequest().getPageNumber() == page.getTotalPages() - 1;
+        final String nextPageUrl = nextPageDisabled ? "#"
                 : buildUrl(pageUrl, page.getPageRequest().getPageNumber() + 1, page.getPageRequest().getPageSize(),
-                        page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery());
-        int nextPageNumber = nextPageDisabled ? page.getTotalPages() - 1 : page.getPageRequest().getPageNumber() + 1;
-        PageRequestLinkDto nextPage = new PageRequestLinkDto(pageRequestLinks.get(nextPageNumber), !nextPageDisabled,
+                page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery());
+        final int nextPageNumber = nextPageDisabled ? page.getTotalPages() - 1 : page.getPageRequest().getPageNumber() + 1;
+        final PageRequestLinkDto nextPage = new PageRequestLinkDto(pageRequestLinks.get(nextPageNumber), !nextPageDisabled,
                 nextPageUrl);
         pagination.setNextPageLink(nextPage);
 
-        boolean lastPageDisabled = page.getPageRequest().getPageNumber() == page.getTotalPages() - 1;
-        String lastPageUrl = lastPageDisabled ? "#"
+        final boolean lastPageDisabled = page.getPageRequest().getPageNumber() == page.getTotalPages() - 1;
+        final String lastPageUrl = lastPageDisabled ? "#"
                 : buildUrl(pageUrl, page.getTotalPages() - 1, page.getPageRequest().getPageSize(),
-                        page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery());
-        PageRequestLinkDto lastPage = new PageRequestLinkDto(pageRequestLinks.get(page.getTotalPages() - 1),
+                page.getPageRequest().getComparatorItem(), page.getPageRequest().getQuery());
+        final PageRequestLinkDto lastPage = new PageRequestLinkDto(pageRequestLinks.get(page.getTotalPages() - 1),
                 !lastPageDisabled, lastPageUrl);
         pagination.setLastPageLink(lastPage);
 
         return pagination;
     }
 
-    private List<PageSizeSelectorOptionDto> buildPageSizeSelectorOptions(int selectedPageSize, Locale locale) {
+    private List<PageSizeSelectorOptionDto> buildPageSizeSelectorOptions(final int selectedPageSize, // NOSONAR
+                                                                         final Locale locale) {
 
         final int pageSizeSelectorMinValue = getPageSizeSelectorMinValue();
         final int pageSizeSelectorMaxValue = getMaxResultsSelectorMaxValue();
@@ -197,24 +187,21 @@ class DefaultPageControlFactory extends PageControlFactory {
 
         Validate.isTrue(selectedPageSize > 0, "selectedMaxResults > 0 must be 'true'");
 
-        if (locale == null) {
-            locale = Locale.getDefault();
-        }
-
         boolean selctedValueAdded = false;
         TreeSet<PageSizeSelectorOptionDto> options = new TreeSet<>();
         for (int i = pageSizeSelectorMinValue; i <= pageSizeSelectorMaxValue; i = i + pageSizeSelectorStep) {
             if (i == selectedPageSize) {
-                options.add(new PageSizeSelectorOptionDto(i, Integer.valueOf(i).toString(), true));
+                options.add(new PageSizeSelectorOptionDto(i, Integer.valueOf(i).toString(), true)); // NOSONAR
                 selctedValueAdded = true;
             } else {
-                options.add(new PageSizeSelectorOptionDto(i, Integer.valueOf(i).toString(), false));
+                options.add(new PageSizeSelectorOptionDto(i, Integer.valueOf(i).toString(), false)); // NOSONAR
             }
         }
 
         if (isSelectAllEntriesAvailable()) {
 
-            ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_BASE_NAME, locale);
+            ResourceBundle resourceBundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_BASE_NAME,
+                    locale == null ? Locale.getDefault() : locale);
             String displayedValue;
             if (resourceBundle.containsKey("pageBuilderFactory.pageSizeSelector.max")) {
                 displayedValue = resourceBundle.getString("pageBuilderFactory.pageSizeSelector.max");
@@ -230,10 +217,11 @@ class DefaultPageControlFactory extends PageControlFactory {
             }
         }
         if (!selctedValueAdded) {
-            options.add(new PageSizeSelectorOptionDto(selectedPageSize, Integer.valueOf(selectedPageSize).toString(),
+            options.add(new PageSizeSelectorOptionDto(selectedPageSize,
+                    Integer.valueOf(selectedPageSize).toString(), // NOSONAR
                     true));
         }
-        return Collections.unmodifiableList(new ArrayList<PageSizeSelectorOptionDto>(options));
+        return Collections.unmodifiableList(new ArrayList<>(options));
     }
 
 }

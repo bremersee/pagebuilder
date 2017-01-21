@@ -16,47 +16,36 @@
 
 package org.bremersee.pagebuilder.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import javax.xml.bind.annotation.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
  * A pagination can be used to display pagination links or buttons on a web site:
  * <pre>
  *  ----    ---    ---    ---     ===     ---    ---    ---    ----
- * | << |  | < |  | 1 |  | 2 |  || 3 ||  | 4 |  | 5 |  | > |  | >> | 
+ * | << |  | < |  | 1 |  | 2 |  || 3 ||  | 4 |  | 5 |  | > |  | >> |
  *  ----    ---    ---    ---     ===     ---    ---    ---    ----
- * First   Prev.  Page   Page     Page   Page   Page   Next    Last 
+ * First   Prev.  Page   Page     Page   Page   Page   Next    Last
  * Page    Page   No 0   No 1     No 2   No 3   No 4   Page    Page
  *                               active
  *                |                                 |
  *                 ------ maxPaginationLinks -------
  * </pre>
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
 //@formatter:off
+@SuppressWarnings({"WeakerAccess", "unused"})
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlRootElement(name = "pagination")
 @XmlType(name = "paginationType", propOrder = {
@@ -70,11 +59,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.ALWAYS)
-@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
-    getterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
-    creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
-    setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE,
+        getterVisibility = Visibility.PROTECTED_AND_PUBLIC,
+        creatorVisibility = Visibility.NONE,
+        isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC,
+        setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
 @JsonPropertyOrder(value = {
         "maxPaginationLinks",
         "firstPageLink",
@@ -84,7 +73,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "lastPageLink"
 })
 @ApiModel(
-        value = "Pagination", 
+        value = "Pagination",
         description = "A pagination can be used to display pagination links or buttons on a web site.")
 //@formatter:on
 public class PaginationDto implements Serializable {
@@ -97,7 +86,7 @@ public class PaginationDto implements Serializable {
 
     private PageRequestLinkDto previousPageLink;
 
-    private List<PageRequestLinkDto> links = new ArrayList<PageRequestLinkDto>();
+    private List<PageRequestLinkDto> links = new ArrayList<>();
 
     private PageRequestLinkDto nextPageLink;
 
@@ -107,6 +96,7 @@ public class PaginationDto implements Serializable {
      * Default constructor.
      */
     public PaginationDto() {
+        super();
     }
 
     /* (non-Javadoc)
@@ -139,7 +129,7 @@ public class PaginationDto implements Serializable {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj) { // NOSONAR
         if (this == obj)
             return true;
         if (obj == null)
@@ -182,7 +172,7 @@ public class PaginationDto implements Serializable {
      */
     @XmlElement(name = "maxPaginationLinks", defaultValue = "7")
     @JsonProperty(value = "maxPaginationLinks", required = true)
-    @ApiModelProperty(value = "The maximum number of pagination links.", position = 0, required = true, example = "7")
+    @ApiModelProperty(value = "The maximum number of pagination links.", required = true, example = "7")
     public int getMaxPaginationLinks() {
         return maxPaginationLinks;
     }
@@ -190,10 +180,10 @@ public class PaginationDto implements Serializable {
     /**
      * Sets the maximum number of pagination links.
      */
-    @JsonProperty(value = "maxPaginationLinks", required = false)
+    @JsonProperty(value = "maxPaginationLinks")
     public void setMaxPaginationLinks(int maxPaginationButtons) {
         if (maxPaginationButtons < 1) {
-            maxPaginationButtons = 1;
+            this.maxPaginationLinks = 1;
         } else {
             this.maxPaginationLinks = maxPaginationButtons;
         }
@@ -202,9 +192,9 @@ public class PaginationDto implements Serializable {
     /**
      * Returns the first pagination link.
      */
-    @XmlElement(name = "firstPageLink", required = false)
-    @JsonProperty(value = "firstPageLink", required = false)
-    @ApiModelProperty(value = "The first pagination link.", position = 1, required = false)
+    @XmlElement(name = "firstPageLink")
+    @JsonProperty(value = "firstPageLink")
+    @ApiModelProperty(value = "The first pagination link.", position = 1)
     public PageRequestLinkDto getFirstPageLink() {
         return firstPageLink;
     }
@@ -212,7 +202,7 @@ public class PaginationDto implements Serializable {
     /**
      * Sets the first pagination link.
      */
-    @JsonProperty(value = "firstPageLink", required = false)
+    @JsonProperty(value = "firstPageLink")
     public void setFirstPageLink(PageRequestLinkDto firstPageLink) {
         this.firstPageLink = firstPageLink;
     }
@@ -220,9 +210,9 @@ public class PaginationDto implements Serializable {
     /**
      * Returns the previous pagination link.
      */
-    @XmlElement(name = "previousPageLink", required = false)
-    @JsonProperty(value = "previousPageLink", required = false)
-    @ApiModelProperty(value = "The previous pagination link.", position = 2, required = false)
+    @XmlElement(name = "previousPageLink")
+    @JsonProperty(value = "previousPageLink")
+    @ApiModelProperty(value = "The previous pagination link.", position = 2)
     public PageRequestLinkDto getPreviousPageLink() {
         return previousPageLink;
     }
@@ -230,7 +220,7 @@ public class PaginationDto implements Serializable {
     /**
      * Sets the previous pagination link.
      */
-    @JsonProperty(value = "previousPageLink", required = false)
+    @JsonProperty(value = "previousPageLink")
     public void setPreviousPageLink(PageRequestLinkDto previousPageLink) {
         this.previousPageLink = previousPageLink;
     }
@@ -238,10 +228,10 @@ public class PaginationDto implements Serializable {
     /**
      * Returns the pagination links.
      */
-    @XmlElementWrapper(name = "links", required = false)
+    @XmlElementWrapper(name = "links")
     @XmlElement(name = "link")
-    @JsonProperty(value = "links", required = false)
-    @ApiModelProperty(value = "The pagination links.", position = 3, required = false)
+    @JsonProperty(value = "links")
+    @ApiModelProperty(value = "The pagination links.", position = 3)
     public List<PageRequestLinkDto> getLinks() {
         return links;
     }
@@ -249,20 +239,21 @@ public class PaginationDto implements Serializable {
     /**
      * Sets the pagination links.
      */
-    @JsonProperty(value = "links", required = false)
+    @JsonProperty(value = "links")
     public void setLinks(List<PageRequestLinkDto> links) {
         if (links == null) {
-            links = new ArrayList<>();
+            this.links = new ArrayList<>();
+        } else {
+            this.links = links;
         }
-        this.links = links;
     }
 
     /**
      * Returns the next pagination link.
      */
-    @XmlElement(name = "nextPageLink", required = false)
-    @JsonProperty(value = "nextPageLink", required = false)
-    @ApiModelProperty(value = "The next pagination link.", position = 4, required = false)
+    @XmlElement(name = "nextPageLink")
+    @JsonProperty(value = "nextPageLink")
+    @ApiModelProperty(value = "The next pagination link.", position = 4)
     public PageRequestLinkDto getNextPageLink() {
         return nextPageLink;
     }
@@ -270,7 +261,7 @@ public class PaginationDto implements Serializable {
     /**
      * Sets the next pagination link.
      */
-    @JsonProperty(value = "nextPageLink", required = false)
+    @JsonProperty(value = "nextPageLink")
     public void setNextPageLink(PageRequestLinkDto nextPageLink) {
         this.nextPageLink = nextPageLink;
     }
@@ -278,9 +269,9 @@ public class PaginationDto implements Serializable {
     /**
      * Returns the last pagination link.
      */
-    @XmlElement(name = "lastPageLink", required = false)
-    @JsonProperty(value = "lastPageLink", required = false)
-    @ApiModelProperty(value = "The last pagination link.", position = 5, required = false)
+    @XmlElement(name = "lastPageLink")
+    @JsonProperty(value = "lastPageLink")
+    @ApiModelProperty(value = "The last pagination link.", position = 5)
     public PageRequestLinkDto getLastPageLink() {
         return lastPageLink;
     }
@@ -288,7 +279,7 @@ public class PaginationDto implements Serializable {
     /**
      * Sets the last pagination link.
      */
-    @JsonProperty(value = "lastPageLink", required = false)
+    @JsonProperty(value = "lastPageLink")
     public void setLastPageLink(PageRequestLinkDto lastPageLink) {
         this.lastPageLink = lastPageLink;
     }

@@ -16,40 +16,34 @@
 
 package org.bremersee.pagebuilder.example.domain;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.springframework.data.domain.Persistable;
+
+import javax.persistence.*;
 
 /**
  * @author Christian Bremer
  */
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "PERSON")
 public class Person implements Persistable<Long> {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     private String firstname;
-    
+
     private String lastname;
-    
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private Address address;
-    
+
     public Person() {
+        super();
     }
 
     public Person(String firstname, String lastname, Address address) {

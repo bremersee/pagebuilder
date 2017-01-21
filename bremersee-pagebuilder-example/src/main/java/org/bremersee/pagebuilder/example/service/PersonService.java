@@ -23,7 +23,7 @@ import org.bremersee.pagebuilder.model.PageRequestDto;
  * @author Christian Bremer
  */
 public interface PersonService {
-    
+
     PageDto findPersons(PageRequestDto pageRequest);
 
 }

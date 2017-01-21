@@ -16,41 +16,41 @@
 
 package org.bremersee.pagebuilder.model;
 
+import org.bremersee.comparator.model.ComparatorItem;
+
 import java.io.Serializable;
 import java.util.Map;
-
-import org.bremersee.comparator.model.ComparatorItem;
 
 /**
  * @author Christian Bremer
  */
 public interface PageRequest extends Serializable {
-    
+
     /**
      * Returns the requested page number (starting with 0).
      */
     int getPageNumber();
-    
+
     /**
      * Returns the maximum number of elements on the page (is always greater than 0).
      */
     int getPageSize();
-    
+
     /**
      * Returns the first result (offset).
      */
     int getFirstResult();
-    
+
     /**
      * Returns the comparator item (may be {@code null}).
      */
     ComparatorItem getComparatorItem();
-    
+
     /**
      * Returns the search query (may be {@code null}).
      */
     String getQuery();
-    
+
     /**
      * Returns custom extensions (may be {@code null}).
      */

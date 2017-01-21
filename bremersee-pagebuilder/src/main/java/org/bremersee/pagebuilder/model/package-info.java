@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-/**
- * @author Christian Bremer
- */
 //@formatter:off
 @javax.xml.bind.annotation.XmlSchema(
-        namespace = "http://bremersee.org/xmlschemas/pagebuilder/v1", 
+        namespace = "http://bremersee.org/xmlschemas/pagebuilder/v1",
         location = "http://bremersee.github.io/xmlschemas/bremersee-pagebuilder-v1a.xsd",
         elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 //@formatter:on

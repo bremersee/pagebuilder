@@ -16,10 +16,6 @@
 
 package org.bremersee.pagebuilder.example.service;
 
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.StringUtils;
 import org.bremersee.pagebuilder.PageBuilder;
 import org.bremersee.pagebuilder.PageBuilderUtils;
@@ -28,6 +24,7 @@ import org.bremersee.pagebuilder.example.domain.Address;
 import org.bremersee.pagebuilder.example.domain.Person;
 import org.bremersee.pagebuilder.example.domain.PersonRepository;
 import org.bremersee.pagebuilder.model.PageDto;
+import org.bremersee.pagebuilder.model.PageRequest;
 import org.bremersee.pagebuilder.model.PageRequestDto;
 import org.bremersee.pagebuilder.spring.PageBuilderSpringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,26 +36,30 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.PostConstruct;
+import java.util.List;
+
 /**
  * @author Christian Bremer
  */
+@SuppressWarnings({"SpringAutowiredFieldsWarningInspection", "WeakerAccess", "SpringJavaAutowiringInspection"})
 @Service
 public class PersonServiceImpl implements PersonService {
-    
+
     @Autowired
     protected PlatformTransactionManager transactionManager;
-    
+
     @Autowired
     protected PersonRepository personRepository;
 
     @Autowired
     protected PageBuilder pageBuilder;
-    
+
     @PostConstruct
     public void init() {
         TransactionTemplate tt = new TransactionTemplate(transactionManager);
         tt.execute(new TransactionCallbackWithoutResult() {
-            
+
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
                 personRepository.save(new Person("Heinrich", "Heine", new Address("Rue de Chanson", "Paris", "12345")));
@@ -74,24 +75,22 @@ public class PersonServiceImpl implements PersonService {
             }
         });
     }
-    
-    @Override
-    public PageDto findPersons(PageRequestDto pageRequest) {
 
-        if (pageRequest == null) {
-            pageRequest = new PageRequestDto();
-        }
-        
+    @Override
+    public PageDto findPersons(final PageRequestDto request) {
+
+        final PageRequest pageRequest = request == null ? new PageRequestDto() : request;
+
         if (StringUtils.isBlank(pageRequest.getQuery())) {
             Pageable pageable = PageBuilderSpringUtils.toSpringPageRequest(pageRequest);
             Page<Person> springPage = personRepository.findAll(pageable);
             PageResult<Person> page = PageBuilderSpringUtils.fromSpringPage(springPage);
             return PageBuilderUtils.createPageDto(page, null);
         }
-        
+
         List<Person> persons = personRepository.findByQuery(pageRequest.getQuery());
         org.bremersee.pagebuilder.model.Page<Person> page = pageBuilder.buildFilteredPage(persons, pageRequest, null);
         return PageBuilderUtils.createPageDto(page, null);
     }
-    
+
 }

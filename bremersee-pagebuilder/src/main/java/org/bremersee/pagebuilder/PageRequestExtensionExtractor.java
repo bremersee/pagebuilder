@@ -20,10 +20,11 @@ import org.bremersee.pagebuilder.model.PageRequest;
 
 /**
  * @author Christian Bremer
- *
  */
+@SuppressWarnings("unused")
 public interface PageRequestExtensionExtractor {
 
-    <T, S extends T> T getPageRequestExtension(PageRequest pageRequest, String key, Class<T> extensionType, S defaultObject);
+    <T, S extends T> T getPageRequestExtension(PageRequest pageRequest, String key, Class<T> extensionType,
+                                               S defaultObject);
 
 }

@@ -20,16 +20,15 @@ package org.bremersee.pagebuilder;
  * <p>
  * Object transformer.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
 public interface PageEntryTransformer<T, E> {
 
     /**
      * Transforms one object (the entity) into another object (the DTO).
-     * 
-     * @param source
-     *            the entity
+     *
+     * @param source the entity
      * @return the DTO (data transfer object)
      */
     T transform(E source);

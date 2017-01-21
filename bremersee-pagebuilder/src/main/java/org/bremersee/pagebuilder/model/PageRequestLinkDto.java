@@ -16,59 +16,49 @@
 
 package org.bremersee.pagebuilder.model;
 
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-import org.bremersee.comparator.model.ComparatorItem;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.bremersee.comparator.model.ComparatorItem;
+
+import javax.xml.bind.annotation.*;
+import java.util.Map;
 
 /**
  * <p>
  * A page request link.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
 //@formatter:off
+@SuppressWarnings({"WeakerAccess", "unused"})
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlRootElement(name = "pageRequestLink")
-@XmlType(name = "pageRequestLinkType", propOrder = { 
+@XmlType(name = "pageRequestLinkType", propOrder = {
         "displayedPageNumber",
-        "active", 
-        "url" })
+        "active",
+        "url"})
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.ALWAYS)
-@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
-    getterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
-    creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
-    setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE,
+        getterVisibility = Visibility.PROTECTED_AND_PUBLIC,
+        creatorVisibility = Visibility.NONE,
+        isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC,
+        setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
 @JsonPropertyOrder(value = {
         "displayedPageNumber",
         "active",
         "url"
 })
 @ApiModel(
-        value = "PageRequestLink", 
+        value = "PageRequestLink",
         description = "A page request link contains beside the page request information "
                 + "a link (to another page) and a flag whether this page request is the "
-                + "current one.", 
+                + "current one.",
         parent = PageRequestDto.class
 )
 //@formatter:on
@@ -84,6 +74,7 @@ public class PageRequestLinkDto extends PageRequestDto {
      * Default constructor.
      */
     public PageRequestLinkDto() {
+        super();
     }
 
     public PageRequestLinkDto(PageRequestDto pageRequest, boolean active, String url) {
@@ -97,9 +88,9 @@ public class PageRequestLinkDto extends PageRequestDto {
         setActive(active);
         setUrl(url);
     }
-    
+
     public PageRequestLinkDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query,
-            Map<String, Object> extensions, boolean active, String url) {
+                              Map<String, Object> extensions, boolean active, String url) {
         super(pageNumber, pageSize, comparatorItem, query, extensions);
         this.active = active;
         this.url = url;
@@ -140,13 +131,13 @@ public class PageRequestLinkDto extends PageRequestDto {
 
     @XmlElement(name = "displayedPageNumber", required = true)
     @JsonProperty(value = "displayedPageNumber", required = true)
-    @ApiModelProperty(value = "The page number for displaying (page number + 1).", position = 0, required = true, readOnly = true)
+    @ApiModelProperty(value = "The page number for displaying (page number + 1).", required = true, readOnly = true)
     public String getDisplayedPageNumber() {
-        return Integer.valueOf(getPageNumber() + 1).toString();
+        return Integer.valueOf(getPageNumber() + 1).toString(); // NOSONAR
     }
-    
-    @JsonProperty(value = "displayedPageNumber", required = false)
-    protected void setDisplayedPageNumber(String displayedPageNumber) {
+
+    @JsonProperty(value = "displayedPageNumber")
+    protected void setDisplayedPageNumber(String displayedPageNumber) { // NOSONAR
     }
 
     @XmlElement(name = "active", required = true)
@@ -164,9 +155,9 @@ public class PageRequestLinkDto extends PageRequestDto {
         this.active = active;
     }
 
-    @XmlElement(name = "url", required = false)
-    @JsonProperty(value = "url", required = false)
-    @ApiModelProperty(value = "An URL to another page.", position = 2, required = false)
+    @XmlElement(name = "url")
+    @JsonProperty(value = "url")
+    @ApiModelProperty(value = "An URL to another page.", position = 2)
     public String getUrl() {
         return url;
     }
@@ -174,7 +165,7 @@ public class PageRequestLinkDto extends PageRequestDto {
     /**
      * Sets the URL.
      */
-    @JsonProperty(value = "url", required = false)
+    @JsonProperty(value = "url")
     public void setUrl(String url) {
         this.url = url;
     }

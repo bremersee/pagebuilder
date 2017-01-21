@@ -16,13 +16,13 @@
 
 package org.bremersee.pagebuilder;
 
-import java.util.Locale;
-
 import org.apache.commons.lang3.StringUtils;
 import org.bremersee.comparator.ComparatorItemTransformer;
 import org.bremersee.comparator.ComparatorItemTransformerImpl;
 import org.bremersee.pagebuilder.model.Page;
 import org.bremersee.pagebuilder.model.PageControlDto;
+
+import java.util.Locale;
 
 /**
  * <p>
@@ -32,9 +32,10 @@ import org.bremersee.pagebuilder.model.PageControlDto;
  * A {@link PageControlDto} can be used to display a {@link Page} on a web
  * site.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
+@SuppressWarnings({"WeakerAccess", "unused", "SameParameterValue"})
 public abstract class PageControlFactory {
 
     /**
@@ -67,51 +68,6 @@ public abstract class PageControlFactory {
      */
     public static final boolean DEFAULT_SELECT_ALL_ENTRIES_AVAILABLE = true;
 
-    /**
-     * Returns a new factory instance.
-     */
-    public static PageControlFactory newInstance() {
-        return new DefaultPageControlFactory();
-    }
-
-    /**
-     * Returns a new factory instance of the given class.
-     * 
-     * @param factoryClassName
-     *            the class name
-     * @return the new factory instance
-     * @throws InstantiationException
-     *             if creating of the factory fails
-     * @throws IllegalAccessException
-     *             if creating of the factory fails
-     * @throws ClassNotFoundException
-     *             if creating of the factory fails
-     */
-    public static PageControlFactory newInstance(String factoryClassName)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        return (PageControlFactory) Class.forName(factoryClassName).newInstance();
-    }
-
-    /**
-     * Returns a new factory instance of the given class.
-     * 
-     * @param factoryClassName
-     *            the class name
-     * @param classLoader
-     *            the class loader to use
-     * @return the new factory instance
-     * @throws InstantiationException
-     *             if creating of the factory fails
-     * @throws IllegalAccessException
-     *             if creating of the factory fails
-     * @throws ClassNotFoundException
-     *             if creating of the factory fails
-     */
-    public static PageControlFactory newInstance(String factoryClassName, ClassLoader classLoader)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        return (PageControlFactory) Class.forName(factoryClassName, true, classLoader).newInstance();
-    }
-
     private ComparatorItemTransformer comparatorItemTransformer = new ComparatorItemTransformerImpl();
 
     private String queryParamName = "q";
@@ -135,9 +91,46 @@ public abstract class PageControlFactory {
     private boolean isQuerySupported = true;
 
     /**
+     * Returns a new factory instance.
+     */
+    public static PageControlFactory newInstance() {
+        return new DefaultPageControlFactory();
+    }
+
+    /**
+     * Returns a new factory instance of the given class.
+     *
+     * @param factoryClassName the class name
+     * @return the new factory instance
+     * @throws InstantiationException if creating of the factory fails
+     * @throws IllegalAccessException if creating of the factory fails
+     * @throws ClassNotFoundException if creating of the factory fails
+     */
+    public static PageControlFactory newInstance(final String factoryClassName) // NOSONAR
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        return (PageControlFactory) Class.forName(factoryClassName).newInstance();
+    }
+
+    /**
+     * Returns a new factory instance of the given class.
+     *
+     * @param factoryClassName the class name
+     * @param classLoader      the class loader to use
+     * @return the new factory instance
+     * @throws InstantiationException if creating of the factory fails
+     * @throws IllegalAccessException if creating of the factory fails
+     * @throws ClassNotFoundException if creating of the factory fails
+     */
+    public static PageControlFactory newInstance(final String factoryClassName, // NOSONAR
+                                                 final ClassLoader classLoader)
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        return (PageControlFactory) Class.forName(factoryClassName, true, classLoader).newInstance();
+    }
+
+    /**
      * Gets the comparator item transformer, that reads and writes the
      * comparator item query parameter.
-     * 
+     *
      * @return the comparator item transformer
      */
     public ComparatorItemTransformer getComparatorItemTransformer() {
@@ -148,12 +141,11 @@ public abstract class PageControlFactory {
      * Sets the comparator item transformer, that reads and writes the
      * comparator item query parameter.<br/>
      * Default is {@link ComparatorItemTransformerImpl}.
-     * 
-     * @param comparatorItemTransformer
-     *            the comparator item transformer
+     *
+     * @param comparatorItemTransformer the comparator item transformer
      * @return the page control factory
      */
-    public PageControlFactory setComparatorItemTransformer(ComparatorItemTransformer comparatorItemTransformer) {
+    public PageControlFactory setComparatorItemTransformer(final ComparatorItemTransformer comparatorItemTransformer) {
         if (comparatorItemTransformer != null) {
             this.comparatorItemTransformer = comparatorItemTransformer;
         }
@@ -162,7 +154,7 @@ public abstract class PageControlFactory {
 
     /**
      * Gets the name of the query parameter. Default is 'q'.
-     * 
+     *
      * @return the name of the query parameter
      */
     public String getQueryParamName() {
@@ -171,12 +163,11 @@ public abstract class PageControlFactory {
 
     /**
      * Sets the name of the query parameter. Default is 'q'.
-     * 
-     * @param queryParamName
-     *            the name of the query parameter
+     *
+     * @param queryParamName the name of the query parameter
      * @return the page control factory
      */
-    public PageControlFactory setQueryParamName(String queryParamName) {
+    public PageControlFactory setQueryParamName(final String queryParamName) {
         if (StringUtils.isNotBlank(queryParamName)) {
             this.queryParamName = queryParamName;
         }
@@ -185,7 +176,7 @@ public abstract class PageControlFactory {
 
     /**
      * Gets the name of the page size query parameter. Default is 's'.
-     * 
+     *
      * @return the name of the page size query parameter
      */
     public String getPageSizeParamName() {
@@ -194,12 +185,11 @@ public abstract class PageControlFactory {
 
     /**
      * Sets the name page size query parameter. Default is 's'.
-     * 
-     * @param pageSizeParamName
-     *            the name of page size query parameter
+     *
+     * @param pageSizeParamName the name of page size query parameter
      * @return the page control factory
      */
-    public PageControlFactory setPageSizeParamName(String pageSizeParamName) {
+    public PageControlFactory setPageSizeParamName(final String pageSizeParamName) {
         if (StringUtils.isNotBlank(pageSizeParamName)) {
             this.pageSizeParamName = pageSizeParamName;
         }
@@ -208,7 +198,7 @@ public abstract class PageControlFactory {
 
     /**
      * Gets the name of the page number query parameter. Default is 'p'.
-     * 
+     *
      * @return the name of the page number query parameter
      */
     public String getPageNumberParamName() {
@@ -217,12 +207,11 @@ public abstract class PageControlFactory {
 
     /**
      * Sets the name of the page number query parameter. Default is 'p'.
-     * 
-     * @param pageNumberParamName
-     *            the name of the page number query parameter
+     *
+     * @param pageNumberParamName the name of the page number query parameter
      * @return the page control factory
      */
-    public PageControlFactory setPageNumberParamName(String pageNumberParamName) {
+    public PageControlFactory setPageNumberParamName(final String pageNumberParamName) {
         if (StringUtils.isNotBlank(pageNumberParamName)) {
             this.pageNumberParamName = pageNumberParamName;
         }
@@ -231,7 +220,7 @@ public abstract class PageControlFactory {
 
     /**
      * Gets the name of the comparator query parameter. Default is 'c'.
-     * 
+     *
      * @return the name of the comparator query parameter
      */
     public String getComparatorParamName() {
@@ -240,12 +229,11 @@ public abstract class PageControlFactory {
 
     /**
      * Sets the name of the comparator query parameter. Default is 'c'.
-     * 
-     * @param comparatorParamName
-     *            the name of the comparator query parameter
+     *
+     * @param comparatorParamName the name of the comparator query parameter
      * @return the page control factory
      */
-    public PageControlFactory setComparatorParamName(String comparatorParamName) {
+    public PageControlFactory setComparatorParamName(final String comparatorParamName) {
         if (StringUtils.isNotBlank(comparatorParamName)) {
             this.comparatorParamName = comparatorParamName;
         }
@@ -255,7 +243,7 @@ public abstract class PageControlFactory {
     /**
      * Gets the minimum value, that the page size selector can have. Default is
      * '10'.
-     * 
+     *
      * @return the minimum value
      */
     public int getPageSizeSelectorMinValue() {
@@ -265,12 +253,11 @@ public abstract class PageControlFactory {
     /**
      * Sets the minimum value, that the page size selector can have. Default is
      * '10'.
-     * 
-     * @param pageSizeSelectorMinValue
-     *            the minimum value
+     *
+     * @param pageSizeSelectorMinValue the minimum value
      * @return the page control factory
      */
-    public PageControlFactory setPageSizeSelectorMinValue(int pageSizeSelectorMinValue) {
+    public PageControlFactory setPageSizeSelectorMinValue(final int pageSizeSelectorMinValue) {
         this.pageSizeSelectorMinValue = pageSizeSelectorMinValue;
         return this;
     }
@@ -278,7 +265,7 @@ public abstract class PageControlFactory {
     /**
      * Gets the maximum value, that the page size selector can have. Default is
      * '100'.
-     * 
+     *
      * @return the maximum value
      */
     public int getMaxResultsSelectorMaxValue() {
@@ -288,19 +275,18 @@ public abstract class PageControlFactory {
     /**
      * Sets the maximum value, that the page size selector can have. Default is
      * '100'.
-     * 
-     * @param pageSizeSelectorMaxValue
-     *            the maximum value
+     *
+     * @param pageSizeSelectorMaxValue the maximum value
      * @return the page control factory
      */
-    public PageControlFactory setPageSizeSelectorMaxValue(int pageSizeSelectorMaxValue) {
+    public PageControlFactory setPageSizeSelectorMaxValue(final int pageSizeSelectorMaxValue) {
         this.pageSizeSelectorMaxValue = pageSizeSelectorMaxValue;
         return this;
     }
 
     /**
      * Gets the step size of the page size selector. Default is '10'.
-     * 
+     *
      * @return the step size of the page size selector
      */
     public int getPageSizeSelectorStep() {
@@ -309,12 +295,11 @@ public abstract class PageControlFactory {
 
     /**
      * Sets the step size of the page size selector. Default is '10'.
-     * 
-     * @param pageSizeSelectorStep
-     *            the step size of the page size selector
+     *
+     * @param pageSizeSelectorStep the step size of the page size selector
      * @return the page control factory
      */
-    public PageControlFactory setPageSizeSelectorStep(int pageSizeSelectorStep) {
+    public PageControlFactory setPageSizeSelectorStep(final int pageSizeSelectorStep) {
         this.pageSizeSelectorStep = pageSizeSelectorStep;
         return this;
     }
@@ -330,19 +315,18 @@ public abstract class PageControlFactory {
     /**
      * Specifies whether the maximum results per page selector has an item to
      * choose all available entries or not. Default is 'true'.
-     * 
-     * @param selectAllEntriesAvailable
-     *            {@code true} or {@code false}
+     *
+     * @param selectAllEntriesAvailable {@code true} or {@code false}
      * @return the page control factory
      */
-    public PageControlFactory setSelectAllEntriesAvailable(boolean selectAllEntriesAvailable) {
+    public PageControlFactory setSelectAllEntriesAvailable(final boolean selectAllEntriesAvailable) {
         this.selectAllEntriesAvailable = selectAllEntriesAvailable;
         return this;
     }
 
     /**
      * Returns the maximum numbers of pagination links. Default is '7'.
-     * 
+     *
      * @return the maximum numbers of pagination links
      */
     public int getMaxPaginationLinks() {
@@ -351,12 +335,11 @@ public abstract class PageControlFactory {
 
     /**
      * Sets the maximum numbers of pagination links. Default is '7'.
-     * 
-     * @param maxPaginationLinks
-     *            the maximum numbers of pagination links
+     *
+     * @param maxPaginationLinks the maximum numbers of pagination links
      * @return the page control factory
      */
-    public PageControlFactory setMaxPaginationLinks(int maxPaginationLinks) {
+    public PageControlFactory setMaxPaginationLinks(final int maxPaginationLinks) {
         this.maxPaginationLinks = maxPaginationLinks;
         return this;
     }
@@ -364,9 +347,9 @@ public abstract class PageControlFactory {
     /**
      * Specifies whether a query field should be displayed on the page or not.
      * Default is 'true'.
-     * 
+     *
      * @return {@code true} if a query field should be displayed on the page,
-     *         otherwise {@code false}
+     * otherwise {@code false}
      */
     public boolean isQuerySupported() {
         return isQuerySupported;
@@ -375,13 +358,12 @@ public abstract class PageControlFactory {
     /**
      * Specifies whether a query field should be displayed on the page or not.
      * Default is 'true'.
-     * 
-     * @param isQuerySupported
-     *            {@code true} if a query field should be displayed on the page,
-     *            otherwise {@code false}
+     *
+     * @param isQuerySupported {@code true} if a query field should be displayed on the page,
+     *                         otherwise {@code false}
      * @return the page control factory
      */
-    public PageControlFactory setQuerySupported(boolean isQuerySupported) {
+    public PageControlFactory setQuerySupported(final boolean isQuerySupported) {
         this.isQuerySupported = isQuerySupported;
         return this;
     }
@@ -391,19 +373,15 @@ public abstract class PageControlFactory {
      * The page URL must be the plain URL (with no page control query
      * parameters), e. g.: http://example.org/myapp/mypage.html<br/>
      * If the locale is not present, the default locale will be used.
-     * 
-     * @param page
-     *            the page
-     * @param transformer
-     *            the page entry transformer (may be {@code null})
-     * @param pageUrl
-     *            the plain page URL
-     * @param locale
-     *            the locale
+     *
+     * @param page        the page
+     * @param transformer the page entry transformer (may be {@code null})
+     * @param pageUrl     the plain page URL
+     * @param locale      the locale
      * @return the created page control
      */
-    public <E, T> PageControlDto newPageControl(Page<E> page, PageEntryTransformer<T, E> transformer, String pageUrl,
-            Locale locale) {
+    public <E, T> PageControlDto newPageControl(final Page<E> page, final PageEntryTransformer<T, E> transformer,
+                                                final String pageUrl, final Locale locale) {
         return newPageControl(PageBuilderUtils.createPageDto(page, transformer), pageUrl, locale);
     }
 
@@ -412,15 +390,12 @@ public abstract class PageControlFactory {
      * The page URL must be the plain URL (with no page control query
      * parameters), e. g.: http://example.org/myapp/mypage.html<br/>
      * If the locale is not present, the default locale will be used.
-     * 
-     * @param page
-     *            the page
-     * @param pageUrl
-     *            the plain page URL
-     * @param locale
-     *            the locale
+     *
+     * @param page    the page
+     * @param pageUrl the plain page URL
+     * @param locale  the locale
      * @return the created page control
      */
-    public abstract <E> PageControlDto newPageControl(Page<E> page, String pageUrl, Locale locale);
+    public abstract <E> PageControlDto newPageControl(final Page<E> page, String pageUrl, final Locale locale);
 
 }

@@ -16,35 +16,23 @@
 
 package org.bremersee.pagebuilder.test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import junit.framework.TestCase;
 import org.bremersee.comparator.model.ComparatorItem;
 import org.bremersee.pagebuilder.PageBuilderUtils;
-import org.bremersee.pagebuilder.model.PageControlDto;
-import org.bremersee.pagebuilder.model.PageDto;
-import org.bremersee.pagebuilder.model.PageRequestDto;
-import org.bremersee.pagebuilder.model.PageRequestLinkDto;
-import org.bremersee.pagebuilder.model.PageSizeSelectorOptionDto;
-import org.bremersee.pagebuilder.model.PaginationDto;
+import org.bremersee.pagebuilder.model.*;
 import org.bremersee.pagebuilder.test.model.Address;
 import org.bremersee.pagebuilder.test.model.Person;
 import org.bremersee.pagebuilder.test.model.Pet;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import junit.framework.TestCase;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.*;
 
 /**
  * @author Christian Bremer
@@ -60,7 +48,7 @@ public class ModelTests {
                         + org.bremersee.pagebuilder.model.ObjectFactory.class.getPackage().getName() + ":"
                         + org.bremersee.pagebuilder.test.model.ObjectFactory.class.getPackage().getName());
     }
-    
+
     private PageRequestDto createPageRequestDtoWithExtension() {
         ComparatorItem comparatorItem = new ComparatorItem("foo", true);
         comparatorItem.next("bar", false);
@@ -123,7 +111,7 @@ public class ModelTests {
 
         System.out.println("OK\n");
     }
-    
+
     @Test
     public void testXmlPageRequestLinkDto() throws Exception {
 
@@ -176,7 +164,7 @@ public class ModelTests {
 
         System.out.println("OK\n");
     }
-    
+
     @Test
     public void testXmlPageSizeSelectorOptionDto() throws Exception {
 
@@ -229,7 +217,7 @@ public class ModelTests {
 
         System.out.println("OK\n");
     }
-    
+
     private List<Object> createPageEntries() {
         Pet pet0 = new Pet("Doggy");
         Pet pet1 = new Pet("Catty");
@@ -241,7 +229,7 @@ public class ModelTests {
         Person p1 = new Person("Rot", "Kaeppchen", addr1);
         Person p2 = new Person("Cindy", "Rella", null);
 
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         list.add(pet0);
         list.add(p0);
         list.add(p1);
@@ -249,7 +237,7 @@ public class ModelTests {
         list.add(pet1);
         return list;
     }
-    
+
     private PageRequestDto createPageRequestDto() {
         PageRequestDto req = new PageRequestDto();
         req.setComparatorItem(new ComparatorItem("name"));
@@ -307,7 +295,7 @@ public class ModelTests {
 
         System.out.println(jsonStr);
 
-        PageDto readPage = (PageDto) om.readValue(jsonStr, PageDto.class);
+        PageDto readPage = om.readValue(jsonStr, PageDto.class);
 
         System.out.println(readPage);
 
@@ -323,7 +311,7 @@ public class ModelTests {
         for (Object o : readPage.getEntries()) {
             System.out.println(o.getClass().getName() + " = " + o);
             Object obj;
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @SuppressWarnings({"rawtypes", "unchecked"})
             Map<String, Object> map = (Map) o;
             if (map.containsKey("name")) {
                 // it's a pet

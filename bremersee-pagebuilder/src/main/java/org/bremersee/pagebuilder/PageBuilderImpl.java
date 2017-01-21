@@ -16,22 +16,23 @@
 
 package org.bremersee.pagebuilder;
 
+import org.bremersee.comparator.ObjectComparatorFactory;
+import org.bremersee.pagebuilder.model.PageRequest;
+import org.bremersee.pagebuilder.model.PageRequestDto;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.bremersee.comparator.ObjectComparatorFactory;
-import org.bremersee.pagebuilder.model.PageRequest;
-import org.bremersee.pagebuilder.model.PageRequestDto;
-
 /**
  * <p>
  * Default page builder implementation.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class PageBuilderImpl implements PageBuilder {
 
     private ObjectComparatorFactory objectComparatorFactory = ObjectComparatorFactory.newInstance();
@@ -51,7 +52,7 @@ public class PageBuilderImpl implements PageBuilder {
     /**
      * Sets the object comparator factory. A default one is present.
      */
-    public void setObjectComparatorFactory(ObjectComparatorFactory objectComparatorFactory) {
+    public void setObjectComparatorFactory(final ObjectComparatorFactory objectComparatorFactory) {
         if (objectComparatorFactory != null) {
             this.objectComparatorFactory = objectComparatorFactory;
         }
@@ -68,7 +69,7 @@ public class PageBuilderImpl implements PageBuilder {
     /**
      * Set the filter for this page builder.
      */
-    public void setPageBuilderFilter(PageBuilderFilter pageBuilderFilter) {
+    public void setPageBuilderFilter(final PageBuilderFilter pageBuilderFilter) {
         this.pageBuilderFilter = pageBuilderFilter;
     }
 
@@ -83,42 +84,45 @@ public class PageBuilderImpl implements PageBuilder {
     }
 
     @Override
-    public <E> PageResult<E> buildPage(Iterable<? extends E> pageEntries, PageRequest pageRequest, long totalSize) {
+    public <E> PageResult<E> buildPage(final Iterable<? extends E> pageEntries, final PageRequest pageRequest,
+                                       final long totalSize) {
         return buildPage(pageEntries, pageRequest, totalSize, null);
     }
-    
+
     @Override
-    public <T, E> PageResult<T> buildPage(Iterable<? extends E> pageEntries, PageRequest pageRequest, long totalSize,
-            PageEntryTransformer<T, E> transformer) {
+    public <T, E> PageResult<T> buildPage(final Iterable<? extends E> pageEntries, final PageRequest pageRequest,
+                                          final long totalSize, final PageEntryTransformer<T, E> transformer) {
         return PageBuilderUtils.createPage(pageEntries, pageRequest, totalSize, transformer);
     }
 
     @Override
-    public <E> PageResult<E> buildFilteredPage(Collection<? extends E> allAvailableEntries, PageRequest pageRequest,
-            Object filterCriteria) {
+    public <E> PageResult<E> buildFilteredPage(final Collection<? extends E> allAvailableEntries,
+                                               final PageRequest pageRequest, final Object filterCriteria) {
         return buildFilteredPage(allAvailableEntries, pageRequest, filterCriteria, null);
     }
-        
+
     @SuppressWarnings("unchecked")
     @Override
-    public <T, E> PageResult<T> buildFilteredPage(Collection<? extends E> allAvailableEntries, PageRequest pageRequest,
-            Object filterCriteria, PageEntryTransformer<T, E> transformer) {
-        
+    public <T, E> PageResult<T> buildFilteredPage(final Collection<? extends E> allAvailableEntries, // NOSONAR
+                                                  final PageRequest pageRequest, final Object filterCriteria,
+                                                  final PageEntryTransformer<T, E> transformer) {
+
+        final Collection<? extends E> allAvailEntries;
         if (allAvailableEntries == null) {
-            allAvailableEntries = new ArrayList<>();
+            allAvailEntries = new ArrayList<>();
+        } else {
+            allAvailEntries = allAvailableEntries;
         }
-        if (pageRequest == null) {
-            pageRequest = new PageRequestDto();
-        }
-        List<E> allEntries = new ArrayList<>(allAvailableEntries);
-        if (pageRequest.getComparatorItem() != null) {
-            Collections.sort(allEntries, objectComparatorFactory.newObjectComparator(pageRequest.getComparatorItem()));
+        final PageRequest request = pageRequest == null ? new PageRequestDto() : pageRequest;
+        List<E> allEntries = new ArrayList<>(allAvailEntries);
+        if (request.getComparatorItem() != null) {
+            Collections.sort(allEntries, objectComparatorFactory.newObjectComparator(request.getComparatorItem()));
         }
         List<E> filteredEntries;
         if (getPageBuilderFilter() == null) {
             filteredEntries = allEntries;
         } else {
-            filteredEntries = new ArrayList<E>(allAvailableEntries.size());
+            filteredEntries = new ArrayList<>(allAvailEntries.size());
             for (E entry : allEntries) {
                 if (getPageBuilderFilter().accept(entry, filterCriteria)) {
                     filteredEntries.add(entry);
@@ -126,12 +130,12 @@ public class PageBuilderImpl implements PageBuilder {
             }
         }
         List<T> pageEntries = new ArrayList<>(filteredEntries.size());
-        if (pageRequest.getFirstResult() < filteredEntries.size()) {
-            int lastResult = pageRequest.getFirstResult() + pageRequest.getPageSize();
-            for (int i = pageRequest.getFirstResult(); i < lastResult; i++) {
+        if (request.getFirstResult() < filteredEntries.size()) {
+            int lastResult = request.getFirstResult() + request.getPageSize();
+            for (int i = request.getFirstResult(); i < lastResult; i++) {
                 if (i < filteredEntries.size()) {
-                    if (transformer == null) {
-                        pageEntries.add((T)filteredEntries.get(i));
+                    if (transformer == null) { // NOSONAR
+                        pageEntries.add((T) filteredEntries.get(i));
                     } else {
                         pageEntries.add(transformer.transform(filteredEntries.get(i)));
                     }
@@ -139,7 +143,7 @@ public class PageBuilderImpl implements PageBuilder {
             }
         }
 
-        return new PageResult<T>(pageEntries, pageRequest, filteredEntries.size());
+        return new PageResult<>(pageEntries, request, filteredEntries.size());
     }
 
 }

@@ -16,33 +16,19 @@
 
 package org.bremersee.pagebuilder.model;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.XmlType;
-
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.Validate;
 import org.bremersee.comparator.model.ComparatorItem;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import javax.xml.bind.annotation.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -51,52 +37,53 @@ import io.swagger.annotations.ApiModelProperty;
  * a query value can be specified and custom extensions, which may be handled by
  * the business logic.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
 //@formatter:off
+@SuppressWarnings({"WeakerAccess", "unused"})
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlRootElement(name = "pageRequest")
-@XmlType(name = "pageRequestType", propOrder = { 
-		"pageNumber", 
-		"pageSize",
-		"firstResult", 
-		"comparatorItem", 
-		"query", 
-		"extensions" 
+@XmlType(name = "pageRequestType", propOrder = {
+        "pageNumber",
+        "pageSize",
+        "firstResult",
+        "comparatorItem",
+        "query",
+        "extensions"
 })
 @XmlSeeAlso({
-    PageRequestLinkDto.class
+        PageRequestLinkDto.class
 })
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.ALWAYS)
-@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
-    getterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
-    creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
-    setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE,
+        getterVisibility = Visibility.PROTECTED_AND_PUBLIC,
+        creatorVisibility = Visibility.NONE,
+        isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC,
+        setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
 @JsonPropertyOrder(value = {
         "pageNumber",
-        "pageSize", 
-        "firstResult", 
-        "comparatorItem", 
-        "query", 
-        "extensions" 
+        "pageSize",
+        "firstResult",
+        "comparatorItem",
+        "query",
+        "extensions"
 })
 @JsonTypeInfo(use = Id.NAME, property = "type")
-@JsonSubTypes({ 
-    @Type(value = PageRequestDto.class, name = "PageRequestDto"),
-    @Type(value = PageRequestLinkDto.class, name = "PageRequestLinkDto") 
+@JsonSubTypes({
+        @Type(value = PageRequestDto.class, name = "PageRequestDto"),
+        @Type(value = PageRequestLinkDto.class, name = "PageRequestLinkDto")
 })
 @ApiModel(
-        value = "PageRequest", 
+        value = "PageRequest",
         description = "A page request defines which page is requested (by it's page number), "
                 + "how many elements the page may have, and how the elements are sorted. "
                 + "Furthermore a query value can be specified "
                 + "and custom extensions, which may be handled by the business logic.",
         discriminator = "type",
-        subTypes = { PageRequestLinkDto.class }
+        subTypes = {PageRequestLinkDto.class}
 )
 //@formatter:on
 public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
@@ -111,23 +98,24 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     private String query;
 
-    private Map<String, Object> extensions = new LinkedHashMap<>();
+    private Map<String, Object> extensions = new LinkedHashMap<>(); // NOSONAR
 
     /**
      * Default constructor.
      */
     public PageRequestDto() {
+        super();
     }
 
     /**
      * Creates a page request by another page request.
+     *
      * @param pageRequest the other page request (may by {@code null})
      */
     public PageRequestDto(PageRequest pageRequest) {
         if (pageRequest != null) {
             setComparatorItem(pageRequest.getComparatorItem());
             setExtensions(pageRequest.getExtensions());
-            // setFirstResult(pageRequest.getFirstResult());
             setPageNumber(pageRequest.getPageNumber());
             setPageSize(pageRequest.getPageSize());
             setExtensions(pageRequest.getExtensions());
@@ -136,8 +124,9 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     /**
      * Creates a page request by the page number and size.
+     *
      * @param pageNumber the page number
-     * @param pageSize the page size
+     * @param pageSize   the page size
      */
     public PageRequestDto(int pageNumber, int pageSize) {
         this(pageNumber, pageSize, null, null, null);
@@ -145,8 +134,9 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     /**
      * Creates a page request by the page number, size and comparator item.
-     * @param pageNumber the page number
-     * @param pageSize the page size
+     *
+     * @param pageNumber     the page number
+     * @param pageSize       the page size
      * @param comparatorItem the comparator item (may be {@code null})
      */
     public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem) {
@@ -155,10 +145,11 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     /**
      * Creates a page request by the page number, size, comparator item and a query value.
-     * @param pageNumber the page number
-     * @param pageSize the page size
+     *
+     * @param pageNumber     the page number
+     * @param pageSize       the page size
      * @param comparatorItem the comparator item (may be {@code null})
-     * @param query the query value
+     * @param query          the query value
      */
     public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query) {
         this(pageNumber, pageSize, comparatorItem, query, null);
@@ -166,14 +157,15 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     /**
      * Creates a page request by the page number, size, comparator item, a query value and custom extensions.
-     * @param pageNumber the page number
-     * @param pageSize the page size
+     *
+     * @param pageNumber     the page number
+     * @param pageSize       the page size
      * @param comparatorItem the comparator item (may be {@code null})
-     * @param query the query value
-     * @param extensions the custom extensions
+     * @param query          the query value
+     * @param extensions     the custom extensions
      */
     public PageRequestDto(int pageNumber, int pageSize, ComparatorItem comparatorItem, String query,
-            Map<String, Object> extensions) {
+                          Map<String, Object> extensions) {
         super();
         setPageNumber(pageNumber);
         setPageSize(pageSize);
@@ -216,7 +208,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj) { // NOSONAR
         if (this == obj)
             return true;
         if (obj == null)
@@ -264,7 +256,8 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
      */
     @XmlElement(name = "pageNumber", required = true)
     @JsonProperty(value = "pageNumber", required = true)
-    @ApiModelProperty(value = "The page number.", position = 0, required = true)
+    @ApiModelProperty(value = "The page number.", required = true)
+    @Override
     public int getPageNumber() {
         return pageNumber;
     }
@@ -285,6 +278,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     @XmlElement(name = "pageSize", required = true)
     @JsonProperty(value = "pageSize", required = true)
     @ApiModelProperty(value = "The maximum number of elements on the page.", position = 1, required = true)
+    @Override
     public int getPageSize() {
         return pageSize;
     }
@@ -301,15 +295,16 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     /**
      * Returns the first result (offset).
      */
-    @XmlElement(name = "firstResult", required = false)
-    @JsonProperty(value = "firstResult", required = false)
-    @ApiModelProperty(value = "The first result (offset).", position = 2, required = false, readOnly = true)
+    @XmlElement(name = "firstResult")
+    @JsonProperty(value = "firstResult")
+    @ApiModelProperty(value = "The first result (offset).", position = 2, readOnly = true)
+    @Override
     public int getFirstResult() {
         // make sure that first result (= offset) is not bigger than
         // Integer.MAX_VALUE
         long firstResult = (long) getPageNumber() * (long) getPageSize();
         if (firstResult < (long) Integer.MAX_VALUE) {
-            return Long.valueOf(firstResult).intValue();
+            return (int) firstResult;
         }
         return Integer.MAX_VALUE;
     }
@@ -317,16 +312,17 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     /**
      * Sets the first result (offset).
      */
-    @JsonProperty(value = "firstResult", required = false)
-    protected void setFirstResult(Integer firstResult) {
+    @JsonProperty(value = "firstResult")
+    protected void setFirstResult(Integer firstResult) { // NOSONAR
     }
 
     /**
      * Returns the comparator item (may be {@code null}).
      */
-    @XmlElement(name = "comparatorItem", required = false)
-    @JsonProperty(value = "comparatorItem", required = false)
-    @ApiModelProperty(value = "The comparator item.", position = 3, required = false)
+    @XmlElement(name = "comparatorItem")
+    @JsonProperty(value = "comparatorItem")
+    @ApiModelProperty(value = "The comparator item.", position = 3)
+    @Override
     public ComparatorItem getComparatorItem() {
         return comparatorItem;
     }
@@ -334,7 +330,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     /**
      * Sets the comparator item (may be {@code null}).
      */
-    @JsonProperty(value = "comparatorItem", required = false)
+    @JsonProperty(value = "comparatorItem")
     public void setComparatorItem(ComparatorItem comparatorItem) {
         this.comparatorItem = comparatorItem;
     }
@@ -342,9 +338,10 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     /**
      * Returns the search query (may be {@code null}).
      */
-    @XmlElement(name = "query", required = false)
-    @JsonProperty(value = "query", required = false)
-    @ApiModelProperty(value = "A query value.", position = 4, required = false)
+    @XmlElement(name = "query")
+    @JsonProperty(value = "query")
+    @ApiModelProperty(value = "A query value.", position = 4)
+    @Override
     public String getQuery() {
         return query;
     }
@@ -352,7 +349,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     /**
      * Sets the search query (may be {@code null}).
      */
-    @JsonProperty(value = "query", required = false)
+    @JsonProperty(value = "query")
     public void setQuery(String query) {
         this.query = query;
     }
@@ -360,8 +357,9 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     /**
      * Returns a custom extension (may be {@code null}).
      */
-    @JsonProperty(value = "extensions", required = false)
-    @ApiModelProperty(value = "Custom extensions.", position = 4, required = false)
+    @JsonProperty(value = "extensions")
+    @ApiModelProperty(value = "Custom extensions.", position = 4)
+    @Override
     public Map<String, Object> getExtensions() {
         return extensions;
     }
@@ -369,7 +367,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     /**
      * Sets a custom extension (may be {@code null}).
      */
-    @JsonProperty(value = "extensions", required = false)
+    @JsonProperty(value = "extensions")
     public void setExtensions(Map<String, Object> extensions) {
         if (extensions == null) {
             this.extensions.clear();
@@ -377,7 +375,6 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
             this.extensions = extensions;
         } else {
             this.extensions.clear();
-            ;
             this.extensions.putAll(extensions);
 
         }
