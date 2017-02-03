@@ -37,10 +37,7 @@ public class PageBuilderImpl implements PageBuilder {
 
     private ObjectComparatorFactory objectComparatorFactory = ObjectComparatorFactory.newInstance();
 
-    /**
-     * An optional filter.
-     */
-    private PageBuilderFilter pageBuilderFilter;
+    private boolean transformEntriesBeforeBuilding = false;
 
     /**
      * Returns the object comparator factory.
@@ -59,28 +56,29 @@ public class PageBuilderImpl implements PageBuilder {
     }
 
     /**
-     * Return the filter for this page builder or {@code null} if no filter is
-     * present.
+     * @return Whether the transforming of the page entries should be done before the page is build or not
+     * (default is {@code false}).
      */
-    protected PageBuilderFilter getPageBuilderFilter() {
-        return pageBuilderFilter;
+    public boolean isTransformEntriesBeforeBuilding() {
+        return transformEntriesBeforeBuilding;
     }
 
     /**
-     * Set the filter for this page builder.
+     * Specifies whether the transforming of the page entries should be done before the page is build or not.
+     * The default value is {@code false}. So the page is build first and than only the entries of the page are
+     * transformed. This is normally the faster way. But sometimes is can be necessary to transform the entries
+     * before the page is build (for example if the source entries cannot be sorted by the comparator).
+     *
+     * @param transformEntriesBeforeBuilding should the entries be transormed before the page is build?
      */
-    public void setPageBuilderFilter(final PageBuilderFilter pageBuilderFilter) {
-        this.pageBuilderFilter = pageBuilderFilter;
+    public void setTransformEntriesBeforeBuilding(boolean transformEntriesBeforeBuilding) {
+        this.transformEntriesBeforeBuilding = transformEntriesBeforeBuilding;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
-        return "PageBuilderImpl [pageBuilderFilter=" + pageBuilderFilter + "]";
+        return "PageBuilderImpl [objectComparatorFactory=" + objectComparatorFactory
+                + ", transformEntriesBeforeBuilding=" + transformEntriesBeforeBuilding + "]";
     }
 
     @Override
@@ -97,14 +95,14 @@ public class PageBuilderImpl implements PageBuilder {
 
     @Override
     public <E> PageResult<E> buildFilteredPage(final Collection<? extends E> allAvailableEntries,
-                                               final PageRequest pageRequest, final Object filterCriteria) {
-        return buildFilteredPage(allAvailableEntries, pageRequest, filterCriteria, null);
+                                               final PageRequest pageRequest, final PageBuilderFilter filter) {
+        return buildFilteredPage(allAvailableEntries, pageRequest, filter, null);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T, E> PageResult<T> buildFilteredPage(final Collection<? extends E> allAvailableEntries, // NOSONAR
-                                                  final PageRequest pageRequest, final Object filterCriteria,
+                                                  final PageRequest pageRequest, final PageBuilderFilter filter,
                                                   final PageEntryTransformer<T, E> transformer) {
 
         final Collection<? extends E> allAvailEntries;
@@ -114,28 +112,48 @@ public class PageBuilderImpl implements PageBuilder {
             allAvailEntries = allAvailableEntries;
         }
         final PageRequest request = pageRequest == null ? new PageRequestDto() : pageRequest;
-        List<E> allEntries = new ArrayList<>(allAvailEntries);
+
+        if (transformEntriesBeforeBuilding && transformer != null) {
+            List<Object> targets = new ArrayList<>(allAvailEntries.size());
+            for (E e : allAvailEntries) {
+                targets.add(transformer.transform(e));
+            }
+            return buildInternalFilteredPage(targets, request, filter, null);
+        } else {
+            List<Object> allEntries = new ArrayList<Object>(allAvailEntries); // NOSONAR
+            return buildInternalFilteredPage(allEntries, request, filter, transformer);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public PageResult buildInternalFilteredPage(final List<Object> allEntries, final PageRequest request, // NOSONAR
+                                                final PageBuilderFilter filter,
+                                                final PageEntryTransformer transformer) {
+
         if (request.getComparatorItem() != null) {
             Collections.sort(allEntries, objectComparatorFactory.newObjectComparator(request.getComparatorItem()));
         }
-        List<E> filteredEntries;
-        if (getPageBuilderFilter() == null) {
+
+        final List<Object> filteredEntries;
+        if (filter == null) {
             filteredEntries = allEntries;
         } else {
-            filteredEntries = new ArrayList<>(allAvailEntries.size());
-            for (E entry : allEntries) {
-                if (getPageBuilderFilter().accept(entry, filterCriteria)) {
+            filteredEntries = new ArrayList<>(allEntries.size());
+            for (Object entry : allEntries) {
+                if (filter.accept(entry)) {
                     filteredEntries.add(entry);
                 }
             }
         }
-        List<T> pageEntries = new ArrayList<>(filteredEntries.size());
+
+        final List<Object> pageEntries = new ArrayList<>(filteredEntries.size());
+
         if (request.getFirstResult() < filteredEntries.size()) {
-            int lastResult = request.getFirstResult() + request.getPageSize();
+            final int lastResult = request.getFirstResult() + request.getPageSize();
             for (int i = request.getFirstResult(); i < lastResult; i++) {
                 if (i < filteredEntries.size()) {
                     if (transformer == null) { // NOSONAR
-                        pageEntries.add((T) filteredEntries.get(i));
+                        pageEntries.add(filteredEntries.get(i));
                     } else {
                         pageEntries.add(transformer.transform(filteredEntries.get(i)));
                     }

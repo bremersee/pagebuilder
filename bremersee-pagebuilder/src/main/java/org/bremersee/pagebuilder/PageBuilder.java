@@ -35,7 +35,7 @@ import java.util.Collection;
  * <li>The list of items that build the page is not filtered and contains all
  * available elements.<br/>
  * Than the page must build with
- * {@link PageBuilder#buildFilteredPage(Collection, PageRequest, Object)} .</li>
+ * {@link PageBuilder#buildFilteredPage(Collection, PageRequest, PageBuilderFilter)} .</li>
  * </ul>
  * </p>
  *
@@ -50,9 +50,9 @@ public interface PageBuilder {
                              PageEntryTransformer<T, E> transformer);
 
     <E> Page<E> buildFilteredPage(Collection<? extends E> allAvailableElements, PageRequest pageRequest,
-                                  Object filterCriteria);
+                                  PageBuilderFilter filter);
 
     <T, E> Page<T> buildFilteredPage(Collection<? extends E> allAvailableEntries, PageRequest pageRequest,
-                                     Object filterCriteria, PageEntryTransformer<T, E> transformer);
+                                     PageBuilderFilter filter, PageEntryTransformer<T, E> transformer);
 
 }

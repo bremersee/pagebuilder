@@ -16,8 +16,6 @@
 
 package org.bremersee.pagebuilder;
 
-import java.io.Serializable;
-
 /**
  * <p>
  * A filter for a {@link PageBuilder}.
@@ -25,25 +23,14 @@ import java.io.Serializable;
  *
  * @author Christian Bremer
  */
-public interface PageBuilderFilter {
+public interface PageBuilderFilter<E> {
 
     /**
      * Determines whether an element should be added to a page or not.
      *
-     * @param pageElement    the element that can be accepted or not
-     * @param filterCriteria the filter criteria (can be {@code null})
+     * @param pageElement the element that can be accepted or not
      * @return {@code true} if the element is accepted otherwise {@code false}
      */
-    boolean accept(Object pageElement, Object filterCriteria);
-
-    /**
-     * Determines whether an element should be added to a page or not.
-     *
-     * @param pageElementId   the ID of the element
-     * @param pageElementType the type (class) of the element
-     * @param filterCriteria  the filter criteria (can be {@code null})
-     * @return {@code true} if the element is accepted otherwise {@code false}
-     */
-    boolean accept(Serializable pageElementId, String pageElementType, Object filterCriteria);
+    boolean accept(E pageElement);
 
 }

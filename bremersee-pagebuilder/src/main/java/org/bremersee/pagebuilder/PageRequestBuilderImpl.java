@@ -77,14 +77,6 @@ public class PageRequestBuilderImpl implements PageRequestBuilder {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bremersee.pagebuilder.PageRequestBuilder#buildPageRequest(java.io.
-     * Serializable, java.io.Serializable, java.io.Serializable,
-     * java.io.Serializable, java.util.Map)
-     */
     @Override
     public PageRequest buildPageRequest(final Serializable pageNumber, final Serializable pageSize,
                                         final Serializable comparatorItem, final Serializable query,

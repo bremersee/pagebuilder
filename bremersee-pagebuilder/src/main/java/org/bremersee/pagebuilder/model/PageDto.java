@@ -16,53 +16,42 @@
 
 package org.bremersee.pagebuilder.model;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 /**
  * <p>
  * A page is a sublist of a list of elements.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
 //@formatter:off
+@SuppressWarnings({"unused", "WeakerAccess"})
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlRootElement(name = "page")
-@XmlType(name = "pageType", propOrder = { 
+@XmlType(name = "pageType", propOrder = {
         "entries",
         "pageRequest",
-		"totalSize", 
-		"totalPages"
+        "totalSize",
+        "totalPages"
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.ALWAYS)
-@JsonAutoDetect(fieldVisibility = Visibility.NONE, 
-    getterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
-    creatorVisibility = Visibility.NONE, 
-    isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC, 
-    setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
+@JsonAutoDetect(fieldVisibility = Visibility.NONE,
+        getterVisibility = Visibility.PROTECTED_AND_PUBLIC,
+        creatorVisibility = Visibility.NONE,
+        isGetterVisibility = Visibility.PROTECTED_AND_PUBLIC,
+        setterVisibility = Visibility.PROTECTED_AND_PUBLIC)
 @JsonPropertyOrder(value = {
         "entries",
         "pageRequestDto",
@@ -70,34 +59,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "totalPages"
 })
 @ApiModel(
-        value = "Page", 
+        value = "Page",
         description = "A page is a sublist of a list of elements.")
 //@formatter:on
 public class PageDto implements Page<Object> {
 
     private static final long serialVersionUID = 1L;
-    
-    private List<Object> entries = new ArrayList<Object>();
+
+    private List<Object> entries = new ArrayList<>(); // NOSONAR
 
     private PageRequestDto pageRequest;
-    
+
     private long totalSize;
 
     /**
      * Default constructor.
      */
     public PageDto() {
+        super();
     }
 
-    public PageDto(Collection<? extends Object> entries) {
+    public PageDto(Collection<?> entries) {
         this(entries, null, 0L);
     }
 
-    public PageDto(Collection<? extends Object> entries, long totalSize) {
+    public PageDto(Collection<?> entries, long totalSize) {
         this(entries, null, totalSize);
     }
 
-    public PageDto(Collection<? extends Object> entries, PageRequestDto pageRequest, long totalSize) {
+    public PageDto(Collection<?> entries, PageRequestDto pageRequest, long totalSize) {
         super();
         if (entries != null) {
             this.entries.addAll(entries);
@@ -130,6 +120,7 @@ public class PageDto implements Page<Object> {
     /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -158,13 +149,14 @@ public class PageDto implements Page<Object> {
      * Returns the elements of the page.<br/>
      * If the serialized page was read with the Jackson JSON processor, each
      * element will be a {@link LinkedHashMap}.
-     * 
+     *
      * @return the elements of the page
      */
     @XmlElementWrapper(name = "entries")
     @XmlElement(name = "entry", nillable = true, type = Object.class)
-    @JsonProperty(value = "entries", required = false)
-    @ApiModelProperty(value = "The elements of the page.", position = 0, required = false)
+    @JsonProperty(value = "entries")
+    @ApiModelProperty(value = "The elements of the page.")
+    @Override
     public List<Object> getEntries() {
         return entries;
     }
@@ -172,23 +164,25 @@ public class PageDto implements Page<Object> {
     /**
      * Sets the elements of the page.
      */
-    @JsonProperty(value = "entries", required = false)
+    @JsonProperty(value = "entries")
     public void setEntries(List<Object> entries) {
         if (entries == null) {
-            entries = new ArrayList<Object>();
+            this.entries = new ArrayList<>();
+        } else {
+            this.entries = entries;
         }
-        this.entries = entries;
     }
-    
+
     /**
      * Returns the page request.
      */
     @XmlElement(name = "pageRequest", required = true)
     @JsonProperty(value = "pageRequest", required = true)
     @ApiModelProperty(value = "The page request.", position = 1, required = true)
+    @Override
     public PageRequestDto getPageRequest() {
-        if (pageRequest == null) {
-            pageRequest = new PageRequestDto();
+        if (this.pageRequest == null) {
+            this.pageRequest = new PageRequestDto();
         }
         return pageRequest;
     }
@@ -196,7 +190,7 @@ public class PageDto implements Page<Object> {
     /**
      * Sets the page request.
      */
-    @JsonProperty(value = "pageRequest", required = false)
+    @JsonProperty(value = "pageRequest")
     public void setPageRequest(PageRequestDto pageRequest) {
         this.pageRequest = pageRequest;
     }
@@ -207,6 +201,7 @@ public class PageDto implements Page<Object> {
     @XmlElement(name = "totalSize", required = true)
     @JsonProperty(value = "totalSize", required = true)
     @ApiModelProperty(value = "The total size of available elements.", position = 2, required = true)
+    @Override
     public long getTotalSize() {
         return totalSize;
     }
@@ -214,7 +209,7 @@ public class PageDto implements Page<Object> {
     /**
      * Sets the size of all available elements.
      */
-    @JsonProperty(value = "totalSize", required = false)
+    @JsonProperty(value = "totalSize")
     public void setTotalSize(long totalSize) {
         this.totalSize = totalSize;
     }
@@ -225,18 +220,20 @@ public class PageDto implements Page<Object> {
     @XmlElement(name = "totalPages", required = true)
     @JsonProperty(value = "totalPages", required = true)
     @ApiModelProperty(value = "The total size of available pages.", position = 3, required = true, readOnly = true)
+    @Override
     public int getTotalPages() {
         if (getTotalSize() <= 0L) {
             return 1;
         }
         return (int) Math.ceil((double) getTotalSize() / (double) getPageRequest().getPageSize());
     }
-    
+
     /**
      * Sets the number of all pages.
      */
-    @JsonProperty(value = "totalPages", required = false)
+    @JsonProperty(value = "totalPages")
     public void setTotalPages(int totalPages) {
+        // only for JAXBContext and JSON ObjectMapper
     }
-    
+
 }

@@ -66,9 +66,6 @@ public class PageResult<E> implements Page<E> {
         return "PageResult [entries=" + entries + ", pageRequest=" + pageRequest + ", totalSize=" + totalSize + "]";
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -79,9 +76,6 @@ public class PageResult<E> implements Page<E> {
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object obj) {
@@ -107,11 +101,6 @@ public class PageResult<E> implements Page<E> {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Page#getEntries()
-     */
     @Override
     public List<E> getEntries() {
         return entries;
@@ -128,11 +117,6 @@ public class PageResult<E> implements Page<E> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Page#getPageRequest()
-     */
     @Override
     public PageRequest getPageRequest() {
         return pageRequest;
@@ -145,11 +129,6 @@ public class PageResult<E> implements Page<E> {
         this.pageRequest = pageRequest;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Page#getTotalSize()
-     */
     @Override
     public long getTotalSize() {
         return totalSize;
@@ -162,11 +141,6 @@ public class PageResult<E> implements Page<E> {
         this.totalSize = totalSize;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bremersee.pagebuilder.model.Page#getTotalPages()
-     */
     @Override
     public int getTotalPages() {
         if (getTotalSize() <= 0L) {

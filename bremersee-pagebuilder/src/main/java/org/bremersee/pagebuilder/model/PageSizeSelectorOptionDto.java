@@ -91,7 +91,6 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -102,7 +101,6 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -115,7 +113,6 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @SuppressWarnings("RedundantIfStatement")

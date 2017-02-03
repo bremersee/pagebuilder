@@ -176,7 +176,6 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -187,7 +186,6 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -204,7 +202,6 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -240,7 +237,6 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
 
     /*
      * (non-Javadoc)
-     * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -272,8 +268,7 @@ public class PageRequestDto implements PageRequest, Comparable<PageRequest> {
     }
 
     /**
-     * Returns the maximum number of elements on the page (is always greater
-     * than 0).
+     * Returns the maximum number of elements on the page (is always greater than 0).
      */
     @XmlElement(name = "pageSize", required = true)
     @JsonProperty(value = "pageSize", required = true)
