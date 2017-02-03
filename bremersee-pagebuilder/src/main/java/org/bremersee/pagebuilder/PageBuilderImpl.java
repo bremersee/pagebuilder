@@ -120,7 +120,12 @@ public class PageBuilderImpl implements PageBuilder {
             }
             return buildInternalFilteredPage(targets, request, filter, null);
         } else {
-            List<Object> allEntries = new ArrayList<Object>(allAvailEntries); // NOSONAR
+            List<Object> allEntries;
+            if (allAvailableEntries instanceof List) {
+                allEntries = (List) allAvailEntries;
+            } else {
+                allEntries = new ArrayList<Object>(allAvailEntries); // NOSONAR
+            }
             return buildInternalFilteredPage(allEntries, request, filter, transformer);
         }
     }
