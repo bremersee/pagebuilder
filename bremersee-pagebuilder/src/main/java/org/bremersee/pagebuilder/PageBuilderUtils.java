@@ -69,6 +69,10 @@ public abstract class PageBuilderUtils {
 
     /**
      * Casts a page.
+     *
+     * @param page the page to cast
+     * @param <E>  type of the page entries
+     * @return the casted page
      */
     @SuppressWarnings("unchecked")
     public static <E> Page<E> cast(final Page<?> page) {
@@ -83,6 +87,8 @@ public abstract class PageBuilderUtils {
      * @param totalSize   the total size
      * @param transformer the entry transformer (may be {@code null} - than all entries
      *                    will be added to the page without transforming)
+     * @param <E>         type of the entries
+     * @param <T>         target type of the page entries
      * @return the page
      */
     @SuppressWarnings("unchecked")
@@ -112,6 +118,8 @@ public abstract class PageBuilderUtils {
      * @param transformer the entry transformer (may be {@code null} - than all entries
      *                    of the source page will be added to the target page without
      *                    transforming)
+     * @param <E>         source type of the page entries
+     * @param <T>         target type of the page entries
      * @return the target page
      */
     public static <E, T> Page<T> createPage(final Page<? extends E> sourcePage,
@@ -131,6 +139,8 @@ public abstract class PageBuilderUtils {
      * @param page        the page
      * @param transformer the entry transformer (may be {@code null} - than all entries
      *                    of the page will be added to the DTO without transforming)
+     * @param <E>         source type of the page entries
+     * @param <T>         target type of the page entries
      * @return the page DTO
      */
     public static <E, T> PageDto createPageDto(final Page<? extends E> page,
@@ -182,6 +192,8 @@ public abstract class PageBuilderUtils {
      * @param defaultObject    a default object (optional)
      * @param jaxbContext      the {@link JAXBContext} (can be null)
      * @param objectMapper     the JSON object mapper (optional)
+     * @param <T>              value type
+     * @param <S>              type of the default value
      * @return the target object
      * @throws Exception if transformation fails
      */
@@ -213,6 +225,7 @@ public abstract class PageBuilderUtils {
      * @param node        the XML node
      * @param valueType   the class of the target object
      * @param jaxbContext the {@link JAXBContext} (can be null)
+     * @param <T>         value type
      * @return the target object
      * @throws JAXBException if transformation fails
      */
@@ -234,6 +247,7 @@ public abstract class PageBuilderUtils {
      * @param map          the JSON map
      * @param valueType    the class of the target object
      * @param objectMapper the JSON object mapper (optional)
+     * @param <T>          value type
      * @return the target object
      * @throws IOException if transformation fails
      */

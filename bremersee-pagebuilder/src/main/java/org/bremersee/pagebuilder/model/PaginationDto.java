@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
  * A pagination can be used to display pagination links or buttons on a web site:
  * <pre>
  *  ----    ---    ---    ---     ===     ---    ---    ---    ----
@@ -40,7 +39,6 @@ import java.util.List;
  *                |                                 |
  *                 ------ maxPaginationLinks -------
  * </pre>
- * </p>
  *
  * @author Christian Bremer
  */

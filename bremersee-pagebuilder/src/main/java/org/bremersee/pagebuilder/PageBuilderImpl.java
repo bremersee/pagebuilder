@@ -39,6 +39,8 @@ public class PageBuilderImpl implements PageBuilder {
 
     /**
      * Returns the object comparator factory.
+     *
+     * @return the object comparator factory
      */
     protected ObjectComparatorFactory getObjectComparatorFactory() {
         return objectComparatorFactory;
@@ -46,6 +48,8 @@ public class PageBuilderImpl implements PageBuilder {
 
     /**
      * Sets the object comparator factory. A default one is present.
+     *
+     * @param objectComparatorFactory the object comparator factory
      */
     public void setObjectComparatorFactory(final ObjectComparatorFactory objectComparatorFactory) {
         if (objectComparatorFactory != null) {

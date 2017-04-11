@@ -26,18 +26,22 @@ import org.springframework.data.domain.Pageable;
  * A composition of {@link Pageable} and the addition attributes of a
  * {@link PageRequestDto}.
  * </p>
- * 
+ *
  * @author Christian Bremer
  */
 public interface SpringPageRequest extends Pageable {
 
     /**
      * Returns the search query (may be {@code null}).
+     *
+     * @return the search query (may be {@code null})
      */
     String getQuery();
 
     /**
      * Returns custom extensions (may be {@code null}).
+     *
+     * @return custum extensions (may be {@code null})
      */
     Map<String, Object> getExtensions();
 

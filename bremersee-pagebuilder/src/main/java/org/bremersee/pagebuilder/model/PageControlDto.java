@@ -31,11 +31,11 @@ import java.util.List;
 /**
  * <p>
  * A {@link PageControlDto} can be used to display a {@link PageDto} on a web
- * site. <br/>
+ * site. <br>
  * It contains a list of links to the other pages, a page size selector, the
  * pagination, a flag whether the business logic supports a query value or not,
  * the URL parameter names of the page request and a serialized comparator item
- * (as URL paremeter value).
+ * (as URL parameter value).
  * </p>
  *
  * @author Christian Bremer

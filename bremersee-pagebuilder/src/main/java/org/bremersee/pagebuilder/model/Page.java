@@ -37,16 +37,22 @@ public interface Page<E> extends Serializable {
 
     /**
      * Returns the page request.
+     *
+     * @return the page request
      */
     PageRequest getPageRequest();
 
     /**
      * Returns the size of all available elements.
+     *
+     * @return the size of all available elements
      */
     long getTotalSize();
 
     /**
      * Returns the number of all pages.
+     *
+     * @return the number of all pages
      */
     int getTotalPages();
 

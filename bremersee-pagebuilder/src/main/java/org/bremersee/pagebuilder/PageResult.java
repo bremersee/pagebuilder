@@ -108,6 +108,8 @@ public class PageResult<E> implements Page<E> {
 
     /**
      * Sets the elements of the page.
+     *
+     * @param entries the elements of the page
      */
     public void setEntries(List<E> entries) {
         if (entries == null) {
@@ -124,6 +126,8 @@ public class PageResult<E> implements Page<E> {
 
     /**
      * Sets the page request.
+     *
+     * @param pageRequest the page request
      */
     public void setPageRequest(PageRequest pageRequest) {
         this.pageRequest = pageRequest;
@@ -136,6 +140,8 @@ public class PageResult<E> implements Page<E> {
 
     /**
      * Sets the size of all available elements.
+     *
+     * @param totalSize the size of all available elements
      */
     public void setTotalSize(long totalSize) {
         this.totalSize = totalSize;

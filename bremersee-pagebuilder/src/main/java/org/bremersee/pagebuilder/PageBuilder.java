@@ -27,17 +27,17 @@ import java.util.Collection;
  * </p>
  * <p>
  * There are two ways to create a page:
+ * </p>
  * <ul>
- * <li>The list of elements that build the page is pre-filtered.<br/>
- * The list of elements is the result of a SQL query for example.<br/>
+ * <li>The list of elements that build the page is pre-filtered.<br>
+ * The list of elements is the result of a SQL query for example.<br>
  * Than the page must build with
  * {@link PageBuilder#buildPage(Iterable, PageRequest, long)} .</li>
  * <li>The list of items that build the page is not filtered and contains all
- * available elements.<br/>
+ * available elements.<br>
  * Than the page must build with
  * {@link PageBuilder#buildFilteredPage(Collection, PageRequest, PageBuilderFilter)} .</li>
  * </ul>
- * </p>
  *
  * @author Christian Bremer
  */

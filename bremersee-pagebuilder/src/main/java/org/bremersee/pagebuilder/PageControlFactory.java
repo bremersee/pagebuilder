@@ -92,6 +92,8 @@ public abstract class PageControlFactory {
 
     /**
      * Returns a new factory instance.
+     *
+     * @return the new factory instance
      */
     public static PageControlFactory newInstance() {
         return new DefaultPageControlFactory();
@@ -139,7 +141,7 @@ public abstract class PageControlFactory {
 
     /**
      * Sets the comparator item transformer, that reads and writes the
-     * comparator item query parameter.<br/>
+     * comparator item query parameter.<br>
      * Default is {@link ComparatorItemTransformerImpl}.
      *
      * @param comparatorItemTransformer the comparator item transformer
@@ -307,6 +309,9 @@ public abstract class PageControlFactory {
     /**
      * Returns {@code true} if the page size selector has an item to choose all
      * available entries, otherwise {@code false}. Default is 'true'.
+     *
+     * @return {@code true} if the page size selector has an item to choose all
+     * available entries, otherwise {@code false}
      */
     public boolean isSelectAllEntriesAvailable() {
         return selectAllEntriesAvailable;
@@ -369,15 +374,17 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Creates a new {@link PageControlDto} from the given page.<br/>
+     * Creates a new {@link PageControlDto} from the given page.<br>
      * The page URL must be the plain URL (with no page control query
-     * parameters), e. g.: http://example.org/myapp/mypage.html<br/>
+     * parameters), e. g.: http://example.org/myapp/mypage.html<br>
      * If the locale is not present, the default locale will be used.
      *
      * @param page        the page
      * @param transformer the page entry transformer (may be {@code null})
      * @param pageUrl     the plain page URL
      * @param locale      the locale
+     * @param <E>         source type of the page entries
+     * @param <T>         target type of the page entries
      * @return the created page control
      */
     public <E, T> PageControlDto newPageControl(final Page<E> page, final PageEntryTransformer<T, E> transformer,
@@ -386,14 +393,15 @@ public abstract class PageControlFactory {
     }
 
     /**
-     * Creates a new {@link PageControlDto} from the given page.<br/>
+     * Creates a new {@link PageControlDto} from the given page.<br>
      * The page URL must be the plain URL (with no page control query
-     * parameters), e. g.: http://example.org/myapp/mypage.html<br/>
+     * parameters), e. g.: http://example.org/myapp/mypage.html<br>
      * If the locale is not present, the default locale will be used.
      *
      * @param page    the page
      * @param pageUrl the plain page URL
      * @param locale  the locale
+     * @param <E>     type of the page entries
      * @return the created page control
      */
     public abstract <E> PageControlDto newPageControl(final Page<E> page, String pageUrl, final Locale locale);
