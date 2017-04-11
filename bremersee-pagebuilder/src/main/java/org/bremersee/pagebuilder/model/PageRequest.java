@@ -28,31 +28,43 @@ public interface PageRequest extends Serializable {
 
     /**
      * Returns the requested page number (starting with 0).
+     *
+     * @return the requested page number (starting with 0)
      */
     int getPageNumber();
 
     /**
      * Returns the maximum number of elements on the page (is always greater than 0).
+     *
+     * @return the maximum number of elements on the page (is always greater than 0)
      */
     int getPageSize();
 
     /**
      * Returns the first result (offset).
+     *
+     * @return the first result (offset)
      */
     int getFirstResult();
 
     /**
      * Returns the comparator item (may be {@code null}).
+     *
+     * @return the comparator item (may be {@code null})
      */
     ComparatorItem getComparatorItem();
 
     /**
      * Returns the search query (may be {@code null}).
+     *
+     * @return the search query (may be {@code null})
      */
     String getQuery();
 
     /**
      * Returns custom extensions (may be {@code null}).
+     *
+     * @return custom extensions (may be {@code null})
      */
     Map<String, Object> getExtensions();
 

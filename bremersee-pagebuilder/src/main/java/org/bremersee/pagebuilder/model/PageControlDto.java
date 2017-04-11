@@ -147,11 +147,6 @@ public class PageControlDto implements Serializable {
         this.queryParamName = queryParamName;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "PageControlDto [page=" + page + ", pageRequestLinks=" + pageRequestLinks + ", pageSizeSelectorOptions="
@@ -161,11 +156,6 @@ public class PageControlDto implements Serializable {
                 + ", comparatorParamValue=" + comparatorParamValue + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -183,11 +173,6 @@ public class PageControlDto implements Serializable {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object obj) { // NOSONAR
@@ -250,6 +235,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Returns the page.
+     *
+     * @return the page
      */
     @XmlElement(name = "page", required = true)
     @JsonProperty(value = "page", required = true)
@@ -260,6 +247,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Sets the page.
+     *
+     * @param page the page
      */
     @JsonProperty(value = "page", required = true)
     public void setPage(PageDto page) {
@@ -285,6 +274,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Returns the pagination.
+     *
+     * @return the pagination
      */
     @XmlElement(name = "pagination")
     @JsonProperty(value = "pagination")
@@ -295,6 +286,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Sets the pagination.
+     *
+     * @param pagination the pagination
      */
     @JsonProperty(value = "pagination")
     public void setPagination(PaginationDto pagination) {
@@ -303,6 +296,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Returns the parameter name of the page number.
+     *
+     * @return the parameter name of the page number
      */
     @XmlElement(name = "pageNumberParamName", defaultValue = "p")
     @JsonProperty(value = "pageNumberParamName", required = true)
@@ -313,6 +308,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Sets the parameter name of page number.
+     *
+     * @param pageNumberParamName the parameter name of page number
      */
     @JsonProperty(value = "pageNumberParamName")
     public void setPageNumberParamName(String pageNumberParamName) {
@@ -323,6 +320,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Returns the parameter name of the page size.
+     *
+     * @return the parameter name of the page size
      */
     @XmlElement(name = "pageSizeParamName", defaultValue = "s")
     @JsonProperty(value = "pageSizeParamName", required = true)
@@ -333,6 +332,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Sets the parameter name of the max results.
+     *
+     * @param pageSizeParamName the parameter name of the max results
      */
     @JsonProperty(value = "pageSizeParamName")
     public void setPageSizeParamName(String pageSizeParamName) {
@@ -343,6 +344,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Returns a list with page size selector options.
+     *
+     * @return a list with page size selector options
      */
     @XmlElementWrapper(name = "pageSizeSelectorOptions")
     @XmlElement(name = "pageSizeSelectorOption")
@@ -354,6 +357,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Sets the list with maximum result options.
+     *
+     * @param pageSizeSelectorOptions the list with maximum result options
      */
     @JsonProperty(value = "pageSizeSelectorOptions")
     public void setPageSizeSelectorOptions(List<PageSizeSelectorOptionDto> pageSizeSelectorOptions) {
@@ -366,6 +371,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Returns the parameter name of the comparator item.
+     *
+     * @return the parameter name of the comparator item
      */
     @XmlElement(name = "comparatorParamName", defaultValue = "c")
     @JsonProperty(value = "comparatorParamName", required = true)
@@ -376,6 +383,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Sets the parameter name of the comparator item.
+     *
+     * @param comparatorParamName the parameter name of the comparator item
      */
     @JsonProperty(value = "comparatorParamName")
     public void setComparatorParamName(String comparatorParamName) {
@@ -386,6 +395,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Returns the serialized value of the comparator item.
+     *
+     * @return the serialized value of the comparator item
      */
     @XmlElement(name = "comparatorParamValue")
     @JsonProperty(value = "comparatorParamValue")
@@ -396,6 +407,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Sets the serialized value of the comparator item.
+     *
+     * @param comparatorParamValue the serialized value of the comparator item
      */
     @JsonProperty(value = "comparatorParamValue")
     public void setComparatorParamValue(String comparatorParamValue) {
@@ -405,6 +418,9 @@ public class PageControlDto implements Serializable {
     /**
      * Returns {@code true} if a query field should be displayed, otherwise
      * {@code false}.
+     *
+     * @return {@code true} if a query field should be displayed, otherwise
+     * {@code false}
      */
     @XmlElement(name = "querySupported", defaultValue = "true")
     @JsonProperty(value = "querySupported", required = true)
@@ -415,6 +431,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Specifies whether the query field should be displayed or not.
+     *
+     * @param querySupported {@code true} if the query field should be displayed, otherwise {@code false}
      */
     @JsonProperty(value = "querySupported")
     public void setQuerySupported(boolean querySupported) {
@@ -423,6 +441,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Returns the parameter name of the query.
+     *
+     * @return the parameter name of the query
      */
     @XmlElement(name = "queryParamName", defaultValue = "q")
     @JsonProperty(value = "queryParamName", required = true)
@@ -433,6 +453,8 @@ public class PageControlDto implements Serializable {
 
     /**
      * Sets the parameter name of the query.
+     *
+     * @param queryParamName the parameter name of the query
      */
     @JsonProperty(value = "queryParamName")
     public void setQueryParamName(String queryParamName) {

@@ -89,20 +89,12 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
         this.selected = selected;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return getClass().getSimpleName() + " [value=" + value + ", displayedValue=" + displayedValue + ", selected="
                 + selected + "]";
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -111,10 +103,6 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object obj) {
@@ -132,6 +120,8 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /**
      * Compares the values of the options.
+     *
+     * @param o the other options
      */
     @Override
     public int compareTo(PageSizeSelectorOptionDto o) {
@@ -140,6 +130,8 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /**
      * Returns the value (the page size) of this option.
+     *
+     * @return the value (the page size) of this option
      */
     @XmlElement(name = "value", required = true)
     @JsonProperty(value = "value", required = true)
@@ -150,6 +142,8 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /**
      * Sets the value of this option.
+     *
+     * @param value the value of this option
      */
     @JsonProperty(value = "value", required = true)
     public void setValue(int value) {
@@ -158,6 +152,8 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /**
      * Returns the displayed value (normally the page size plus one).
+     *
+     * @return the displayed value (normally the page size plus one)
      */
     @XmlElement(name = "displayedValue")
     @JsonProperty(value = "displayedValue")
@@ -171,6 +167,8 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /**
      * Sets the displayed value of this option.
+     *
+     * @param displayedValue the displayed value of this option
      */
     @JsonProperty(value = "displayedValue")
     public void setDisplayedValue(String displayedValue) {
@@ -179,6 +177,8 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /**
      * Returns {@code true} if the option is selected, otherwise {@code false}.
+     *
+     * @return {@code true} if the option is selected, otherwise {@code false}
      */
     @XmlElement(name = "selected", required = true)
     @JsonProperty(value = "selected", required = true)
@@ -189,6 +189,8 @@ public class PageSizeSelectorOptionDto implements Serializable, Comparable<PageS
 
     /**
      * Sets whether this option is selected or not.
+     *
+     * @param selected {@code true} if this option is selected, otherwise {@code false}
      */
     @JsonProperty(value = "selected")
     public void setSelected(boolean selected) {

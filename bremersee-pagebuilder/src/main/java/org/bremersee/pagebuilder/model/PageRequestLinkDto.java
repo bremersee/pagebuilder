@@ -149,6 +149,8 @@ public class PageRequestLinkDto extends PageRequestDto {
 
     /**
      * Specifies whether this link is active or not.
+     *
+     * @param active {@code true} if this link is active, otherwise {@code false}
      */
     @JsonProperty(value = "active", required = true)
     public void setActive(boolean active) {
@@ -164,6 +166,8 @@ public class PageRequestLinkDto extends PageRequestDto {
 
     /**
      * Sets the URL.
+     *
+     * @param url the URL of the link
      */
     @JsonProperty(value = "url")
     public void setUrl(String url) {

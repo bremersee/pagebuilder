@@ -31,7 +31,7 @@ import java.util.List;
  * A pagination can be used to display pagination links or buttons on a web site:
  * <pre>
  *  ----    ---    ---    ---     ===     ---    ---    ---    ----
- * | << |  | < |  | 1 |  | 2 |  || 3 ||  | 4 |  | 5 |  | > |  | >> |
+ * | &lt;&lt; |  | &lt; |  | 1 |  | 2 |  || 3 ||  | 4 |  | 5 |  | &gt; |  | &gt;&gt; |
  *  ----    ---    ---    ---     ===     ---    ---    ---    ----
  * First   Prev.  Page   Page     Page   Page   Page   Next    Last
  * Page    Page   No 0   No 1     No 2   No 3   No 4   Page    Page
@@ -97,9 +97,6 @@ public class PaginationDto implements Serializable {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "PaginationDto [maxPaginationLinks=" + maxPaginationLinks + ", firstPageLink=" + firstPageLink
@@ -107,9 +104,6 @@ public class PaginationDto implements Serializable {
                 + ", lastPageLink=" + lastPageLink + "]";
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -123,9 +117,6 @@ public class PaginationDto implements Serializable {
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) { // NOSONAR
         if (this == obj)
@@ -167,6 +158,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Returns the maximum number of pagination links.
+     *
+     * @return the maximum number of pagination links
      */
     @XmlElement(name = "maxPaginationLinks", defaultValue = "7")
     @JsonProperty(value = "maxPaginationLinks", required = true)
@@ -177,6 +170,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Sets the maximum number of pagination links.
+     *
+     * @param maxPaginationButtons the maximum number of pagination links
      */
     @JsonProperty(value = "maxPaginationLinks")
     public void setMaxPaginationLinks(int maxPaginationButtons) {
@@ -189,6 +184,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Returns the first pagination link.
+     *
+     * @return the first pagination link
      */
     @XmlElement(name = "firstPageLink")
     @JsonProperty(value = "firstPageLink")
@@ -199,6 +196,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Sets the first pagination link.
+     *
+     * @param firstPageLink the first pagination link
      */
     @JsonProperty(value = "firstPageLink")
     public void setFirstPageLink(PageRequestLinkDto firstPageLink) {
@@ -207,6 +206,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Returns the previous pagination link.
+     *
+     * @return the previous pagination link
      */
     @XmlElement(name = "previousPageLink")
     @JsonProperty(value = "previousPageLink")
@@ -217,6 +218,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Sets the previous pagination link.
+     *
+     * @param previousPageLink the previous pagination link
      */
     @JsonProperty(value = "previousPageLink")
     public void setPreviousPageLink(PageRequestLinkDto previousPageLink) {
@@ -225,6 +228,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Returns the pagination links.
+     *
+     * @return the pagination links
      */
     @XmlElementWrapper(name = "links")
     @XmlElement(name = "link")
@@ -236,6 +241,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Sets the pagination links.
+     *
+     * @param links the pagination links
      */
     @JsonProperty(value = "links")
     public void setLinks(List<PageRequestLinkDto> links) {
@@ -248,6 +255,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Returns the next pagination link.
+     *
+     * @return the next pagination link
      */
     @XmlElement(name = "nextPageLink")
     @JsonProperty(value = "nextPageLink")
@@ -258,6 +267,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Sets the next pagination link.
+     *
+     * @param nextPageLink the next pagination link
      */
     @JsonProperty(value = "nextPageLink")
     public void setNextPageLink(PageRequestLinkDto nextPageLink) {
@@ -266,6 +277,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Returns the last pagination link.
+     *
+     * @return the last pagination link
      */
     @XmlElement(name = "lastPageLink")
     @JsonProperty(value = "lastPageLink")
@@ -276,6 +289,8 @@ public class PaginationDto implements Serializable {
 
     /**
      * Sets the last pagination link.
+     *
+     * @param lastPageLink the last pagination link
      */
     @JsonProperty(value = "lastPageLink")
     public void setLastPageLink(PageRequestLinkDto lastPageLink) {

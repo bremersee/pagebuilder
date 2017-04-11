@@ -96,17 +96,11 @@ public class PageDto implements Page<Object> {
         setTotalSize(totalSize);
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "PageDto [entries=" + entries + ", pageRequest=" + pageRequest + ", totalSize=" + totalSize + "]";
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -117,9 +111,6 @@ public class PageDto implements Page<Object> {
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean equals(Object obj) {
@@ -146,7 +137,7 @@ public class PageDto implements Page<Object> {
     }
 
     /**
-     * Returns the elements of the page.<br/>
+     * Returns the elements of the page.<br>
      * If the serialized page was read with the Jackson JSON processor, each
      * element will be a {@link LinkedHashMap}.
      *
@@ -163,6 +154,8 @@ public class PageDto implements Page<Object> {
 
     /**
      * Sets the elements of the page.
+     *
+     * @param entries the elements of the page
      */
     @JsonProperty(value = "entries")
     public void setEntries(List<Object> entries) {
@@ -175,6 +168,8 @@ public class PageDto implements Page<Object> {
 
     /**
      * Returns the page request.
+     *
+     * @return the page request
      */
     @XmlElement(name = "pageRequest", required = true)
     @JsonProperty(value = "pageRequest", required = true)
@@ -189,6 +184,8 @@ public class PageDto implements Page<Object> {
 
     /**
      * Sets the page request.
+     *
+     * @param pageRequest the page request
      */
     @JsonProperty(value = "pageRequest")
     public void setPageRequest(PageRequestDto pageRequest) {
@@ -197,6 +194,8 @@ public class PageDto implements Page<Object> {
 
     /**
      * Returns the size of all available elements.
+     *
+     * @return the size of all available elements
      */
     @XmlElement(name = "totalSize", required = true)
     @JsonProperty(value = "totalSize", required = true)
@@ -208,6 +207,8 @@ public class PageDto implements Page<Object> {
 
     /**
      * Sets the size of all available elements.
+     *
+     * @param totalSize the size of all available elements
      */
     @JsonProperty(value = "totalSize")
     public void setTotalSize(long totalSize) {
@@ -216,6 +217,8 @@ public class PageDto implements Page<Object> {
 
     /**
      * Returns the number of all pages.
+     *
+     * @return the number of all pages
      */
     @XmlElement(name = "totalPages", required = true)
     @JsonProperty(value = "totalPages", required = true)
@@ -230,6 +233,8 @@ public class PageDto implements Page<Object> {
 
     /**
      * Sets the number of all pages.
+     *
+     * @param totalPages the number of all pages
      */
     @JsonProperty(value = "totalPages")
     public void setTotalPages(int totalPages) {
