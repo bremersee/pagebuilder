@@ -16,9 +16,6 @@
 
 package org.bremersee.pagebuilder.spring;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bremersee.comparator.spring.ComparatorSpringUtils;
 import org.bremersee.pagebuilder.PageBuilderUtils;
 import org.bremersee.pagebuilder.PageEntryTransformer;
@@ -29,6 +26,10 @@ import org.bremersee.pagebuilder.model.PageRequestDto;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Christian Bremer
  */
@@ -37,11 +38,10 @@ public abstract class PageBuilderSpringUtils {
     private PageBuilderSpringUtils() {
     }
 
-    public static SpringPageRequest toSpringPageRequest(PageRequest pageRequest) {
+    public static SpringPageRequest toSpringPageRequest(final PageRequest pageRequest) {
         if (pageRequest == null) {
             return null;
         }
-
         // make sure that first result (= offset) is not bigger than
         // Integer.MAX_VALUE
         int pageNumber = pageRequest.getPageNumber();
@@ -50,13 +50,33 @@ public abstract class PageBuilderSpringUtils {
         if (firstResult > (long) Integer.MAX_VALUE) {
             pageNumber = 0;
         }
-
         return new SpringPageRequestImpl(pageNumber, pageSize,
                 ComparatorSpringUtils.toSort(pageRequest.getComparatorItem()), pageRequest.getQuery(),
                 pageRequest.getExtensions());
     }
 
-    public static PageRequestDto fromSpringPageRequest(Pageable pageable) {
+    @SuppressWarnings("unused")
+    public static PageRequestDto fromSpringPageRequest(final Pageable pageable) {
+        if (pageable != null && pageable instanceof SpringPageRequestImpl) {
+            SpringPageRequestImpl spr = (SpringPageRequestImpl) pageable;
+            return fromSpringPageRequest(pageable, spr.getQuery(), spr.getExtensions());
+        } else {
+            return fromSpringPageRequest(pageable, null, null);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static PageRequestDto fromSpringPageRequest(final Pageable pageable, final String query) {
+        if (pageable != null && pageable instanceof SpringPageRequestImpl) {
+            return fromSpringPageRequest(pageable, query, ((SpringPageRequestImpl) pageable).getExtensions());
+        } else {
+            return fromSpringPageRequest(pageable, query, null);
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static PageRequestDto fromSpringPageRequest(final Pageable pageable, final String query,
+                                                       final Map<String, Object> extensions) {
         if (pageable == null) {
             return null;
         }
@@ -64,89 +84,116 @@ public abstract class PageBuilderSpringUtils {
         pageRequest.setComparatorItem(ComparatorSpringUtils.fromSort(pageable.getSort()));
         pageRequest.setPageNumber(pageable.getPageNumber());
         pageRequest.setPageSize(pageable.getPageSize());
-        if (pageable instanceof SpringPageRequestImpl) {
-            SpringPageRequestImpl spr = (SpringPageRequestImpl) pageable;
-            pageRequest.setExtensions(spr.getExtensions());
-            pageRequest.setQuery(spr.getQuery());
+        pageRequest.setQuery(query);
+        if (extensions != null) {
+            if (pageRequest.getExtensions() != null) {
+                pageRequest.getExtensions().putAll(extensions);
+            } else {
+                pageRequest.setExtensions(extensions);
+            }
         }
         return pageRequest;
     }
 
-    public static <E> PageImpl<E> toSpringPage(Page<E> page) {
+    @SuppressWarnings("WeakerAccess")
+    public static <E> PageImpl<E> toSpringPage(final Page<E> page) {
         if (page == null) {
             return null;
         }
         //@formatter:off
-        return new SpringPageImpl<E>(
-                page.getEntries(), 
-                toSpringPageRequest(page.getPageRequest()), 
+        return new SpringPageImpl<>(
+                page.getEntries(),
+                toSpringPageRequest(page.getPageRequest()),
                 page.getTotalSize());
         //@formatter:on
     }
 
-    public static <E, T> PageImpl<T> toSpringPage(Page<E> page, PageEntryTransformer<T, E> transformer) {
+    @SuppressWarnings("unused")
+    public static <E, T> PageImpl<T> toSpringPage(final Page<E> page, final PageEntryTransformer<T, E> transformer) {
+        if (transformer == null) {
+            //noinspection unchecked
+            return (PageImpl<T>) toSpringPage(page);
+        }
         if (page == null) {
             return null;
-        }
-        if (transformer == null) {
-            transformer = new PageEntryTransformer<T, E>() {
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public T transform(E source) {
-                    return (T)source;
-                }
-            };
         }
         List<T> transformedEntries = new ArrayList<>(page.getEntries().size());
         for (E entry : page.getEntries()) {
             transformedEntries.add(transformer.transform(entry));
         }
         //@formatter:off
-        return new SpringPageImpl<T>(
-                transformedEntries, 
-                toSpringPageRequest(page.getPageRequest()), 
+        return new SpringPageImpl<>(
+                transformedEntries,
+                toSpringPageRequest(page.getPageRequest()),
                 page.getTotalSize());
         //@formatter:on
     }
 
-    public static <E> PageResult<E> fromSpringPage(org.springframework.data.domain.Page<E> springPage) {
-        if (springPage == null) {
-            return null;
-        }
-        PageRequestDto pageRequest = getPageRequest(springPage);
-        return new PageResult<E>(springPage.getContent(), pageRequest, springPage.getTotalElements());
+    public static <E> PageResult<E> fromSpringPage(final org.springframework.data.domain.Page<E> springPage) {
+        return fromSpringPage(springPage, null, (Map<String, Object>) null);
     }
 
-    public static <E, T> PageResult<T> fromSpringPage(org.springframework.data.domain.Page<E> springPage, PageEntryTransformer<T, E> transformer) {
+    @SuppressWarnings("unused")
+    public static <E> PageResult<E> fromSpringPage(final org.springframework.data.domain.Page<E> springPage,
+                                                   final String query) {
+        return fromSpringPage(springPage, query, (Map<String, Object>) null);
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static <E> PageResult<E> fromSpringPage(final org.springframework.data.domain.Page<E> springPage,
+                                                   final String query, final Map<String, Object> extensions) {
         if (springPage == null) {
             return null;
         }
-        if (transformer == null) {
-            transformer = new PageEntryTransformer<T, E>() {
+        PageRequestDto pageRequest = getPageRequest(springPage, query, extensions);
+        return new PageResult<>(springPage.getContent(), pageRequest, springPage.getTotalElements());
+    }
 
-                @SuppressWarnings("unchecked")
-                @Override
-                public T transform(E source) {
-                    return (T)source;
-                }
-            };
+    @SuppressWarnings("unused")
+    public static <E, T> PageResult<T> fromSpringPage(final org.springframework.data.domain.Page<E> springPage,
+                                                      final PageEntryTransformer<T, E> transformer) {
+        return fromSpringPage(springPage, null, null, transformer);
+    }
+
+    @SuppressWarnings("unused")
+    public static <E, T> PageResult<T> fromSpringPage(final org.springframework.data.domain.Page<E> springPage,
+                                                      final String query,
+                                                      final PageEntryTransformer<T, E> transformer) {
+        return fromSpringPage(springPage, query, null, transformer);
+    }
+
+    @SuppressWarnings({"WeakerAccess", "SameParameterValue"})
+    public static <E, T> PageResult<T> fromSpringPage(final org.springframework.data.domain.Page<E> springPage,
+                                                      final String query, final Map<String, Object> extensions,
+                                                      final PageEntryTransformer<T, E> transformer) {
+        if (transformer == null) {
+            //noinspection unchecked
+            return (PageResult<T>) fromSpringPage(springPage, query, extensions);
         }
-        PageRequestDto pageRequest = getPageRequest(springPage);
+        if (springPage == null) {
+            return null;
+        }
+        PageRequestDto pageRequest = getPageRequest(springPage, query, extensions);
         return PageBuilderUtils.createPage(springPage.getContent(), pageRequest, springPage.getTotalElements(), transformer);
     }
 
-    private static PageRequestDto getPageRequest(org.springframework.data.domain.Page<?> springPage) {
+    private static PageRequestDto getPageRequest(final org.springframework.data.domain.Page<?> springPage,
+                                                 final String query, final Map<String, Object> extensions) {
         if (springPage == null) {
             return null;
-        }
-        if (springPage instanceof SpringPageImpl && ((SpringPageImpl<?>) springPage).getPageable() != null) {
-            return fromSpringPageRequest(((SpringPageImpl<?>) springPage).getPageable());
         }
         PageRequestDto pageRequest = new PageRequestDto();
         pageRequest.setComparatorItem(ComparatorSpringUtils.fromSort(springPage.getSort()));
         pageRequest.setPageNumber(springPage.getNumber());
         pageRequest.setPageSize(springPage.getSize());
+        pageRequest.setQuery(query);
+        if (extensions != null) {
+            if (pageRequest.getExtensions() != null) {
+                pageRequest.getExtensions().putAll(extensions);
+            } else {
+                pageRequest.setExtensions(extensions);
+            }
+        }
         return pageRequest;
     }
 

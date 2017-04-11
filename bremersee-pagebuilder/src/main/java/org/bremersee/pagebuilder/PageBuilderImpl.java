@@ -22,8 +22,8 @@ import org.bremersee.pagebuilder.model.PageRequestDto;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -36,8 +36,6 @@ import java.util.List;
 public class PageBuilderImpl implements PageBuilder {
 
     private ObjectComparatorFactory objectComparatorFactory = ObjectComparatorFactory.newInstance();
-
-    private boolean transformEntriesBeforeBuilding = false;
 
     /**
      * Returns the object comparator factory.
@@ -55,30 +53,9 @@ public class PageBuilderImpl implements PageBuilder {
         }
     }
 
-    /**
-     * @return Whether the transforming of the page entries should be done before the page is build or not
-     * (default is {@code false}).
-     */
-    public boolean isTransformEntriesBeforeBuilding() {
-        return transformEntriesBeforeBuilding;
-    }
-
-    /**
-     * Specifies whether the transforming of the page entries should be done before the page is build or not.
-     * The default value is {@code false}. So the page is build first and than only the entries of the page are
-     * transformed. This is normally the faster way. But sometimes is can be necessary to transform the entries
-     * before the page is build (for example if the source entries cannot be sorted by the comparator).
-     *
-     * @param transformEntriesBeforeBuilding should the entries be transormed before the page is build?
-     */
-    public void setTransformEntriesBeforeBuilding(boolean transformEntriesBeforeBuilding) {
-        this.transformEntriesBeforeBuilding = transformEntriesBeforeBuilding;
-    }
-
     @Override
     public String toString() {
-        return "PageBuilderImpl [objectComparatorFactory=" + objectComparatorFactory
-                + ", transformEntriesBeforeBuilding=" + transformEntriesBeforeBuilding + "]";
+        return "PageBuilderImpl [objectComparatorFactory=" + objectComparatorFactory + "]";
     }
 
     @Override
@@ -88,21 +65,50 @@ public class PageBuilderImpl implements PageBuilder {
     }
 
     @Override
-    public <T, E> PageResult<T> buildPage(final Iterable<? extends E> pageEntries, final PageRequest pageRequest,
-                                          final long totalSize, final PageEntryTransformer<T, E> transformer) {
-        return PageBuilderUtils.createPage(pageEntries, pageRequest, totalSize, transformer);
+    public <T, E> PageResult<T> buildPage(final Iterable<? extends E> pageEntries,
+                                          final PageRequest pageRequest,
+                                          final long totalSize,
+                                          final PageEntryTransformer<T, E> transformer) {
+        return PageBuilderUtils.createPage(
+                pageEntries,
+                pageRequest,
+                totalSize,
+                transformer);
     }
 
     @Override
     public <E> PageResult<E> buildFilteredPage(final Collection<? extends E> allAvailableEntries,
-                                               final PageRequest pageRequest, final PageBuilderFilter filter) {
-        return buildFilteredPage(allAvailableEntries, pageRequest, filter, null);
+                                               final PageRequest pageRequest,
+                                               final PageBuilderFilter filter) {
+        return buildFilteredPage(allAvailableEntries,
+                pageRequest,
+                true,
+                filter,
+                true,
+                null);
+    }
+
+    @Override
+    public <T, E> PageResult<T> buildFilteredPage(final Collection<? extends E> allAvailableElements,
+                                                  final PageRequest pageRequest,
+                                                  final boolean sortEntriesBeforeTransforming,
+                                                  final PageEntryTransformer<T, E> transformer) {
+        return buildFilteredPage(
+                allAvailableElements,
+                pageRequest,
+                sortEntriesBeforeTransforming,
+                null,
+                true,
+                transformer);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T, E> PageResult<T> buildFilteredPage(final Collection<? extends E> allAvailableEntries, // NOSONAR
-                                                  final PageRequest pageRequest, final PageBuilderFilter filter,
+                                                  final PageRequest pageRequest,
+                                                  final boolean sortEntriesBeforeTransforming,
+                                                  final PageBuilderFilter filter,
+                                                  final boolean executeFilterBeforeTransforming,
                                                   final PageEntryTransformer<T, E> transformer) {
 
         final Collection<? extends E> allAvailEntries;
@@ -113,60 +119,79 @@ public class PageBuilderImpl implements PageBuilder {
         }
         final PageRequest request = pageRequest == null ? new PageRequestDto() : pageRequest;
 
-        if (transformEntriesBeforeBuilding && transformer != null) {
-            List<Object> targets = new ArrayList<>(allAvailEntries.size());
-            for (E e : allAvailEntries) {
-                targets.add(transformer.transform(e));
-            }
-            return buildInternalFilteredPage(targets, request, filter, null);
+        final List<Object> entries;
+        if (executeFilterBeforeTransforming && filter != null) {
+            entries = allAvailEntries.stream().filter(filter::accept).collect(Collectors.toList());
         } else {
-            List<Object> allEntries;
-            if (allAvailableEntries instanceof List) {
-                allEntries = (List) allAvailEntries;
-            } else {
-                allEntries = new ArrayList<Object>(allAvailEntries); // NOSONAR
-            }
-            return buildInternalFilteredPage(allEntries, request, filter, transformer);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public PageResult buildInternalFilteredPage(final List<Object> allEntries, final PageRequest request, // NOSONAR
-                                                final PageBuilderFilter filter,
-                                                final PageEntryTransformer transformer) {
-
-        if (request.getComparatorItem() != null) {
-            Collections.sort(allEntries, objectComparatorFactory.newObjectComparator(request.getComparatorItem()));
+            entries = toList(allAvailEntries);
         }
 
-        final List<Object> filteredEntries;
-        if (filter == null) {
-            filteredEntries = allEntries;
-        } else {
-            filteredEntries = new ArrayList<>(allEntries.size());
-            for (Object entry : allEntries) {
-                if (filter.accept(entry)) {
-                    filteredEntries.add(entry);
-                }
-            }
+        final boolean doSortBeforeTransforming = transformer == null || sortEntriesBeforeTransforming;
+        if (request.getComparatorItem() != null && doSortBeforeTransforming) {
+            entries.sort(objectComparatorFactory.newObjectComparator(request.getComparatorItem()));
         }
 
-        final List<Object> pageEntries = new ArrayList<>(filteredEntries.size());
+        if ((executeFilterBeforeTransforming || filter == null)
+                && (sortEntriesBeforeTransforming || transformer == null)) {
 
-        if (request.getFirstResult() < filteredEntries.size()) {
-            final int lastResult = request.getFirstResult() + request.getPageSize();
-            for (int i = request.getFirstResult(); i < lastResult; i++) {
-                if (i < filteredEntries.size()) {
-                    if (transformer == null) { // NOSONAR
-                        pageEntries.add(filteredEntries.get(i));
-                    } else {
-                        pageEntries.add(transformer.transform(filteredEntries.get(i)));
+            // faster way
+            final List<Object> pageEntries = new ArrayList<>(entries.size());
+            if (request.getFirstResult() < entries.size()) {
+                final int lastResult = request.getFirstResult() + request.getPageSize();
+                for (int i = request.getFirstResult(); i < lastResult; i++) {
+                    if (i < entries.size()) { // NOSONAR
+                        if (transformer == null) {
+                            pageEntries.add(entries.get(i));
+                        } else {
+                            pageEntries.add(transformer.transform((E) entries.get(i)));
+                        }
                     }
                 }
             }
+            return (PageResult<T>) new PageResult<>(pageEntries, request, entries.size());
         }
 
-        return new PageResult<>(pageEntries, request, filteredEntries.size());
+        List<Object> transformedEntries;
+        if (transformer == null) {
+            transformedEntries = entries;
+        } else {
+            transformedEntries = new ArrayList<>();
+            for (Object source : entries) {
+                transformedEntries.add(transformer.transform((E) source));
+            }
+        }
+
+        List<Object> transformedFilteredEntries;
+        if (!executeFilterBeforeTransforming && filter != null) {
+            transformedFilteredEntries = transformedEntries.stream().filter(filter::accept).collect(Collectors.toList());
+        } else {
+            transformedFilteredEntries = transformedEntries;
+        }
+
+        if (!doSortBeforeTransforming && request.getComparatorItem() != null) {
+            transformedFilteredEntries.sort(objectComparatorFactory.newObjectComparator(request.getComparatorItem()));
+        }
+
+        final List<Object> pageEntries = new ArrayList<>(transformedFilteredEntries.size());
+        if (request.getFirstResult() < transformedFilteredEntries.size()) {
+            final int lastResult = request.getFirstResult() + request.getPageSize();
+            for (int i = request.getFirstResult(); i < lastResult; i++) {
+                if (i < transformedFilteredEntries.size()) {
+                    pageEntries.add(transformedFilteredEntries.get(i));
+                }
+            }
+        }
+
+        return (PageResult<T>) new PageResult<>(pageEntries, request, transformedFilteredEntries.size());
+    }
+
+    private List<Object> toList(Collection<?> col) {
+        if (col instanceof List) {
+            //noinspection unchecked
+            return (List<Object>) col;
+        } else {
+            return new ArrayList<>(col);
+        }
     }
 
 }

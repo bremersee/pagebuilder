@@ -44,15 +44,27 @@ import java.util.Collection;
 @SuppressWarnings({"SameParameterValue", "unused"})
 public interface PageBuilder {
 
-    <E> Page<E> buildPage(Iterable<? extends E> pageElements, PageRequest pageRequest, long totalSize);
+    <E> Page<E> buildPage(Iterable<? extends E> pageElements,
+                          PageRequest pageRequest, long totalSize);
 
-    <T, E> Page<T> buildPage(Iterable<? extends E> pageElements, PageRequest pageRequest, long totalSize,
+    <T, E> Page<T> buildPage(Iterable<? extends E> pageElements,
+                             PageRequest pageRequest, long totalSize,
                              PageEntryTransformer<T, E> transformer);
 
-    <E> Page<E> buildFilteredPage(Collection<? extends E> allAvailableElements, PageRequest pageRequest,
+    <E> Page<E> buildFilteredPage(Collection<? extends E> allAvailableElements,
+                                  PageRequest pageRequest,
                                   PageBuilderFilter filter);
 
-    <T, E> Page<T> buildFilteredPage(Collection<? extends E> allAvailableEntries, PageRequest pageRequest,
-                                     PageBuilderFilter filter, PageEntryTransformer<T, E> transformer);
+    <T, E> Page<T> buildFilteredPage(Collection<? extends E> allAvailableElements,
+                                  PageRequest pageRequest,
+                                  boolean sortEntriesBeforeTransforming,
+                                  PageEntryTransformer<T, E> transformer);
+
+    <T, E> Page<T> buildFilteredPage(Collection<? extends E> allAvailableEntries,
+                                     PageRequest pageRequest,
+                                     boolean sortEntriesBeforeTransforming,
+                                     PageBuilderFilter filter,
+                                     boolean executeFilterBeforeTransforming,
+                                     PageEntryTransformer<T, E> transformer);
 
 }
