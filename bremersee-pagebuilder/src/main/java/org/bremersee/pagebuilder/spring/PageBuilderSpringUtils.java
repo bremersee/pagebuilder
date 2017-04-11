@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * @author Christian Bremer
  */
-public abstract class PageBuilderSpringUtils {
+public abstract class PageBuilderSpringUtils { // NOSONAR
 
     private PageBuilderSpringUtils() {
     }
