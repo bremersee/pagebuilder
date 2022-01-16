@@ -256,7 +256,7 @@ public class PageBuilder<S, T> {
     if (ObjectUtils.isEmpty(this.sort)) {
       this.sortTarget = null;
     } else {
-      this.sortTarget = Objects.requireNonNullElse(sortTarget, SortTarget.TARGET_ENTRIES);
+      this.sortTarget = requireNonNullElse(sortTarget, SortTarget.TARGET_ENTRIES);
     }
     return this;
   }
@@ -330,8 +330,8 @@ public class PageBuilder<S, T> {
       pageSort = Sort.unsorted();
     }
 
-    int number = Objects.requireNonNullElse(pageNumber, 0);
-    int size = Objects.requireNonNullElse(pageSize, Integer.MAX_VALUE);
+    int number = requireNonNullElse(pageNumber, 0);
+    int size = requireNonNullElse(pageSize, Integer.MAX_VALUE);
     final Pageable pageable = PageRequest.of(number, size, pageSort);
     final List<T> content = target.stream()
         .skip(pageable.getOffset())
