@@ -1,0 +1,7 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+PageBuilder,org.bremersee.pagebuilder,PageBuilderJaxbContextDataProvider,6,36,1,1,0,6,2,5,1,5
+PageBuilder,org.bremersee.pagebuilder,PageBuilder,9,297,11,21,0,77,12,25,1,20
+PageBuilder,org.bremersee.pagebuilder,PageBuilder.SortTarget,0,24,0,0,0,3,0,1,0,1
+PageBuilder,org.bremersee.pagebuilder.model,CommonPageDto,0,77,1,5,0,19,1,8,0,6
+PageBuilder,org.bremersee.pagebuilder.model,AbstractPageDto,0,22,0,0,0,8,0,2,0,2
+PageBuilder,org.bremersee.pagebuilder.model,ObjectFactory,0,7,0,0,0,2,0,2,0,2
