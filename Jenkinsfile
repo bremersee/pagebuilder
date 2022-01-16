@@ -3,9 +3,10 @@ pipeline {
     label 'maven'
   }
   environment {
-    DEPLOY = false
-    SNAPSHOT_SITE = false
-    RELEASE_SITE = false
+    CODECOV_TOKEN = credentials('pagebuilder-codecov-token')
+    DEPLOY = true
+    SNAPSHOT_SITE = true
+    RELEASE_SITE = true
     DEPLOY_FEATURE = false
   }
   tools {
