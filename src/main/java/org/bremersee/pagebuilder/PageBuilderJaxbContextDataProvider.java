@@ -27,6 +27,8 @@ import org.bremersee.xml.JaxbContextData;
 import org.bremersee.xml.JaxbContextDataProvider;
 
 /**
+ * The page builder jaxb context data provider.
+ *
  * @author Christian Bremer
  */
 public class PageBuilderJaxbContextDataProvider implements JaxbContextDataProvider {

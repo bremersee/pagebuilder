@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.bremersee.pagebuilder.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,8 +39,11 @@ import org.bremersee.comparator.spring.mapper.SortMapper;
 import org.springframework.data.domain.Page;
 
 /**
+ * The common page dto.
+ *
  * @author Christian Bremer
  */
+@SuppressWarnings("SameNameButDifferent")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "page")
 @XmlType(name = "pageType", propOrder = {
@@ -48,16 +52,30 @@ import org.springframework.data.domain.Page;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+@Schema(description = "A page.")
 public class CommonPageDto extends AbstractPageDto {
 
   @XmlElementWrapper(name = "content")
   @XmlAnyElement(lax = true)
+  @Schema(description = "The content of the page.")
   private final List<Object> content = new ArrayList<>();
 
+  /**
+   * Instantiates a new common page dto.
+   */
   protected CommonPageDto() {
     super();
   }
 
+  /**
+   * Instantiates a new Common page dto.
+   *
+   * @param content the content
+   * @param number the number
+   * @param size the size
+   * @param totalElements the total elements
+   * @param sort the sort
+   */
   @JsonCreator
   public CommonPageDto(
       @JsonProperty("content") List<?> content,
@@ -71,14 +89,33 @@ public class CommonPageDto extends AbstractPageDto {
     }
   }
 
+  /**
+   * Gets content.
+   *
+   * @return the content
+   */
   public List<Object> getContent() {
     return Collections.unmodifiableList(content);
   }
 
+  /**
+   * Creates a common page dto from Spring's page.
+   *
+   * @param page the page
+   * @return the common page dto
+   */
   public static CommonPageDto from(Page<?> page) {
     return from(page, null);
   }
 
+  /**
+   * Creates a common page dto from Spring's page.
+   *
+   * @param <T> the type of the source page
+   * @param page the page
+   * @param converter the converter
+   * @return the common page dto
+   */
   public static <T> CommonPageDto from(Page<T> page, Function<T, ?> converter) {
     return Optional.ofNullable(page)
         .map(p -> new CommonPageDto(

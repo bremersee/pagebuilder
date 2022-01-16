@@ -42,6 +42,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * The page builder.
+ *
+ * @param <S> the source type
+ * @param <T> the target type
  * @author Christian Bremer
  */
 public class PageBuilder<S, T> {
@@ -66,6 +70,9 @@ public class PageBuilder<S, T> {
 
   private Function<SortOrder, Comparator<?>> targetSortFn;
 
+  /**
+   * Instantiates a new page builder.
+   */
   public PageBuilder() {
     sourceFilter = sourceEntry -> true;
     //noinspection unchecked
@@ -77,6 +84,12 @@ public class PageBuilder<S, T> {
     targetSortFn = cf -> (Comparator<T>) new ValueComparator(cf);
   }
 
+  /**
+   * Sets source entries to the page builder.
+   *
+   * @param entries the entries
+   * @return the page builder
+   */
   public PageBuilder<S, T> sourceEntries(Stream<? extends S> entries) {
     if (!Objects.isNull(entries)) {
       this.sourceEntries = entries;
@@ -84,6 +97,12 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Sets source entries to the page builder.
+   *
+   * @param entries the entries
+   * @return the page builder
+   */
   public PageBuilder<S, T> sourceEntries(Iterable<? extends S> entries) {
     if (!Objects.isNull(entries)) {
       this.sourceEntries = StreamSupport.stream(entries.spliterator(), false);
@@ -91,6 +110,12 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Sets source entries to the page builder.
+   *
+   * @param entries the entries
+   * @return the page builder
+   */
   public PageBuilder<S, T> sourceEntries(Iterator<? extends S> entries) {
     if (!Objects.isNull(entries)) {
       this.sourceEntries = StreamSupport.stream(Spliterators
@@ -99,6 +124,12 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Sets source filter to the page builder.
+   *
+   * @param sourceFilter the source filter
+   * @return the page builder
+   */
   public PageBuilder<S, T> sourceFilter(Predicate<S> sourceFilter) {
     if (!Objects.isNull(sourceFilter)) {
       this.sourceFilter = sourceFilter;
@@ -106,6 +137,12 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Sets source sort function to the page builder.
+   *
+   * @param sourceSortFn the source sort function
+   * @return the page builder
+   */
   public PageBuilder<S, T> sourceSortFn(
       Function<SortOrder, Comparator<?>> sourceSortFn) {
     if (!Objects.isNull(sourceSortFn)) {
@@ -114,10 +151,23 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Sets pageable to the page builder.
+   *
+   * @param pageable the pageable
+   * @return the page builder
+   */
   public PageBuilder<S, T> pageable(Pageable pageable) {
     return pageable(pageable, SortTarget.TARGET_ENTRIES);
   }
 
+  /**
+   * Sets pageable to the page builder.
+   *
+   * @param pageable the pageable
+   * @param sortTarget the sort target
+   * @return the page builder
+   */
   public PageBuilder<S, T> pageable(Pageable pageable, SortTarget sortTarget) {
     if (!Objects.isNull(pageable)) {
       return pageable(
@@ -129,6 +179,14 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Sets pageable to the page builder.
+   *
+   * @param pageNumber the page number
+   * @param pageSize the page size
+   * @param sort the sort
+   * @return the page builder
+   */
   public PageBuilder<S, T> pageable(
       Integer pageNumber,
       Integer pageSize,
@@ -140,6 +198,14 @@ public class PageBuilder<S, T> {
         Objects.isNull(sort) ? null : Arrays.asList(sort));
   }
 
+  /**
+   * Sets pageable to the page builder.
+   *
+   * @param pageNumber the page number
+   * @param pageSize the page size
+   * @param sort the sort
+   * @return the page builder
+   */
   public PageBuilder<S, T> pageable(
       Integer pageNumber,
       Integer pageSize,
@@ -147,6 +213,15 @@ public class PageBuilder<S, T> {
     return pageable(pageNumber, pageSize, SortTarget.TARGET_ENTRIES, sort);
   }
 
+  /**
+   * Sets pageable to the page builder.
+   *
+   * @param pageNumber the page number
+   * @param pageSize the page size
+   * @param sortTarget the sort target
+   * @param sort the sort
+   * @return the page builder
+   */
   public PageBuilder<S, T> pageable(
       Integer pageNumber,
       Integer pageSize,
@@ -159,6 +234,15 @@ public class PageBuilder<S, T> {
         Objects.isNull(sort) ? null : Arrays.asList(sort));
   }
 
+  /**
+   * Sets pageable to the page builder.
+   *
+   * @param pageNumber the page number
+   * @param pageSize the page size
+   * @param sortTarget the sort target
+   * @param sort the sort
+   * @return the page builder
+   */
   public PageBuilder<S, T> pageable(
       Integer pageNumber,
       Integer pageSize,
@@ -177,6 +261,12 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Sets entry converter to the page builder.
+   *
+   * @param converter the entry converter
+   * @return the page builder
+   */
   public PageBuilder<S, T> converter(Function<S, T> converter) {
     if (!Objects.isNull(converter)) {
       this.converter = converter;
@@ -184,6 +274,12 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Sets target filter to the page builder.
+   *
+   * @param targetFilter the target filter
+   * @return the page builder
+   */
   public PageBuilder<S, T> targetFilter(Predicate<T> targetFilter) {
     if (!Objects.isNull(targetFilter)) {
       this.targetFilter = targetFilter;
@@ -191,6 +287,12 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Sets target sort function to the page builder.
+   *
+   * @param targetSortFn the target sort function
+   * @return the page builder
+   */
   public PageBuilder<S, T> targetSortFn(
       Function<SortOrder, Comparator<?>> targetSortFn) {
     if (!Objects.isNull(targetSortFn)) {
@@ -199,6 +301,11 @@ public class PageBuilder<S, T> {
     return this;
   }
 
+  /**
+   * Builds the page.
+   *
+   * @return the page
+   */
   public Page<T> build() {
     //noinspection unchecked
     final List<S> source = ((Stream<S>) requireNonNullElse(this.sourceEntries, Stream.empty()))
@@ -233,8 +340,17 @@ public class PageBuilder<S, T> {
     return new PageImpl<>(content, pageable, target.size());
   }
 
+  /**
+   * The sort target.
+   */
   enum SortTarget {
+    /**
+     * Source entries sort target.
+     */
     SOURCE_ENTRIES,
+    /**
+     * Target entries sort target.
+     */
     TARGET_ENTRIES
   }
 }

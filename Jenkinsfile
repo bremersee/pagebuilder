@@ -3,10 +3,9 @@ pipeline {
     label 'maven'
   }
   environment {
-    CODECOV_TOKEN = credentials('comparator-codecov-token')
-    DEPLOY = true
-    SNAPSHOT_SITE = true
-    RELEASE_SITE = true
+    DEPLOY = false
+    SNAPSHOT_SITE = false
+    RELEASE_SITE = false
     DEPLOY_FEATURE = false
   }
   tools {

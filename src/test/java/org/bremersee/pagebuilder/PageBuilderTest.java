@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.bremersee.pagebuilder;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,9 +38,19 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.NullHandling;
 import org.springframework.data.domain.Sort.Order;
 
+/**
+ * The page builder test.
+ *
+ * @author Christian Bremer
+ */
 @ExtendWith(SoftAssertionsExtension.class)
 class PageBuilderTest {
 
+  /**
+   * Source filter.
+   *
+   * @param softly the softly
+   */
   @Test
   void sourceFilter(SoftAssertions softly) {
     List<Integer> entries = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -47,6 +73,11 @@ class PageBuilderTest {
         .isEqualTo(Sort.unsorted());
   }
 
+  /**
+   * Source sort fn.
+   *
+   * @param softly the softly
+   */
   @Test
   void sourceSortFn(SoftAssertions softly) {
     List<Integer> entries = List.of(2, 4, 6, 8, 10, 9, 7, 5, 3, 1);
@@ -74,6 +105,11 @@ class PageBuilderTest {
         .isEqualTo(Sort.unsorted()); // sorting of source entries is not put into the page
   }
 
+  /**
+   * Pageable.
+   *
+   * @param softly the softly
+   */
   @Test
   void pageable(SoftAssertions softly) {
     List<Address> entries = List.of(
@@ -116,6 +152,11 @@ class PageBuilderTest {
         .isEqualTo(2);
   }
 
+  /**
+   * Pageable with page request.
+   *
+   * @param softly the softly
+   */
   @Test
   void pageableWithPageRequest(SoftAssertions softly) {
     List<Address> entries = List.of(
@@ -154,6 +195,9 @@ class PageBuilderTest {
         .isEqualTo(2);
   }
 
+  /**
+   * Converter.
+   */
   @Test
   void converter() {
     List<Address> expected = List.of(
@@ -173,6 +217,11 @@ class PageBuilderTest {
         .containsExactlyElementsOf(expected);
   }
 
+  /**
+   * Target filter.
+   *
+   * @param softly the softly
+   */
   @Test
   void targetFilter(SoftAssertions softly) {
     List<Person> entries = List.of(
@@ -199,6 +248,11 @@ class PageBuilderTest {
             .with(NullHandling.NULLS_LAST)));
   }
 
+  /**
+   * Target sort fn.
+   *
+   * @param softly the softly
+   */
   @Test
   void targetSortFn(SoftAssertions softly) {
     List<Animal> entries = List.of(

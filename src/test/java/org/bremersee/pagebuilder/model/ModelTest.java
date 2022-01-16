@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.ServiceLoader;
-import javax.xml.bind.JAXBContext;
-import org.assertj.core.api.Assertions;
 import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrders;
 import org.bremersee.pagebuilder.testmodel.Address;
@@ -39,10 +37,10 @@ import org.bremersee.xml.JaxbContextData;
 import org.bremersee.xml.JaxbContextDataProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.jaxb.SpringDataJaxb.PageDto;
 
 /**
+ * The model test.
+ *
  * @author Christian Bremer
  */
 class ModelTest {
@@ -51,6 +49,9 @@ class ModelTest {
 
   private static ObjectMapper objectMapper;
 
+  /**
+   * Setups xml and json mapper.
+   */
   @BeforeAll
   static void setup() {
     jaxbContextBuilder = JaxbContextBuilder.builder()
@@ -67,26 +68,35 @@ class ModelTest {
         "_type");
   }
 
+  /**
+   * Xml page.
+   *
+   * @throws Exception the exception
+   */
   @Test
   void xmlPage() throws Exception {
     CommonPageDto expected = examplePage();
     StringWriter sw = new StringWriter();
     jaxbContextBuilder.buildMarshaller().marshal(expected, sw);
     String xml = sw.toString();
-    System.out.println(xml);
+    // System.out.println(xml);
     CommonPageDto actual = (CommonPageDto) jaxbContextBuilder.buildUnmarshaller()
         .unmarshal(new StringReader(xml));
     assertThat(actual)
         .isEqualTo(expected);
   }
 
+  /**
+   * Json page.
+   *
+   * @throws Exception the exception
+   */
   @Test
   void jsonPage() throws Exception {
     CommonPageDto expected = examplePage();
     String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(expected);
-    System.out.println(json);
+    // System.out.println(json);
     CommonPageDto actual = objectMapper.readValue(json, CommonPageDto.class);
-    System.out.println(actual);
     assertThat(actual)
         .isEqualTo(expected);
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
  */
 
 /**
+ * The package of the test model.
+ *
  * @author Christian Bremer
  */
 @javax.xml.bind.annotation.XmlSchema(
-        namespace = "http://bremersee.org/xmlschemas/pagebuilder/v2/test",
-        elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+    namespace = "http://bremersee.org/xmlschemas/pagebuilder/v2/test",
+    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.bremersee.pagebuilder.testmodel;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,24 +19,46 @@ package org.bremersee.pagebuilder.testmodel;
 import javax.xml.bind.annotation.XmlRegistry;
 
 /**
+ * The xml object factory og the test model.
+ *
  * @author Christian Bremer
  */
 @SuppressWarnings("unused")
 @XmlRegistry
 public class ObjectFactory {
 
+  /**
+   * Create address.
+   *
+   * @return the address
+   */
   public Address createAddress() {
     return new Address();
   }
 
+  /**
+   * Create cat.
+   *
+   * @return the cat
+   */
   public Cat createCat() {
     return new Cat();
   }
 
+  /**
+   * Create dog.
+   *
+   * @return the dog
+   */
   public Dog createDog() {
     return new Dog();
   }
 
+  /**
+   * Create person.
+   *
+   * @return the person
+   */
   public Person createPerson() {
     return new Person();
   }

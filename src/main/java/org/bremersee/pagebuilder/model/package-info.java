@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
+/**
+ * This package contains the model of the page builder.
+ *
+ * @author Christian Bremer
+ */
 @javax.xml.bind.annotation.XmlSchema(
     namespace = "http://bremersee.org/xmlschemas/pagebuilder/v2",
-    // location = "http://bremersee.github.io/xmlschemas/pagebuilder-v2.xsd",
+    location = "http://bremersee.github.io/xmlschemas/pagebuilder-v2.xsd",
     elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.bremersee.pagebuilder.model;

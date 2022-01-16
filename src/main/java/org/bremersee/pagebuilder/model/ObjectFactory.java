@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 package org.bremersee.pagebuilder.model;
 
 import javax.xml.bind.annotation.XmlRegistry;
-import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrders;
 
 /**
  * The xml object factory.
@@ -28,6 +26,11 @@ import org.bremersee.comparator.model.SortOrders;
 @XmlRegistry
 public class ObjectFactory {
 
+  /**
+   * Creates common page dto.
+   *
+   * @return the common page dto
+   */
   public CommonPageDto createCommonPageDto() {
     return new CommonPageDto();
   }
