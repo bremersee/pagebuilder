@@ -6,7 +6,7 @@ pipeline {
     CODECOV_TOKEN = credentials('pagebuilder-codecov-token')
     DEPLOY = true
     SNAPSHOT_SITE = true
-    RELEASE_SITE = true
+    RELEASE_SITE = false
     DEPLOY_FEATURE = false
   }
   tools {
