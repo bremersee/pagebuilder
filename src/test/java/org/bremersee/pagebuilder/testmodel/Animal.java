@@ -48,11 +48,15 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Schema(description = "Base object of an animal",
-    discriminatorProperty = "_type", discriminatorMapping = {
-    @DiscriminatorMapping(value = "org.bremersee.pagebuilder.testmodel.Cat", schema = Cat.class),
-    @DiscriminatorMapping(value = "org.bremersee.pagebuilder.testmodel.Dog", schema = Dog.class)
-})
+@Schema(
+    description = "Base object of an animal",
+    discriminatorProperty = "_type",
+    discriminatorMapping = {
+        @DiscriminatorMapping(
+            value = "org.bremersee.pagebuilder.testmodel.Cat", schema = Cat.class),
+        @DiscriminatorMapping(
+            value = "org.bremersee.pagebuilder.testmodel.Dog", schema = Dog.class)
+    })
 public abstract class Animal {
 
   // The xml schema needs this property, because it is required in the OpenApi schema.

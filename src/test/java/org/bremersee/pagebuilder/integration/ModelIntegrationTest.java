@@ -109,12 +109,6 @@ class ModelIntegrationTest {
         httpEntity,
         CommonPageDto.class);
 
-    // without global 'objectMapper.activateDefaultTypingAsProperty'
-//    assertThat(response.getBody())
-//        .extracting(CommonPageDto::getContent, InstanceOfAssertFactories.list(Object.class))
-//        .hasSize(3)
-//        .allMatch(entry -> entry instanceof Map);
-
     // with global 'objectMapper.activateDefaultTypingAsProperty'
     assertThat(response.getBody())
         .isEqualTo(new CommonPageDto(
