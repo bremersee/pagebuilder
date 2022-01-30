@@ -16,15 +16,23 @@
 
 package org.bremersee.pagebuilder.testmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import io.swagger.v3.oas.annotations.media.Schema;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * The address.
@@ -34,13 +42,29 @@ import lombok.NoArgsConstructor;
 @XmlRootElement(name = "address")
 @XmlType(name = "addressType")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Data
+@EqualsAndHashCode
+@ToString
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
+// To keep global typing and schema in sync
+@JsonTypeInfo(
+    use = Id.CLASS,
+    property = "_type")
+@Schema(description = "An address", discriminatorProperty = "_type")
 public class Address {
+
+  // The xml schema needs this property, because it is required in the OpenApi schema.
+  @JsonIgnore
+  @XmlAttribute(name = "_type")
+  @Schema(hidden = true) // It is defined as discriminator property.
+  @SuppressWarnings("unused")
+  private String type;
 
   @XmlAttribute(required = true)
   @JsonProperty(required = true)
+  @Getter
+  @Setter
+  @NonNull
   private String city;
 
 }

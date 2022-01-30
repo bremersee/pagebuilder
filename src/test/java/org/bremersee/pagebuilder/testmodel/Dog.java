@@ -53,4 +53,16 @@ public class Dog extends Animal {
   public Dog(String name) {
     super(name);
   }
+
+  /**
+   * Instantiates a new dog.
+   *
+   * @param name the name
+   * @param address the address
+   */
+  public Dog(String name, Address address) {
+    super(name);
+    this.address = address;
+  }
+
 }

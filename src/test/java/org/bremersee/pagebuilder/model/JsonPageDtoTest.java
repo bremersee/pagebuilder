@@ -24,6 +24,7 @@ import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrder.CaseHandling;
 import org.bremersee.comparator.model.SortOrders;
 import org.bremersee.pagebuilder.testmodel.Address;
+import org.bremersee.pagebuilder.testmodel.AddressPage;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,19 +32,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 /**
- * The common page dto test.
+ * The json page dto test.
  *
  * @author Christian Bremer
  */
-class CommonPageDtoTest {
+class JsonPageDtoTest {
 
   @Test
   void getContentWithNoSort() {
-    List<Integer> expected = List.of(2, 4, 6);
-    CommonPageDto actual = new CommonPageDto(expected, 0, 4, 10L);
+    List<Address> content = List.of(
+        new Address("Berlin"),
+        new Address("London"),
+        new Address("New York"));
+    AddressPage actual = new AddressPage(content, 0, 4, 10L);
     assertThat(actual)
-        .extracting(CommonPageDto::getContent, InstanceOfAssertFactories.list(Integer.class))
-        .containsExactlyElementsOf(expected);
+        .extracting(AddressPage::getContent, InstanceOfAssertFactories.list(Address.class))
+        .containsExactly(
+            new Address("Berlin"),
+            new Address("London"),
+            new Address("New York"));
   }
 
   @Test
@@ -52,9 +59,9 @@ class CommonPageDtoTest {
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    CommonPageDto actual = new CommonPageDto(content, 0, 4, 10L, Sort.by("city"));
+    AddressPage actual = new AddressPage(content, 0, 4, 10L, Sort.by("city"));
     assertThat(actual)
-        .extracting(CommonPageDto::getContent, InstanceOfAssertFactories.list(Address.class))
+        .extracting(AddressPage::getContent, InstanceOfAssertFactories.list(Address.class))
         .containsExactly(
             new Address("Berlin"),
             new Address("London"),
@@ -67,10 +74,10 @@ class CommonPageDtoTest {
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    CommonPageDto actual = new CommonPageDto(content, 0, 4, 10L,
+    AddressPage actual = new AddressPage(content, 0, 4, 10L,
         new SortOrders(List.of(SortOrder.by("city"))));
     assertThat(actual)
-        .extracting(CommonPageDto::getContent, InstanceOfAssertFactories.list(Address.class))
+        .extracting(AddressPage::getContent, InstanceOfAssertFactories.list(Address.class))
         .containsExactly(
             new Address("Berlin"),
             new Address("London"),
@@ -84,22 +91,13 @@ class CommonPageDtoTest {
         new Address("London"),
         new Address("New York"));
     Page<Address> page = new PageImpl<>(content, PageRequest.of(0, 4, Sort.by("city")), 10L);
-    CommonPageDto actual = new CommonPageDto(page);
+    AddressPage actual = new AddressPage(page);
     assertThat(actual)
-        .extracting(CommonPageDto::getContent, InstanceOfAssertFactories.list(Address.class))
+        .extracting(AddressPage::getContent, InstanceOfAssertFactories.list(Address.class))
         .containsExactly(
             new Address("Berlin"),
             new Address("London"),
             new Address("New York"));
-  }
-
-  @Test
-  void getSortWithNoSort() {
-    List<Integer> expected = List.of(2, 4, 6);
-    CommonPageDto actual = new CommonPageDto(expected, 0, 4, 10L);
-    assertThat(actual)
-        .extracting(CommonPageDto::getSort)
-        .isNotNull();
   }
 
   @Test
@@ -108,12 +106,13 @@ class CommonPageDtoTest {
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    CommonPageDto actual = new CommonPageDto(content, 0, 4, 10L, Sort.by("city"));
+    AddressPage actual = new AddressPage(content, 0, 4, 10L,
+        SortOrders.by(SortOrder.by("city").with(CaseHandling.SENSITIVE)));
     assertThat(actual)
-        .extracting(CommonPageDto::getSort)
+        .extracting(AddressPage::getSort)
         .isNotNull();
     assertThat(actual)
-        .extracting(CommonPageDto::getSort)
+        .extracting(AddressPage::getSort)
         .isEqualTo(SortOrders.by(SortOrder.by("city").with(CaseHandling.SENSITIVE)));
   }
 

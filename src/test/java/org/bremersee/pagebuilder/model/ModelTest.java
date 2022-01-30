@@ -95,7 +95,6 @@ class ModelTest {
   void jsonPage() throws Exception {
     CommonPageDto expected = examplePage();
     String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(expected);
-    // System.out.println(json);
     CommonPageDto actual = objectMapper.readValue(json, CommonPageDto.class);
     assertThat(actual)
         .isEqualTo(expected);
