@@ -54,7 +54,7 @@ class ModelTest {
    */
   @BeforeAll
   static void setup() {
-    jaxbContextBuilder = JaxbContextBuilder.builder()
+    jaxbContextBuilder = JaxbContextBuilder.newInstance()
         .processAll(ServiceLoader.load(JaxbContextDataProvider.class))
         .add(new JaxbContextData(ObjectFactory.class.getPackage()))
         .initJaxbContext();

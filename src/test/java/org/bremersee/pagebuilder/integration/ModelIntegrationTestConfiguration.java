@@ -43,19 +43,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class ModelIntegrationTestConfiguration implements WebMvcConfigurer {
 
   /**
-   * Jaxb context builder jaxb context builder.
+   * Creates jaxb context builder bean.
    *
    * @return the jaxb context builder
    */
   @Bean
   public JaxbContextBuilder jaxbContextBuilder() {
-    return JaxbContextBuilder.builder()
+    return JaxbContextBuilder.newInstance()
         .processAll(ServiceLoader.load(JaxbContextDataProvider.class))
         .add(new JaxbContextData(ObjectFactory.class.getPackage()));
   }
 
   /**
-   * Xml http message converter jaxb 2 http message converter.
+   * Creates xml http message converter bean.
    *
    * @param jaxbContextBuilder the jaxb context builder
    * @return the jaxb 2 http message converter
@@ -66,7 +66,7 @@ public class ModelIntegrationTestConfiguration implements WebMvcConfigurer {
   }
 
   /**
-   * Json customizer jackson 2 object mapper builder customizer.
+   * Creates customizer for jackson 2 object mapper builder.
    *
    * @return the jackson 2 object mapper builder customizer
    */
