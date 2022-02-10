@@ -320,7 +320,7 @@
 <a class="jxr_linenumber" name="L312" href="#L312">312</a>         .filter(sourceFilter)
 <a class="jxr_linenumber" name="L313" href="#L313">313</a>         .collect(Collectors.toList());
 <a class="jxr_linenumber" name="L314" href="#L314">314</a>     <strong class="jxr_keyword">if</strong> (SortTarget.SOURCE_ENTRIES.equals(sortTarget) &amp;&amp; !ObjectUtils.isEmpty(sort)) {
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>       source.sort(ComparatorBuilder.builder()
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>       source.sort(ComparatorBuilder.newInstance()
 <a class="jxr_linenumber" name="L316" href="#L316">316</a>           .addAll(sort, sourceSortFn)
 <a class="jxr_linenumber" name="L317" href="#L317">317</a>           .build());
 <a class="jxr_linenumber" name="L318" href="#L318">318</a>     }
@@ -330,7 +330,7 @@
 <a class="jxr_linenumber" name="L322" href="#L322">322</a>         .collect(Collectors.toList());
 <a class="jxr_linenumber" name="L323" href="#L323">323</a>     <strong class="jxr_keyword">final</strong> Sort pageSort;
 <a class="jxr_linenumber" name="L324" href="#L324">324</a>     <strong class="jxr_keyword">if</strong> (SortTarget.TARGET_ENTRIES.equals(sortTarget) &amp;&amp; !ObjectUtils.isEmpty(sort)) {
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>       target.sort(ComparatorBuilder.builder()
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>       target.sort(ComparatorBuilder.newInstance()
 <a class="jxr_linenumber" name="L326" href="#L326">326</a>           .addAll(sort, targetSortFn)
 <a class="jxr_linenumber" name="L327" href="#L327">327</a>           .build());
 <a class="jxr_linenumber" name="L328" href="#L328">328</a>       pageSort = SortMapper.toSort(sort);

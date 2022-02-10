@@ -17,34 +17,47 @@
 package org.bremersee.pagebuilder.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.spring.mapper.SortMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 /**
- * The abstract page dto.
+ * The abstract page transfer object.
  *
+ * @param &lt;T&gt; the type of the content
  * @author Christian Bremer
  */
 @SuppressWarnings(&quot;SameNameButDifferent&quot;)
+@Valid
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = &quot;abstractPageType&quot;, propOrder = {
-    &quot;number&quot;,
-    &quot;size&quot;,
-    &quot;totalElements&quot;,
-    &quot;sort&quot;
-})
+@XmlType(name = &quot;abstractPageType&quot;)
 @Getter
 @EqualsAndHashCode
 @ToString
-@Schema(description = &quot;The base information of a page.&quot;)
-public abstract class AbstractPageDto {
+@Schema(description = &quot;The base page.&quot;)
+public abstract class AbstractPageDto&lt;T&gt; {
+
+  /**
+   * The Content.
+   */
+<span class="fc" id="L58">  @Schema(description = &quot;The content of the page.&quot;)</span>
+  @XmlTransient
+  protected List&lt;T&gt; content = new ArrayList&lt;&gt;();
 
   @Schema(description = &quot;The page number starting with 0.&quot;)
   @XmlElement(name = &quot;number&quot;, required = true)
@@ -58,29 +71,111 @@ public abstract class AbstractPageDto {
   @XmlElement(name = &quot;totalElements&quot;, required = true)
   private final long totalElements;
 
-  @XmlElementRef
+  @XmlElementRef(type = SortOrders.class)
   private final SortOrders sort;
 
   /**
-   * Instantiates a new abstract page dto.
+   * Instantiates a new abstract page transfer object.
    */
   protected AbstractPageDto() {
-<span class="fc" id="L68">    this(0, 0, 0, null);</span>
-<span class="fc" id="L69">  }</span>
+<span class="fc" id="L81">    this(null, 0, 0, 0, (SortOrders) null);</span>
+<span class="fc" id="L82">  }</span>
 
   /**
-   * Instantiates a new abstract page dto.
+   * Instantiates a new abstract page transfer object.
    *
+   * @param content the content
+   * @param number the number
+   * @param size the size
+   * @param totalElements the total elements
+   */
+  public AbstractPageDto(
+      List&lt;? extends T&gt; content,
+      int number,
+      int size,
+      long totalElements) {
+<span class="fc" id="L97">    this(content, number, size, totalElements, Sort.unsorted());</span>
+<span class="fc" id="L98">  }</span>
+
+  /**
+   * Instantiates a new abstract page transfer object.
+   *
+   * @param content the content of the page
+   * @param number the number of the page starting with 0
+   * @param size the size of the page (not the size of the content)
+   * @param totalElements the total elements (the size of available elements)
+   * @param sort the sort oder
+   */
+  public AbstractPageDto(
+      List&lt;? extends T&gt; content,
+      int number,
+      int size,
+      long totalElements,
+<span class="fc" id="L114">      SortOrders sort) {</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">    if (!Objects.isNull(content)) {</span>
+<span class="fc" id="L116">      this.content.addAll(content);</span>
+    }
+<span class="fc" id="L118">    this.number = number;</span>
+<span class="fc" id="L119">    this.size = size;</span>
+<span class="fc" id="L120">    this.totalElements = totalElements;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">    this.sort = Objects.isNull(sort) ? new SortOrders(List.of()) : sort;</span>
+<span class="fc" id="L122">  }</span>
+
+  /**
+   * Instantiates a new abstract page transfer object.
+   *
+   * @param content the content
    * @param number the number
    * @param size the size
    * @param totalElements the total elements
    * @param sort the sort
    */
-<span class="fc" id="L79">  public AbstractPageDto(int number, int size, long totalElements, SortOrders sort) {</span>
-<span class="fc" id="L80">    this.number = number;</span>
-<span class="fc" id="L81">    this.size = size;</span>
-<span class="fc" id="L82">    this.totalElements = totalElements;</span>
-<span class="fc" id="L83">    this.sort = sort;</span>
-<span class="fc" id="L84">  }</span>
+  public AbstractPageDto(
+      List&lt;? extends T&gt; content,
+      int number,
+      int size,
+      long totalElements,
+      Sort sort) {
+<span class="fc" id="L139">    this(</span>
+        content,
+        number,
+        size,
+        totalElements,
+<span class="fc" id="L144">        new SortOrders(SortMapper.fromSort(sort)));</span>
+<span class="fc" id="L145">  }</span>
+
+  /**
+   * Instantiates a new abstract page transfer object.
+   *
+   * @param page the page
+   */
+  public AbstractPageDto(Page&lt;? extends T&gt; page) {
+<span class="fc" id="L153">    this(</span>
+<span class="fc" id="L154">        page.getContent(),</span>
+<span class="fc" id="L155">        page.getNumber(),</span>
+<span class="fc" id="L156">        page.getSize(),</span>
+<span class="fc" id="L157">        page.getTotalElements(),</span>
+<span class="fc" id="L158">        page.getSort());</span>
+<span class="fc" id="L159">  }</span>
+
+  /**
+   * Gets content.
+   *
+   * @return the content
+   */
+  @NotNull
+  public abstract List&lt;T&gt; getContent();
+
+  /**
+   * Gets sort.
+   *
+   * @return the sort
+   */
+  public final SortOrders getSort() {
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">    if (Objects.isNull(sort)) {</span>
+<span class="nc" id="L176">      return new SortOrders(List.of());</span>
+    }
+<span class="fc" id="L178">    return sort;</span>
+  }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

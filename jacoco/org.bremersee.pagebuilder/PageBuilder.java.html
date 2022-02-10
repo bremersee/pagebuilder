@@ -312,7 +312,7 @@ public class PageBuilder&lt;S, T&gt; {
 <span class="fc" id="L312">        .filter(sourceFilter)</span>
 <span class="fc" id="L313">        .collect(Collectors.toList());</span>
 <span class="pc bpc" id="L314" title="1 of 4 branches missed.">    if (SortTarget.SOURCE_ENTRIES.equals(sortTarget) &amp;&amp; !ObjectUtils.isEmpty(sort)) {</span>
-<span class="fc" id="L315">      source.sort(ComparatorBuilder.builder()</span>
+<span class="fc" id="L315">      source.sort(ComparatorBuilder.newInstance()</span>
 <span class="fc" id="L316">          .addAll(sort, sourceSortFn)</span>
 <span class="fc" id="L317">          .build());</span>
     }
@@ -322,7 +322,7 @@ public class PageBuilder&lt;S, T&gt; {
 <span class="fc" id="L322">        .collect(Collectors.toList());</span>
     final Sort pageSort;
 <span class="pc bpc" id="L324" title="1 of 4 branches missed.">    if (SortTarget.TARGET_ENTRIES.equals(sortTarget) &amp;&amp; !ObjectUtils.isEmpty(sort)) {</span>
-<span class="fc" id="L325">      target.sort(ComparatorBuilder.builder()</span>
+<span class="fc" id="L325">      target.sort(ComparatorBuilder.newInstance()</span>
 <span class="fc" id="L326">          .addAll(sort, targetSortFn)</span>
 <span class="fc" id="L327">          .build());</span>
 <span class="fc" id="L328">      pageSort = SortMapper.toSort(sort);</span>
@@ -354,4 +354,4 @@ public class PageBuilder&lt;S, T&gt; {
 <span class="fc" id="L354">    TARGET_ENTRIES</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

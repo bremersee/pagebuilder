@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2022 bremersee.org</copyright>
     <item>
-      <title>File: 20,
+      <title>File: 28,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -47,6 +47,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.testmodel.ObjectFactory.java">org/bremersee/pagebuilder/testmodel/ObjectFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.model.JsonPageDto.java">org/bremersee/pagebuilder/model/JsonPageDto.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +102,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.PageBuilderJaxbContextDataProvider.java">org/bremersee/pagebuilder/PageBuilderJaxbContextDataProvider.java</a>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.model.JsonPageDtoTest.java">org/bremersee/pagebuilder/model/JsonPageDtoTest.java</a>
                 </td>
                 <td>
                   0
@@ -186,6 +200,118 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.integration.Jaxb2HttpMessageConverter.java">org/bremersee/pagebuilder/integration/Jaxb2HttpMessageConverter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.testmodel.Cat.java">org/bremersee/pagebuilder/testmodel/Cat.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.integration.ModelIntegrationTestConfiguration.java">org/bremersee/pagebuilder/integration/ModelIntegrationTestConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.testmodel.Address.java">org/bremersee/pagebuilder/testmodel/Address.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.model.CommonPageDtoTest.java">org/bremersee/pagebuilder/model/CommonPageDtoTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.integration.components.IntegrationRestController.java">org/bremersee/pagebuilder/integration/components/IntegrationRestController.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.PageBuilderJaxbContextDataProvider.java">org/bremersee/pagebuilder/PageBuilderJaxbContextDataProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.testmodel.AddressPage.java">org/bremersee/pagebuilder/testmodel/AddressPage.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.testmodel.Person.java">org/bremersee/pagebuilder/testmodel/Person.java</a>
                 </td>
                 <td>
@@ -201,6 +327,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.model.BufferSchemaOutputResolver.java">org/bremersee/pagebuilder/model/BufferSchemaOutputResolver.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.integration.ModelIntegrationTest.java">org/bremersee/pagebuilder/integration/ModelIntegrationTest.java</a>
                 </td>
                 <td>
                   0
@@ -242,20 +382,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.testmodel.Cat.java">org/bremersee/pagebuilder/testmodel/Cat.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.PageBuilderJaxbContextDataProviderTest.java">org/bremersee/pagebuilder/PageBuilderJaxbContextDataProviderTest.java</a>
                 </td>
                 <td>
@@ -270,21 +396,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.testmodel.Address.java">org/bremersee/pagebuilder/testmodel/Address.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.model.CommonPageDtoTest.java">org/bremersee/pagebuilder/model/CommonPageDtoTest.java</a>
+                  <a href="https://github.com/bremersee/pagebuilder/checkstyle.html#org.bremersee.pagebuilder.testmodel.AnimalPage.java">org/bremersee/pagebuilder/testmodel/AnimalPage.java</a>
                 </td>
                 <td>
                   0
