@@ -120,13 +120,6 @@ class ModelIntegrationTest {
             2,
             3,
             10L));
-
-    ResponseEntity<String> stringResponse = restTemplate.exchange(
-        "http://localhost:" + port + "/common-page",
-        HttpMethod.GET,
-        httpEntity,
-        String.class);
-    System.out.println(stringResponse.getBody());
   }
 
   /**

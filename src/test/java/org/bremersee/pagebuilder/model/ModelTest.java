@@ -79,7 +79,6 @@ class ModelTest {
     StringWriter sw = new StringWriter();
     jaxbContextBuilder.buildMarshaller().marshal(expected, sw);
     String xml = sw.toString();
-    // System.out.println(xml);
     CommonPageDto actual = (CommonPageDto) jaxbContextBuilder.buildUnmarshaller()
         .unmarshal(new StringReader(xml));
     assertThat(actual)
