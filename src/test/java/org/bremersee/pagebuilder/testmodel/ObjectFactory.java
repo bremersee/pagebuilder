@@ -63,4 +63,13 @@ public class ObjectFactory {
     return new Person();
   }
 
+  /**
+   * Create animal page.
+   *
+   * @return the animal page
+   */
+  public AnimalPage createAnimalPage() {
+    return new AnimalPage();
+  }
+
 }

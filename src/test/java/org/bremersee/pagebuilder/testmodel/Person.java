@@ -16,17 +16,23 @@
 
 package org.bremersee.pagebuilder.testmodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import io.swagger.v3.oas.annotations.media.Schema;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * The person.
@@ -36,20 +42,50 @@ import lombok.NoArgsConstructor;
 @XmlRootElement(name = "person")
 @XmlType(name = "personType")
 @XmlAccessorType(XmlAccessType.FIELD)
-@Data
+@EqualsAndHashCode
+@ToString
 @NoArgsConstructor
-@AllArgsConstructor
+// To keep global typing and schema in sync
+@JsonTypeInfo(
+    use = Id.CLASS,
+    property = "_type")
+@Schema(description = "A person", discriminatorProperty = "_type")
 public class Person {
+
+  // The xml schema needs this property, because it is required in the OpenApi schema.
+  @JsonIgnore
+  @XmlAttribute(name = "_type")
+  @Schema(hidden = true) // It is defined as discriminator property.
+  @SuppressWarnings("unused")
+  private String type;
 
   @XmlAttribute(required = true)
   @JsonProperty(required = true)
+  @Getter
+  @Setter
   private String firstname;
 
   @XmlAttribute(required = true)
   @JsonProperty(required = true)
+  @Getter
+  @Setter
   private String lastname;
 
   @JsonInclude(Include.NON_NULL)
+  @Getter
+  @Setter
   private Address address;
 
+  /**
+   * Instantiates a new person.
+   *
+   * @param firstname the firstname
+   * @param lastname the lastname
+   * @param address the address
+   */
+  public Person(String firstname, String lastname, Address address) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.address = address;
+  }
 }

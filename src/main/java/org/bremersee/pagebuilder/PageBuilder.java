@@ -312,7 +312,7 @@ public class PageBuilder<S, T> {
         .filter(sourceFilter)
         .collect(Collectors.toList());
     if (SortTarget.SOURCE_ENTRIES.equals(sortTarget) && !ObjectUtils.isEmpty(sort)) {
-      source.sort(ComparatorBuilder.builder()
+      source.sort(ComparatorBuilder.newInstance()
           .addAll(sort, sourceSortFn)
           .build());
     }
@@ -322,7 +322,7 @@ public class PageBuilder<S, T> {
         .collect(Collectors.toList());
     final Sort pageSort;
     if (SortTarget.TARGET_ENTRIES.equals(sortTarget) && !ObjectUtils.isEmpty(sort)) {
-      target.sort(ComparatorBuilder.builder()
+      target.sort(ComparatorBuilder.newInstance()
           .addAll(sort, targetSortFn)
           .build());
       pageSort = SortMapper.toSort(sort);

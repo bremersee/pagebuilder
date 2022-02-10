@@ -53,4 +53,16 @@ public class Cat extends Animal {
   public Cat(String name) {
     super(name);
   }
+
+  /**
+   * Instantiates a new cat.
+   *
+   * @param name the name
+   * @param owner the owner
+   */
+  public Cat(String name, Person owner) {
+    super(name);
+    this.owner = owner;
+  }
+
 }

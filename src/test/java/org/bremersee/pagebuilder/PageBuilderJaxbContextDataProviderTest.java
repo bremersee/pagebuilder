@@ -59,8 +59,5 @@ class PageBuilderJaxbContextDataProviderTest {
     Collection<JaxbContextData> actual = target.getJaxbContextData();
     softly.assertThat(actual)
         .containsExactly(new JaxbContextData(ObjectFactory.class.getPackage()));
-    softly.assertThat(actual)
-        .map(JaxbContextData::getNameSpace)
-        .containsExactly(PageBuilderJaxbContextDataProvider.getNamespace());
   }
 }

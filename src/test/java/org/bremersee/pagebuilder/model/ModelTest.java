@@ -54,7 +54,7 @@ class ModelTest {
    */
   @BeforeAll
   static void setup() {
-    jaxbContextBuilder = JaxbContextBuilder.builder()
+    jaxbContextBuilder = JaxbContextBuilder.newInstance()
         .processAll(ServiceLoader.load(JaxbContextDataProvider.class))
         .add(new JaxbContextData(ObjectFactory.class.getPackage()))
         .initJaxbContext();
@@ -79,7 +79,6 @@ class ModelTest {
     StringWriter sw = new StringWriter();
     jaxbContextBuilder.buildMarshaller().marshal(expected, sw);
     String xml = sw.toString();
-    // System.out.println(xml);
     CommonPageDto actual = (CommonPageDto) jaxbContextBuilder.buildUnmarshaller()
         .unmarshal(new StringReader(xml));
     assertThat(actual)
@@ -95,7 +94,6 @@ class ModelTest {
   void jsonPage() throws Exception {
     CommonPageDto expected = examplePage();
     String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(expected);
-    // System.out.println(json);
     CommonPageDto actual = objectMapper.readValue(json, CommonPageDto.class);
     assertThat(actual)
         .isEqualTo(expected);

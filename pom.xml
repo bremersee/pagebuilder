@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.bremersee</groupId>
     <artifactId>common-parent</artifactId>
-    <version>2.3.1</version>
+    <version>2.4.0</version>
     <relativePath/>
   </parent>
 
   <artifactId>pagebuilder</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
   <name>PageBuilder</name>
   <description>A page builder library</description>
   <url>https://github.com/bremersee/pagebuilder</url>
@@ -21,7 +21,7 @@
     <github.repo>pagebuilder</github.repo>
     <gh-pages-staging-dir>${project.build.directory}/staging</gh-pages-staging-dir>
 
-    <comparator.version>3.0.0</comparator.version>
+    <comparator.version>3.1.0</comparator.version>
   </properties>
 
   <developers>
@@ -123,6 +123,16 @@
           <artifactId>junit-vintage-engine</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-webmvc-core</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
