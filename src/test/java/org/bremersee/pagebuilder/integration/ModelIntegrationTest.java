@@ -30,15 +30,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * The model integration test.
@@ -54,29 +52,19 @@ class ModelIntegrationTest {
   /**
    * The rest template builder.
    */
-  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
-  RestTemplateBuilder restTemplateBuilder;
-
-  /**
-   * The local port.
-   */
-  @LocalServerPort
-  int port;
+  TestRestTemplate restTemplate;
 
   /**
    * Gets common page as xml.
    */
   @Test
   void getCommonPageAsXml() {
-    RestTemplate restTemplate = restTemplateBuilder
-        .build();
-
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setAccept(List.of(MediaType.APPLICATION_XML));
     HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
     ResponseEntity<CommonPageDto> response = restTemplate.exchange(
-        "http://localhost:" + port + "/common-page",
+        "/common-page",
         HttpMethod.GET,
         httpEntity,
         CommonPageDto.class);
@@ -97,14 +85,11 @@ class ModelIntegrationTest {
    */
   @Test
   void getCommonPageAsJson() {
-    RestTemplate restTemplate = restTemplateBuilder
-        .build();
-
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
     HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
     ResponseEntity<CommonPageDto> response = restTemplate.exchange(
-        "http://localhost:" + port + "/common-page",
+        "/common-page",
         HttpMethod.GET,
         httpEntity,
         CommonPageDto.class);
@@ -127,14 +112,11 @@ class ModelIntegrationTest {
    */
   @Test
   void getAddressPageAsJson() {
-    RestTemplate restTemplate = restTemplateBuilder
-        .build();
-
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
     HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
     ResponseEntity<AddressPage> response = restTemplate.exchange(
-        "http://localhost:" + port + "/address-page",
+        "/address-page",
         HttpMethod.GET,
         httpEntity,
         AddressPage.class);
@@ -158,14 +140,11 @@ class ModelIntegrationTest {
    */
   @Test
   void getAnimalPageAsJson() {
-    RestTemplate restTemplate = restTemplateBuilder
-        .build();
-
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON));
     HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
     ResponseEntity<AnimalPage> response = restTemplate.exchange(
-        "http://localhost:" + port + "/animal-page",
+        "/animal-page",
         HttpMethod.GET,
         httpEntity,
         AnimalPage.class);
@@ -187,14 +166,11 @@ class ModelIntegrationTest {
    */
   @Test
   void getAnimalPageAsXml() {
-    RestTemplate restTemplate = restTemplateBuilder
-        .build();
-
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setAccept(List.of(MediaType.APPLICATION_XML));
     HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
     ResponseEntity<AnimalPage> response = restTemplate.exchange(
-        "http://localhost:" + port + "/animal-page",
+        "/animal-page",
         HttpMethod.GET,
         httpEntity,
         AnimalPage.class);
@@ -216,9 +192,8 @@ class ModelIntegrationTest {
    */
   @Test
   void openApi() {
-    RestTemplate restTemplate = restTemplateBuilder.build();
     ResponseEntity<String> response = restTemplate.getForEntity(
-        "http://localhost:" + port + "/v3/api-docs.yaml",
+        "/v3/api-docs.yaml",
         String.class);
     assertThat(response.getBody()).isNotNull();
     System.out.println(response.getBody());

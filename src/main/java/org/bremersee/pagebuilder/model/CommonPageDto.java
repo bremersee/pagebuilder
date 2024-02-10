@@ -19,10 +19,10 @@ package org.bremersee.pagebuilder.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAnyElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAnyElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
 import org.bremersee.comparator.model.SortOrders;
 import org.springframework.data.domain.Page;
@@ -33,7 +33,6 @@ import org.springframework.data.domain.Sort;
  *
  * @author Christian Bremer
  */
-@SuppressWarnings("SameNameButDifferent")
 @XmlRootElement(name = "page")
 @XmlType(name = "pageType")
 @JsonIgnoreProperties(ignoreUnknown = true)

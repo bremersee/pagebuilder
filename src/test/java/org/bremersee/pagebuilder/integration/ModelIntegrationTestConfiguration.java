@@ -23,8 +23,8 @@ import java.util.ServiceLoader;
 import org.bremersee.pagebuilder.integration.components.IntegrationRestController;
 import org.bremersee.pagebuilder.testmodel.ObjectFactory;
 import org.bremersee.xml.JaxbContextBuilder;
-import org.bremersee.xml.JaxbContextData;
 import org.bremersee.xml.JaxbContextDataProvider;
+import org.bremersee.xml.JaxbContextMember;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
@@ -51,7 +51,7 @@ public class ModelIntegrationTestConfiguration implements WebMvcConfigurer {
   public JaxbContextBuilder jaxbContextBuilder() {
     return JaxbContextBuilder.newInstance()
         .processAll(ServiceLoader.load(JaxbContextDataProvider.class))
-        .add(new JaxbContextData(ObjectFactory.class.getPackage()));
+        .add(JaxbContextMember.byPackage(ObjectFactory.class.getPackage()).build());
   }
 
   /**

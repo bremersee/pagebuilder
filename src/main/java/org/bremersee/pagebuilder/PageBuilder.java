@@ -343,7 +343,7 @@ public class PageBuilder<S, T> {
   /**
    * The sort target.
    */
-  enum SortTarget {
+  public enum SortTarget {
     /**
      * Source entries sort target.
      */

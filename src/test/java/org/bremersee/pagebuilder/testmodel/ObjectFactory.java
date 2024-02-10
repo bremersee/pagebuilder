@@ -16,7 +16,7 @@
 
 package org.bremersee.pagebuilder.testmodel;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 /**
  * The xml object factory og the test model.
