@@ -17,8 +17,6 @@
 package org.bremersee.pagebuilder.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -42,7 +40,6 @@ import org.springframework.data.domain.Sort;
  * @param <T> the type of the content
  * @author Christian Bremer
  */
-@Valid
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "abstractPageType")
 @Getter
@@ -162,7 +159,6 @@ public abstract class AbstractPageDto<T> {
    *
    * @return the content
    */
-  @NotNull
   public abstract List<T> getContent();
 
   /**
