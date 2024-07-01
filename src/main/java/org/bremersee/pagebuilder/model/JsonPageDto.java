@@ -30,7 +30,6 @@ import org.springframework.data.domain.Sort;
  * @param <T> the content type
  * @author Christian Bremer
  */
-@SuppressWarnings("SameNameButDifferent")
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "The page for json deserialization.")
 public abstract class JsonPageDto<T> extends AbstractPageDto<T> {

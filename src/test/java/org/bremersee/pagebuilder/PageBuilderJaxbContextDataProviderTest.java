@@ -19,12 +19,12 @@ package org.bremersee.pagebuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
+import jakarta.xml.bind.annotation.XmlSchema;
 import java.util.Collection;
-import javax.xml.bind.annotation.XmlSchema;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.pagebuilder.model.ObjectFactory;
-import org.bremersee.xml.JaxbContextData;
+import org.bremersee.xml.JaxbContextMember;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -56,8 +56,9 @@ class PageBuilderJaxbContextDataProviderTest {
   @Test
   void getJaxbContextData(SoftAssertions softly) {
     PageBuilderJaxbContextDataProvider target = new PageBuilderJaxbContextDataProvider();
-    Collection<JaxbContextData> actual = target.getJaxbContextData();
+    Collection<JaxbContextMember> actual = target.getJaxbContextData();
     softly.assertThat(actual)
-        .containsExactly(new JaxbContextData(ObjectFactory.class.getPackage()));
+        .containsExactly(JaxbContextMember.byPackage(
+            org.bremersee.comparator.model.ObjectFactory.class.getPackage()).build());
   }
 }
