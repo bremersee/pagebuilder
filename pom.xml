@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.bremersee</groupId>
     <artifactId>common-parent</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0</version>
     <relativePath/>
   </parent>
 
@@ -21,8 +21,8 @@
     <github.repo>pagebuilder</github.repo>
     <gh-pages-staging-dir>${project.build.directory}/staging</gh-pages-staging-dir>
 
-    <common-xml.version>3.0.0-SNAPSHOT</common-xml.version>
-    <comparator.version>4.0.0-SNAPSHOT</comparator.version>
+    <common-xml.version>3.0.1</common-xml.version>
+    <comparator.version>4.0.0</comparator.version>
   </properties>
 
   <developers>
