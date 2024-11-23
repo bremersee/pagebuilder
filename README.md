@@ -8,4 +8,4 @@ This project contains classes for building a page and a common data transfer obj
 
 - [Release](https://bremersee.github.io/pagebuilder/index.html)
 
-- [Snapshot](https://nexus.bremersee.org/repository/maven-sites/pagebuilder/3.1.1-SNAPSHOT/index.html)
+- [Snapshot](https://nexus.bremersee.org/repository/maven-sites/pagebuilder/3.2.0-SNAPSHOT/index.html)

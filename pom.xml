@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.bremersee</groupId>
     <artifactId>common-parent</artifactId>
-    <version>3.1.2-SNAPSHOT</version>
+    <version>3.1.2</version>
     <relativePath/>
   </parent>
 
   <artifactId>pagebuilder</artifactId>
-  <version>3.1.1-SNAPSHOT</version>
+  <version>3.1.1</version>
   <name>PageBuilder</name>
   <description>A page builder library</description>
   <url>https://github.com/bremersee/pagebuilder</url>
@@ -21,8 +21,8 @@
     <github.repo>pagebuilder</github.repo>
     <gh-pages-staging-dir>${project.build.directory}/staging</gh-pages-staging-dir>
 
-    <common-xml.version>3.1.1-SNAPSHOT</common-xml.version>
-    <comparator.version>4.1.1-SNAPSHOT</comparator.version>
+    <common-xml.version>3.1.1</common-xml.version>
+    <comparator.version>4.1.1</comparator.version>
   </properties>
 
   <developers>
