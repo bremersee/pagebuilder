@@ -16,6 +16,8 @@
 
 package org.bremersee.pagebuilder.model;
 
+import static java.util.Objects.isNull;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -25,11 +27,10 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.spring.mapper.SortMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -67,14 +68,14 @@ public abstract class AbstractPageDto<T> {
   @XmlElement(name = "totalElements", required = true)
   private final long totalElements;
 
-  @XmlElementRef(type = SortOrders.class)
-  private final SortOrders sort;
+  @XmlElementRef(type = SortOrder.class)
+  private final SortOrder sort;
 
   /**
    * Instantiates a new abstract page transfer object.
    */
   protected AbstractPageDto() {
-    this(null, 0, 0, 0, (SortOrders) null);
+    this(null, 0, 0, 0, (SortOrder) null);
   }
 
   /**
@@ -107,14 +108,14 @@ public abstract class AbstractPageDto<T> {
       int number,
       int size,
       long totalElements,
-      SortOrders sort) {
-    if (!Objects.isNull(content)) {
+      SortOrder sort) {
+    if (!isNull(content)) {
       this.content.addAll(content);
     }
     this.number = number;
     this.size = size;
     this.totalElements = totalElements;
-    this.sort = Objects.isNull(sort) ? new SortOrders(List.of()) : sort;
+    this.sort = isNull(sort) ? new SortOrder(List.of()) : sort;
   }
 
   /**
@@ -137,7 +138,7 @@ public abstract class AbstractPageDto<T> {
         number,
         size,
         totalElements,
-        new SortOrders(SortMapper.fromSort(sort)));
+        SortMapper.defaultSortMapper().fromSort(sort));
   }
 
   /**
@@ -166,9 +167,9 @@ public abstract class AbstractPageDto<T> {
    *
    * @return the sort
    */
-  public final SortOrders getSort() {
-    if (Objects.isNull(sort)) {
-      return new SortOrders(List.of());
+  public final SortOrder getSort() {
+    if (isNull(sort)) {
+      return new SortOrder(List.of());
     }
     return sort;
   }

@@ -21,8 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrder.CaseHandling;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrderItem;
+import org.bremersee.comparator.model.SortOrderItem.CaseHandling;
 import org.bremersee.pagebuilder.testmodel.Address;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
@@ -68,7 +68,7 @@ class CommonPageDtoTest {
         new Address("London"),
         new Address("New York"));
     CommonPageDto actual = new CommonPageDto(content, 0, 4, 10L,
-        new SortOrders(List.of(SortOrder.by("city"))));
+        new SortOrder(List.of(SortOrderItem.by("city"))));
     assertThat(actual)
         .extracting(CommonPageDto::getContent, InstanceOfAssertFactories.list(Address.class))
         .containsExactly(
@@ -114,7 +114,7 @@ class CommonPageDtoTest {
         .isNotNull();
     assertThat(actual)
         .extracting(CommonPageDto::getSort)
-        .isEqualTo(SortOrders.by(SortOrder.by("city").with(CaseHandling.SENSITIVE)));
+        .isEqualTo(SortOrder.by(SortOrderItem.by("city").with(CaseHandling.SENSITIVE)));
   }
 
 }

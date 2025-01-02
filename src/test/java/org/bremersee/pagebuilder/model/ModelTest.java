@@ -26,7 +26,10 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.ServiceLoader;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrderItem;
+import org.bremersee.comparator.model.SortOrderItem.CaseHandling;
+import org.bremersee.comparator.model.SortOrderItem.Direction;
+import org.bremersee.comparator.model.SortOrderItem.NullHandling;
 import org.bremersee.pagebuilder.testmodel.Address;
 import org.bremersee.pagebuilder.testmodel.Cat;
 import org.bremersee.pagebuilder.testmodel.Dog;
@@ -100,7 +103,8 @@ class ModelTest {
   }
 
   private CommonPageDto examplePage() {
-    SortOrder sortOrder = new SortOrder(null, true, true, false);
+    SortOrderItem sortOrder = new SortOrderItem(
+        null, Direction.ASC, CaseHandling.SENSITIVE, NullHandling.NULLS_LAST);
     Address address = new Address("Somewhere");
     Person person = new Person("Anna Livia", "Plurabelle", address);
     Dog dog = new Dog(address);
@@ -112,7 +116,7 @@ class ModelTest {
         0,
         10,
         20,
-        new SortOrders(List.of(sortOrder)));
+        new SortOrder(List.of(sortOrder)));
   }
 
 }

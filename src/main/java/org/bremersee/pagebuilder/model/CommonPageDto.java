@@ -18,13 +18,13 @@ package org.bremersee.pagebuilder.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.List;
 import jakarta.xml.bind.annotation.XmlAnyElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import java.util.List;
 import lombok.EqualsAndHashCode;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
@@ -61,7 +61,7 @@ public class CommonPageDto extends AbstractPageDto<Object> {
       int number,
       int size,
       long totalElements,
-      SortOrders sort) {
+      SortOrder sort) {
     super(content, number, size, totalElements, sort);
   }
 

@@ -21,8 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrder.CaseHandling;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrderItem;
+import org.bremersee.comparator.model.SortOrderItem.CaseHandling;
 import org.bremersee.pagebuilder.testmodel.Address;
 import org.bremersee.pagebuilder.testmodel.AddressPage;
 import org.junit.jupiter.api.Test;
@@ -75,7 +75,7 @@ class JsonPageDtoTest {
         new Address("London"),
         new Address("New York"));
     AddressPage actual = new AddressPage(content, 0, 4, 10L,
-        new SortOrders(List.of(SortOrder.by("city"))));
+        new SortOrder(List.of(SortOrderItem.by("city"))));
     assertThat(actual)
         .extracting(AddressPage::getContent, InstanceOfAssertFactories.list(Address.class))
         .containsExactly(
@@ -107,13 +107,13 @@ class JsonPageDtoTest {
         new Address("London"),
         new Address("New York"));
     AddressPage actual = new AddressPage(content, 0, 4, 10L,
-        SortOrders.by(SortOrder.by("city").with(CaseHandling.SENSITIVE)));
+        SortOrder.by(SortOrderItem.by("city").with(CaseHandling.SENSITIVE)));
     assertThat(actual)
         .extracting(AddressPage::getSort)
         .isNotNull();
     assertThat(actual)
         .extracting(AddressPage::getSort)
-        .isEqualTo(SortOrders.by(SortOrder.by("city").with(CaseHandling.SENSITIVE)));
+        .isEqualTo(SortOrder.by(SortOrderItem.by("city").with(CaseHandling.SENSITIVE)));
   }
 
 }

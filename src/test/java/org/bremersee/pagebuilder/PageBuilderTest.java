@@ -22,7 +22,8 @@ import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.ValueComparator;
-import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrderItem;
+import org.bremersee.comparator.model.SortOrderItem.CaseHandling;
 import org.bremersee.pagebuilder.PageBuilder.SortTarget;
 import org.bremersee.pagebuilder.testmodel.Address;
 import org.bremersee.pagebuilder.testmodel.Animal;
@@ -84,9 +85,9 @@ class PageBuilderTest {
     List<Integer> expected = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
     Page<Integer> actual = new PageBuilder<Integer, Integer>()
         .sourceEntries(entries)
-        .pageable(0, 9,
-            SortTarget.SOURCE_ENTRIES,
-            List.of(new SortOrder(null, true, false, false)))
+        .pageable(0, 9, SortTarget.SOURCE_ENTRIES, List.of(
+            new SortOrderItem(null, SortOrderItem.Direction.ASC, CaseHandling.INSENSITIVE,
+                SortOrderItem.NullHandling.NULLS_LAST)))
         .sourceSortFn(ValueComparator::new)
         .targetSortFn(null)
         .build();
@@ -120,8 +121,9 @@ class PageBuilderTest {
     List<Address> expected = List.of(new Address("Berlin"), new Address("London"));
     Page<Address> actual = new PageBuilder<Address, Address>()
         .sourceEntries(entries.iterator())
-        .pageable(0, 2,
-            List.of(new SortOrder("city", true, true, false)))
+        .pageable(0, 2, List.of(
+            new SortOrderItem("city", SortOrderItem.Direction.ASC, CaseHandling.INSENSITIVE,
+                SortOrderItem.NullHandling.NULLS_LAST)))
         .build();
     softly.assertThat(actual)
         .isNotNull()
@@ -181,7 +183,7 @@ class PageBuilderTest {
     softly.assertThat(actual.getTotalPages())
         .isEqualTo(2);
     softly.assertThat(actual.getPageable().getSort())
-        .isEqualTo(Sort.by(Order.by("city").with(Direction.ASC).with(NullHandling.NULLS_LAST)));
+        .isEqualTo(Sort.by(Order.by("city").with(Direction.ASC)));
 
     actual = new PageBuilder<Address, Address>()
         .sourceEntries(entries.iterator())
@@ -237,7 +239,8 @@ class PageBuilderTest {
         .targetFilter(address -> !address.getCity().contains(" "))
         .pageable(0, Integer.MAX_VALUE,
             SortTarget.TARGET_ENTRIES,
-            new SortOrder("city", true, true, false))
+            new SortOrderItem("city", SortOrderItem.Direction.ASC, CaseHandling.INSENSITIVE,
+                SortOrderItem.NullHandling.NULLS_LAST))
         .build();
     softly.assertThat(actual)
         .containsExactlyElementsOf(expected);
@@ -268,8 +271,10 @@ class PageBuilderTest {
     Page<Animal> actual = new PageBuilder<Animal, Animal>()
         .sourceEntries(entries)
         .pageable(0, Integer.MAX_VALUE,
-            new SortOrder("_type", true, false, false),
-            new SortOrder("name", false, true, false))
+            new SortOrderItem("_type", SortOrderItem.Direction.ASC, CaseHandling.SENSITIVE,
+                SortOrderItem.NullHandling.NULLS_LAST),
+            new SortOrderItem("name", SortOrderItem.Direction.DESC, CaseHandling.INSENSITIVE,
+                SortOrderItem.NullHandling.NULLS_LAST))
         .targetSortFn(sortOrder -> {
           if ("_type".equals(sortOrder.getField())) {
             return (o1, o2) -> o1 instanceof Dog && o2 instanceof Dog
@@ -300,7 +305,8 @@ class PageBuilderTest {
     actual = new PageBuilder<Animal, Animal>()
         .sourceEntries(entries)
         .pageable(0, Integer.MAX_VALUE,
-            new SortOrder("name", true, true, false))
+            new SortOrderItem("name", SortOrderItem.Direction.ASC, CaseHandling.INSENSITIVE,
+                SortOrderItem.NullHandling.NULLS_LAST))
         .targetSortFn(null)
         .build();
     softly.assertThat(actual)

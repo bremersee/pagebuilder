@@ -19,7 +19,7 @@ package org.bremersee.pagebuilder.testmodel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.NoArgsConstructor;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.pagebuilder.model.JsonPageDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -56,7 +56,7 @@ public class AddressPage extends JsonPageDto<Address> {
    * @param sort the sort
    */
   public AddressPage(List<? extends Address> content, int number, int size,
-      long totalElements, SortOrders sort) {
+      long totalElements, SortOrder sort) {
     super(content, number, size, totalElements, sort);
   }
 

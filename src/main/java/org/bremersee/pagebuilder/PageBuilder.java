@@ -33,6 +33,7 @@ import java.util.stream.StreamSupport;
 import org.bremersee.comparator.ComparatorBuilder;
 import org.bremersee.comparator.ValueComparator;
 import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrderItem;
 import org.bremersee.comparator.spring.mapper.SortMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,13 +55,13 @@ public class PageBuilder<S, T> {
 
   private Predicate<S> sourceFilter;
 
-  private Function<SortOrder, Comparator<?>> sourceSortFn;
+  private Function<SortOrderItem, Comparator<?>> sourceSortFn;
 
   private Integer pageNumber;
 
   private Integer pageSize;
 
-  private List<SortOrder> sort;
+  private List<SortOrderItem> sort;
 
   private SortTarget sortTarget;
 
@@ -68,7 +69,7 @@ public class PageBuilder<S, T> {
 
   private Predicate<T> targetFilter;
 
-  private Function<SortOrder, Comparator<?>> targetSortFn;
+  private Function<SortOrderItem, Comparator<?>> targetSortFn;
 
   /**
    * Instantiates a new page builder.
@@ -144,7 +145,7 @@ public class PageBuilder<S, T> {
    * @return the page builder
    */
   public PageBuilder<S, T> sourceSortFn(
-      Function<SortOrder, Comparator<?>> sourceSortFn) {
+      Function<SortOrderItem, Comparator<?>> sourceSortFn) {
     if (!Objects.isNull(sourceSortFn)) {
       this.sourceSortFn = sourceSortFn;
     }
@@ -174,7 +175,7 @@ public class PageBuilder<S, T> {
           pageable.getPageNumber(),
           pageable.getPageSize(),
           sortTarget,
-          SortMapper.fromSort(pageable.getSort()));
+          SortMapper.defaultSortMapper().fromSort(pageable.getSort()).getItems());
     }
     return this;
   }
@@ -190,7 +191,7 @@ public class PageBuilder<S, T> {
   public PageBuilder<S, T> pageable(
       Integer pageNumber,
       Integer pageSize,
-      SortOrder... sort) {
+      SortOrderItem... sort) {
     return pageable(
         pageNumber,
         pageSize,
@@ -209,7 +210,7 @@ public class PageBuilder<S, T> {
   public PageBuilder<S, T> pageable(
       Integer pageNumber,
       Integer pageSize,
-      List<SortOrder> sort) {
+      List<SortOrderItem> sort) {
     return pageable(pageNumber, pageSize, SortTarget.TARGET_ENTRIES, sort);
   }
 
@@ -226,7 +227,7 @@ public class PageBuilder<S, T> {
       Integer pageNumber,
       Integer pageSize,
       SortTarget sortTarget,
-      SortOrder... sort) {
+      SortOrderItem... sort) {
     return pageable(
         pageNumber,
         pageSize,
@@ -247,7 +248,7 @@ public class PageBuilder<S, T> {
       Integer pageNumber,
       Integer pageSize,
       SortTarget sortTarget,
-      List<SortOrder> sort) {
+      List<SortOrderItem> sort) {
 
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
     this.pageNumber = pageable.getPageNumber();
@@ -294,7 +295,7 @@ public class PageBuilder<S, T> {
    * @return the page builder
    */
   public PageBuilder<S, T> targetSortFn(
-      Function<SortOrder, Comparator<?>> targetSortFn) {
+      Function<SortOrderItem, Comparator<?>> targetSortFn) {
     if (!Objects.isNull(targetSortFn)) {
       this.targetSortFn = targetSortFn;
     }
@@ -325,7 +326,7 @@ public class PageBuilder<S, T> {
       target.sort(ComparatorBuilder.newInstance()
           .addAll(sort, targetSortFn)
           .build());
-      pageSort = SortMapper.toSort(sort);
+      pageSort = SortMapper.defaultSortMapper().toSort(new SortOrder(sort));
     } else {
       pageSort = Sort.unsorted();
     }

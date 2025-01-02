@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Collections;
 import java.util.List;
 import lombok.EqualsAndHashCode;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
@@ -62,7 +62,7 @@ public abstract class JsonPageDto<T> extends AbstractPageDto<T> {
    * @param sort the sort
    */
   public JsonPageDto(List<? extends T> content, int number, int size, long totalElements,
-      SortOrders sort) {
+      SortOrder sort) {
     super(content, number, size, totalElements, sort);
   }
 
