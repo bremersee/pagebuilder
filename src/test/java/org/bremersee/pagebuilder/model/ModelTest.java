@@ -102,6 +102,37 @@ class ModelTest {
         .isEqualTo(expected);
   }
 
+  /**
+   * Xml slice.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  void xmlSlice() throws Exception {
+    CommonSliceDto expected = exampleSlice();
+    StringWriter sw = new StringWriter();
+    jaxbContextBuilder.buildMarshaller().marshal(expected, sw);
+    String xml = sw.toString();
+    CommonSliceDto actual = (CommonSliceDto) jaxbContextBuilder.buildUnmarshaller()
+        .unmarshal(new StringReader(xml));
+    assertThat(actual)
+        .isEqualTo(expected);
+  }
+
+  /**
+   * Json slice.
+   *
+   * @throws Exception the exception
+   */
+  @Test
+  void jsonSlice() throws Exception {
+    CommonSliceDto expected = exampleSlice();
+    String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(expected);
+    CommonSliceDto actual = objectMapper.readValue(json, CommonSliceDto.class);
+    assertThat(actual)
+        .isEqualTo(expected);
+  }
+
   private CommonPageDto examplePage() {
     SortOrderItem sortOrder = new SortOrderItem(
         null, Direction.ASC, CaseHandling.SENSITIVE, NullHandling.NULLS_LAST);
@@ -116,6 +147,23 @@ class ModelTest {
         0,
         10,
         20,
+        new SortOrder(List.of(sortOrder)));
+  }
+
+  private CommonSliceDto exampleSlice() {
+    SortOrderItem sortOrder = new SortOrderItem(
+        null, Direction.ASC, CaseHandling.SENSITIVE, NullHandling.NULLS_LAST);
+    Address address = new Address("Somewhere");
+    Person person = new Person("Anna Livia", "Plurabelle", address);
+    Dog dog = new Dog(address);
+    dog.setName("Struppi");
+    Cat cat = new Cat(person);
+    cat.setName("Garfield");
+    return new CommonSliceDto(
+        List.of(address, person, dog, cat),
+        1,
+        4,
+        true,
         new SortOrder(List.of(sortOrder)));
   }
 

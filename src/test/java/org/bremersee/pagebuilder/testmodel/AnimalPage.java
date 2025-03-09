@@ -34,7 +34,7 @@ import org.springframework.data.domain.Sort;
  * @author Christian Bremer
  */
 @XmlRootElement(name = "animalPage")
-@XmlType(name = "animalPType")
+@XmlType(name = "animalPageType")
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Schema(description = "An animal page.")

@@ -16,14 +16,21 @@
 
 package org.bremersee.pagebuilder.model;
 
+import static java.util.Objects.isNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAnyElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import java.io.Serial;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bremersee.comparator.model.SortOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -33,12 +40,17 @@ import org.springframework.data.domain.Sort;
  *
  * @author Christian Bremer
  */
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "page")
 @XmlType(name = "pageType")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Schema(description = "A page.")
 public class CommonPageDto extends AbstractPageDto<Object> {
+
+  @Serial
+  private static final long serialVersionUID = 1;
 
   /**
    * Instantiates a new common page transfer object.
@@ -112,6 +124,9 @@ public class CommonPageDto extends AbstractPageDto<Object> {
   @XmlElementWrapper(name = "content")
   @XmlAnyElement(lax = true)
   public List<Object> getContent() {
+    if (isNull(content)) {
+      content = new ArrayList<>();
+    }
     return content;
   }
 

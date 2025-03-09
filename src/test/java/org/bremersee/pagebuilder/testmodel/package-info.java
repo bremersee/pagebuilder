@@ -20,6 +20,6 @@
  * @author Christian Bremer
  */
 @jakarta.xml.bind.annotation.XmlSchema(
-    namespace = "http://bremersee.org/xmlschemas/pagebuilder/v2/test",
+    namespace = "http://bremersee.org/xmlschemas/pagebuilder/v3/test",
     elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.bremersee.pagebuilder.testmodel;

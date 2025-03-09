@@ -72,4 +72,13 @@ public class ObjectFactory {
     return new AnimalPage();
   }
 
+  /**
+   * Create animal slice.
+   *
+   * @return the animal slice
+   */
+  public AnimalSlice createAnimalSlice() {
+    return new AnimalSlice();
+  }
+
 }

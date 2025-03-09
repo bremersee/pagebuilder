@@ -20,7 +20,7 @@
  * @author Christian Bremer
  */
 @jakarta.xml.bind.annotation.XmlSchema(
-    namespace = "http://bremersee.org/xmlschemas/pagebuilder/v2",
-    location = "http://bremersee.github.io/xmlschemas/pagebuilder-v2.xsd",
+    namespace = "http://bremersee.org/xmlschemas/pagebuilder/v3",
+    location = "http://bremersee.github.io/xmlschemas/pagebuilder-v3.xsd",
     elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.bremersee.pagebuilder.model;

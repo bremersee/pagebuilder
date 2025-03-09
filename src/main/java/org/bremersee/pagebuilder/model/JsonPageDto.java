@@ -16,10 +16,14 @@
 
 package org.bremersee.pagebuilder.model;
 
+import static java.util.Objects.isNull;
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.Collections;
+import java.io.Serial;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bremersee.comparator.model.SortOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -31,8 +35,12 @@ import org.springframework.data.domain.Sort;
  * @author Christian Bremer
  */
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Schema(description = "The page for json deserialization.")
 public abstract class JsonPageDto<T> extends AbstractPageDto<T> {
+
+  @Serial
+  private static final long serialVersionUID = 1;
 
   /**
    * Instantiates a new json page transfer object.
@@ -91,6 +99,9 @@ public abstract class JsonPageDto<T> extends AbstractPageDto<T> {
 
   @Override
   public List<T> getContent() {
-    return Collections.unmodifiableList(content);
+    if (isNull(content)) {
+      content = new ArrayList<>();
+    }
+    return content;
   }
 }

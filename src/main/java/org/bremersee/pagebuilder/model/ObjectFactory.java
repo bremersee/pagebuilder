@@ -26,6 +26,13 @@ import jakarta.xml.bind.annotation.XmlRegistry;
 @XmlRegistry
 public class ObjectFactory {
 
+
+  /**
+   * Instantiates a new object factory.
+   */
+  public ObjectFactory() {
+  }
+
   /**
    * Creates common page dto.
    *
@@ -33,6 +40,15 @@ public class ObjectFactory {
    */
   public CommonPageDto createCommonPageDto() {
     return new CommonPageDto();
+  }
+
+  /**
+   * Creates common slice dto.
+   *
+   * @return the common slice dto
+   */
+  public CommonSliceDto createCommonSliceDto() {
+    return new CommonSliceDto();
   }
 
 }

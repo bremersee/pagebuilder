@@ -24,28 +24,27 @@ import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrderItem;
 import org.bremersee.comparator.model.SortOrderItem.CaseHandling;
 import org.bremersee.pagebuilder.testmodel.Address;
-import org.bremersee.pagebuilder.testmodel.AddressPage;
+import org.bremersee.pagebuilder.testmodel.AddressSlice;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 
 /**
- * The json page dto test.
+ * The json slice dto test.
  *
  * @author Christian Bremer
  */
-class JsonPageDtoTest {
+class JsonSliceDtoTest {
 
   /**
    * Default constructor.
    */
   @Test
   void defaultConstructor() {
-    assertThat(new AddressPage()).isEqualTo(new AddressPage());
+    assertThat(new AddressSlice()).isEqualTo(new AddressSlice());
   }
 
   /**
@@ -57,9 +56,9 @@ class JsonPageDtoTest {
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    AddressPage actual = new AddressPage(content, 0, 4, 10L);
+    AddressSlice actual = new AddressSlice(content, 0, 4, false);
     assertThat(actual)
-        .extracting(AddressPage::getContent, InstanceOfAssertFactories.list(Address.class))
+        .extracting(AddressSlice::getContent, InstanceOfAssertFactories.list(Address.class))
         .containsExactly(
             new Address("Berlin"),
             new Address("London"),
@@ -75,9 +74,9 @@ class JsonPageDtoTest {
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    AddressPage actual = new AddressPage(content, 0, 4, 10L, Sort.by("city"));
+    AddressSlice actual = new AddressSlice(content, 0, 4, false, Sort.by("city"));
     assertThat(actual)
-        .extracting(AddressPage::getContent, InstanceOfAssertFactories.list(Address.class))
+        .extracting(AddressSlice::getContent, InstanceOfAssertFactories.list(Address.class))
         .containsExactly(
             new Address("Berlin"),
             new Address("London"),
@@ -93,10 +92,10 @@ class JsonPageDtoTest {
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    AddressPage actual = new AddressPage(content, 0, 4, 10L,
+    AddressSlice actual = new AddressSlice(content, 0, 3, true,
         new SortOrder(List.of(SortOrderItem.by("city"))));
     assertThat(actual)
-        .extracting(AddressPage::getContent, InstanceOfAssertFactories.list(Address.class))
+        .extracting(AddressSlice::getContent, InstanceOfAssertFactories.list(Address.class))
         .containsExactly(
             new Address("Berlin"),
             new Address("London"),
@@ -104,18 +103,18 @@ class JsonPageDtoTest {
   }
 
   /**
-   * Gets content with page.
+   * Gets content with slice.
    */
   @Test
-  void getContentWithPage() {
+  void getContentWithSlice() {
     List<Address> content = List.of(
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    Page<Address> page = new PageImpl<>(content, PageRequest.of(0, 4, Sort.by("city")), 10L);
-    AddressPage actual = new AddressPage(page);
+    Slice<Address> slice = new SliceImpl<>(content, PageRequest.of(0, 4, Sort.by("city")), false);
+    AddressSlice actual = new AddressSlice(slice);
     assertThat(actual)
-        .extracting(AddressPage::getContent, InstanceOfAssertFactories.list(Address.class))
+        .extracting(AddressSlice::getContent, InstanceOfAssertFactories.list(Address.class))
         .containsExactly(
             new Address("Berlin"),
             new Address("London"),
@@ -131,13 +130,13 @@ class JsonPageDtoTest {
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    AddressPage actual = new AddressPage(content, 0, 4, 10L,
+    AddressSlice actual = new AddressSlice(content, 0, 4, false,
         SortOrder.by(SortOrderItem.by("city").with(CaseHandling.SENSITIVE)));
     assertThat(actual)
-        .extracting(AddressPage::getSort)
+        .extracting(AddressSlice::getSort)
         .isNotNull();
     assertThat(actual)
-        .extracting(AddressPage::getSort)
+        .extracting(AddressSlice::getSort)
         .isEqualTo(SortOrder.by(SortOrderItem.by("city").with(CaseHandling.SENSITIVE)));
   }
 
@@ -145,13 +144,13 @@ class JsonPageDtoTest {
    * Gets pageable without sort.
    */
   @Test
-  void getPageableWithoutSort() {
+  void getSliceableWithoutSort() {
     List<Address> content = List.of(
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    AddressPage page = new AddressPage(content, 0, 4, 10L);
-    Pageable actual = page.getPageable();
+    AddressSlice slice = new AddressSlice(content, 0, 4, false);
+    Pageable actual = slice.getPageable();
     assertThat(actual.getPageNumber())
         .isEqualTo(0);
     assertThat(actual.getPageSize())
@@ -169,9 +168,9 @@ class JsonPageDtoTest {
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    AddressPage page = new AddressPage(content, 0, 4, 10L,
+    AddressSlice slice = new AddressSlice(content, 0, 4, false,
         SortOrder.by(SortOrderItem.by("city").with(CaseHandling.SENSITIVE)));
-    Pageable actual = page.getPageable();
+    Pageable actual = slice.getPageable();
     assertThat(actual.getPageNumber())
         .isEqualTo(0);
     assertThat(actual.getPageSize())
@@ -189,23 +188,8 @@ class JsonPageDtoTest {
         new Address("Berlin"),
         new Address("London"),
         new Address("New York"));
-    AddressPage page = new AddressPage(content, 0, 4, 10L);
-    Slice<Address> actual = page.toSlice();
-    assertThat(actual.getContent())
-        .containsExactlyElementsOf(content);
-  }
-
-  /**
-   * To page.
-   */
-  @Test
-  void toPage() {
-    List<Address> content = List.of(
-        new Address("Berlin"),
-        new Address("London"),
-        new Address("New York"));
-    AddressPage page = new AddressPage(content, 0, 4, 10L);
-    Slice<Address> actual = page.toPage();
+    AddressSlice slice = new AddressSlice(content, 0, 4, false);
+    Slice<Address> actual = slice.toSlice();
     assertThat(actual.getContent())
         .containsExactlyElementsOf(content);
   }

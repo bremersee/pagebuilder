@@ -16,23 +16,23 @@
 
 package org.bremersee.pagebuilder.model;
 
-import static java.util.Objects.isNull;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElementRef;
-import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
+import java.io.Serial;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.spring.mapper.SortMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Sort;
 
 /**
@@ -41,35 +41,22 @@ import org.springframework.data.domain.Sort;
  * @param <T> the type of the content
  * @author Christian Bremer
  */
-@XmlAccessorType(XmlAccessType.FIELD)
+@SuppressWarnings("unused")
+@XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "abstractPageType")
-@Getter
-@EqualsAndHashCode
-@ToString
+@Setter(AccessLevel.PROTECTED)
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Schema(description = "The base page.")
-public abstract class AbstractPageDto<T> {
+public abstract class AbstractPageDto<T> extends AbstractSliceDto<T> {
+
+  @Serial
+  private static final long serialVersionUID = 1;
 
   /**
-   * The Content.
+   * The size of available elements.
    */
-  @Schema(description = "The content of the page.")
-  @XmlTransient
-  protected List<T> content = new ArrayList<>();
-
-  @Schema(description = "The page number starting with 0.")
-  @XmlElement(name = "number", required = true)
-  private final int number;
-
-  @Schema(description = "The size of the page (not the size of the content).")
-  @XmlElement(name = "size", required = true)
-  private final int size;
-
-  @Schema(description = "The size of available elements.")
-  @XmlElement(name = "totalElements", required = true)
-  private final long totalElements;
-
-  @XmlElementRef(type = SortOrder.class)
-  private final SortOrder sort;
+  private long totalElements;
 
   /**
    * Instantiates a new abstract page transfer object.
@@ -109,13 +96,9 @@ public abstract class AbstractPageDto<T> {
       int size,
       long totalElements,
       SortOrder sort) {
-    if (!isNull(content)) {
-      this.content.addAll(content);
-    }
-    this.number = number;
-    this.size = size;
+    super(content, number, size, false, sort);
     this.totalElements = totalElements;
-    this.sort = isNull(sort) ? new SortOrder(List.of()) : sort;
+    setNextAvailable(isNextAvailable());
   }
 
   /**
@@ -156,21 +139,50 @@ public abstract class AbstractPageDto<T> {
   }
 
   /**
-   * Gets content.
+   * Gets total elements.
    *
-   * @return the content
+   * @return the total elements
    */
-  public abstract List<T> getContent();
+  @Schema(description = "The size of available elements.")
+  @XmlElement(name = "totalElements", required = true)
+  public long getTotalElements() {
+    return totalElements;
+  }
 
   /**
-   * Gets sort.
+   * Gets total pages.
    *
-   * @return the sort
+   * @return the total pages
    */
-  public final SortOrder getSort() {
-    if (isNull(sort)) {
-      return new SortOrder(List.of());
-    }
-    return sort;
+  @Schema(description = "The total number of pages.")
+  @JsonProperty(required = true)
+  @XmlElement(name = "totalPages", required = true)
+  public int getTotalPages() {
+    return getSize() <= 0
+        ? 1
+        : (int) Math.ceil((double) getTotalElements() / (double) getSize());
   }
+
+  /**
+   * Sets total pages. This method is ignored.
+   *
+   * @param totalPages the total pages
+   */
+  protected void setTotalPages(int totalPages) {
+  }
+
+  @Override
+  public boolean isNextAvailable() {
+    return getNumber() + 1 < getTotalPages();
+  }
+
+  /**
+   * To page.
+   *
+   * @return the page
+   */
+  public Page<T> toPage() {
+    return new PageImpl<>(getContent(), getPageable(), getTotalElements());
+  }
+
 }

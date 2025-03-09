@@ -36,4 +36,14 @@ class ObjectFactoryTest {
     assertThat(target.createCommonPageDto())
         .isEqualTo(new CommonPageDto());
   }
+
+  /**
+   * Create common slice dto.
+   */
+  @Test
+  void createCommonSliceDto() {
+    ObjectFactory target = new ObjectFactory();
+    assertThat(target.createCommonSliceDto())
+        .isEqualTo(new CommonSliceDto());
+  }
 }

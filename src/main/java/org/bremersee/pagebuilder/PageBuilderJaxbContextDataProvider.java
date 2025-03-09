@@ -34,6 +34,12 @@ import org.bremersee.xml.JaxbContextMember;
 public class PageBuilderJaxbContextDataProvider implements JaxbContextDataProvider {
 
   /**
+   * Instantiates a new page builder jaxb context data provider.
+   */
+  public PageBuilderJaxbContextDataProvider() {
+  }
+
+  /**
    * Gets namespace.
    *
    * @return the namespace
@@ -48,6 +54,8 @@ public class PageBuilderJaxbContextDataProvider implements JaxbContextDataProvid
 
   @Override
   public Collection<JaxbContextMember> getJaxbContextData() {
-    return List.of(JaxbContextMember.byPackage(org.bremersee.comparator.model.ObjectFactory.class.getPackage()).build());
+    return List.of(JaxbContextMember
+        .byPackage(org.bremersee.comparator.model.ObjectFactory.class.getPackage())
+        .build());
   }
 }
